@@ -44,3 +44,5 @@ data class ScoresResponse(val overall:Int,val story:Int,val animation:Int,val so
 
 data class AnimeScheduleResponse(val monday:List<PreviewAnimeResponse>,val tuesday:List<PreviewAnimeResponse>,val wednesday:List<PreviewAnimeResponse>,val thursday:List<PreviewAnimeResponse>,
                                  val friday:List<PreviewAnimeResponse>,val saturday:List<PreviewAnimeResponse>,val sunday:List<PreviewAnimeResponse>)
+
+data class AnimeGenreSeasonResponse(val anime:List<PreviewAnimeResponse>)

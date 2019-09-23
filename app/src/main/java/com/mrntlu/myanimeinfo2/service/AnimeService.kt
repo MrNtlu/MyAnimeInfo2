@@ -17,6 +17,9 @@ interface AnimeService {
     @GET("anime/{mal_id}/reviews/{page}")
     suspend fun getAnimeReviewsByID(@Path("mal_id") mal_id:Int,@Path("page") page:Int):ReviewsResponse
 
+    @GET("anime/{mal_id}/recommendations")
+    suspend fun getAnimeRecommendationsByID(@Path("mal_id") mal_id:Int):RecommendationsResponse
+
     @GET("top/anime/{page}/{subtype}")
     suspend fun getTopAnimes(@Path("page") page:Int,@Path("subtype") subtype:String):TopAnimeResponse
 
@@ -25,4 +28,10 @@ interface AnimeService {
 
     @GET("schedule")
     suspend fun getAnimeSchedule():AnimeScheduleResponse
+
+    @GET("genre/anime/{genreID}/{page}")
+    suspend fun getAnimeByGenre(@Path("genreID") genreID:Int,@Path("page") page:Int):AnimeGenreSeasonResponse
+
+    @GET("season/{year}/{season}")
+    suspend fun getAnimeBySeason(@Path("year") year:Int,@Path("season")season:String):AnimeGenreSeasonResponse
 }
