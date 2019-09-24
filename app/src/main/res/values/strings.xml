@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">MyAnimeInfo2</string>
+
+    <string name="anime">anime</string>
+    <string name="manga">manga</string>
+
+    <string-array name="topAnimeSubtypes">
+        <item></item>
+        <item>airing</item>
+        <item>upcoming</item>
+        <item>tv</item>
+        <item>movie</item>
+        <item>ova</item>
+        <item>special</item>
+        <item>bypopularity</item>
+        <item>favorite</item>
+    </string-array>
+
+    <string-array name="topMangaSubtypes">
+        <item></item>
+        <item>manga</item>
+        <item>novels</item>
+        <item>oneshots</item>
+        <item>doujin</item>
+        <item>manhwa</item>
+        <item>manhua</item>
+        <item>bypopularity</item>
+        <item>favorite</item>
+    </string-array>
 </resources>

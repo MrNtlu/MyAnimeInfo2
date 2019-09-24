@@ -8,7 +8,7 @@ class RetrofitClient {
     companion object{
         fun getClient(): Retrofit {
             return Retrofit.Builder()
-                .baseUrl("https://api.jikan.moe/v3")
+                .baseUrl("https://api.jikan.moe/v3/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
         }
     }
