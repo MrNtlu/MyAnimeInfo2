@@ -28,11 +28,11 @@ interface AnimeService {
     suspend fun getAnimeBySeason(@Path("year") year:Int,@Path("season")season:String):AnimeGenreSeasonResponse
 
     @GET("search/anime")
-    fun getAnimeBySearch(@Query("q") q:String, @Query("page") page:Int):AnimeSearchResponse
+    suspend fun getAnimeBySearch(@Query("q") q:String, @Query("page") page:Int):AnimeSearchResponse
 
     //Manga
-    @GET("manga/{mal_id}/{page}")
-    suspend fun getMangaByID(@Path("mal_id") mal_id:Int,@Path("page") page:Int):MangaResponse
+    @GET("manga/{mal_id}")
+    suspend fun getMangaByID(@Path("mal_id") mal_id:Int):MangaResponse
 
     @GET("manga/{mal_id}/reviews/{page}")
     suspend fun getMangaReviewsByID(@Path("mal_id") mal_id:Int,@Path("page") page:Int):ReviewsResponse
@@ -47,14 +47,14 @@ interface AnimeService {
     suspend fun getMangaByGenre(@Path("genreID") genreID:Int,@Path("page") page:Int):MangaGenreSeasonResponse
 
     @GET("search/manga")
-    fun getMangaBySearch(@Query("q") q:String, @Query("page") page:Int):MangaSearchResponse
+    suspend fun getMangaBySearch(@Query("q") q:String, @Query("page") page:Int):MangaSearchResponse
 
     //Common
     @GET("{type}/{mal_id}/recommendations")
     suspend fun getRecommendationsByID(@Path("type") type:String,@Path("mal_id") mal_id:Int):RecommendationsResponse
 
-    @GET("character/{character_id}") //TODO character info response body https://api.jikan.moe/v3/character/80
-    suspend fun getCharacterInfoByID(@Path("character_id") character_id:Int):CharactersResponse
+    @GET("character/{character_id}")
+    suspend fun getCharacterInfoByID(@Path("character_id") character_id:Int):CharacterInfoResponse
 
     @GET("{type}/{mal_id}/reviews/{page}")
     suspend fun getReviewsByID(@Path("type") type:String,@Path("mal_id") mal_id:Int,@Path("page") page:Int):ReviewsResponse

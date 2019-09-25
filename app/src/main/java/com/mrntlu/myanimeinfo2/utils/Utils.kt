@@ -5,6 +5,11 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 
+object Constants{
+    const val TIME_OUT=5000L
+}
+
+
 fun View.setGone(){
     this.visibility=View.GONE
 }
