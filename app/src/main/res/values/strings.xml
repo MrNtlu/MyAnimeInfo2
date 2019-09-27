@@ -3,6 +3,8 @@
 
     <string name="anime">anime</string>
     <string name="manga">manga</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 
     <string-array name="topAnimeSubtypes">
         <item></item>
@@ -27,4 +29,7 @@
         <item>bypopularity</item>
         <item>favorite</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group>
+        <item
+            android:title="Main Page"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:id="@+id/main_page_menu"/>
+
+        <item
+            android:title="Main Page"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_popcorn"
+            android:id="@+id/anime_by_genre"/>
+        <item
+            android:title="Main Page"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_calendar_small"
+            android:id="@+id/anime_schedule"/>
+
+    </group>
+
+    <item android:title="Main Page">
+        <menu>
+            <item
+                android:title="Main Page"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_magnifying_glass"
+                android:id="@+id/search_anime"/>
+            <item
+                android:title="Main Page"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_anime_boy_with_tie"
+                android:id="@+id/search_user"/>
+        </menu>
+    </item>
+</menu>

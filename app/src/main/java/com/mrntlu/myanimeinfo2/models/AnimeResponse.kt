@@ -28,7 +28,9 @@ data class PreviewAnimeResponse(val mal_id:Int,val type:String,val image_url:Str
 data class PreviewMangaResponse(val mal_id:Int,val type:String,val image_url:String,val volumes:Int,
                                 val score:Double,val title:String)
 
-data class TopAnimeResponse(val mal_id:Int,val type:String,val image_url:String,val episodes:Int?,val score:Double,
+data class TopAnimeResponse(val top:List<PreviewAnimeResponse>)
+
+data class TopAnimeBodyResponse(val mal_id:Int,val type:String,val image_url:String,val episodes:Int?,val score:Double,
                             val rank:Int,val title:String,val start_date:String?,val end_date:String?,val members:Int)
 
 data class TopMangaResponse(val mal_id:Int,val type:String,val image_url:String,val volumes:Int?,val score:Double,

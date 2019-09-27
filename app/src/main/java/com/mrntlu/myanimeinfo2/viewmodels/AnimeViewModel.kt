@@ -2,6 +2,8 @@ package com.mrntlu.myanimeinfo2.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
@@ -60,7 +62,9 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun getTopAnimes(page:Int,subtype:String) {
+    fun getTopAnimes(page:Int,subtype:String): LiveData<TopAnimeResponse> {
+        val liveData=MutableLiveData<TopAnimeResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -76,14 +80,17 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
-    fun getAnimeSchedule() {
+    fun getAnimeSchedule(): MutableLiveData<AnimeScheduleResponse> {
+        val liveData=MutableLiveData<AnimeScheduleResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -99,11 +106,12 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     fun getAnimeByGenre(genreID:Int,page:Int) {
