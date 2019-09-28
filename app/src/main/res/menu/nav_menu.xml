@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <group>
         <item
             android:title="Main Page"
             app:showAsAction="ifRoom"
             android:icon="@drawable/ic_home_black_24dp"
             android:id="@+id/main_page_menu"/>
-
-        <item
-            android:title="Main Page"
-            app:showAsAction="ifRoom"
-            android:icon="@drawable/ic_popcorn"
-            android:id="@+id/anime_by_genre"/>
-        <item
-            android:title="Main Page"
-            app:showAsAction="ifRoom"
-            android:icon="@drawable/ic_calendar_small"
-            android:id="@+id/anime_schedule"/>
-
     </group>
 
-    <item android:title="Main Page">
+    <item android:title="Anime">
+        <menu>
+            <item
+                android:title="Main Page"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_popcorn"
+                android:id="@+id/anime_by_genre"/>
+            <item
+                android:title="Schedule"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_calendar_small"
+                android:id="@+id/anime_schedule"/>
+        </menu>
+    </item>
+
+    <item android:title="Manga">
         <menu>
             <item
                 android:title="Main Page"

@@ -16,7 +16,9 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     private var mJob:Job?=null
 
     //Anime
-    fun getAnimeByID(mal_id:Int){
+    fun getAnimeByID(mal_id:Int): LiveData<AnimeResponse> {
+        val liveData=MutableLiveData<AnimeResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -32,11 +34,12 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     fun getAnimeCharactersByID(mal_id: Int) {
@@ -88,7 +91,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeSchedule(): MutableLiveData<AnimeScheduleResponse> {
+    fun getAnimeSchedule(): LiveData<AnimeScheduleResponse> {
         val liveData=MutableLiveData<AnimeScheduleResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->

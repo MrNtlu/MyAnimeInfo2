@@ -12,17 +12,17 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
-import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
+import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
-class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PreviewMangaListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var isAdapterSet:Boolean=false
     private val LOADING_ITEM_HOLDER=0
     private val PREVIEW_HOLDER=1
-    private var previewAnimeList:ArrayList<PreviewAnimeResponse> = arrayListOf()
+    private var previewMangaList:ArrayList<PreviewMangaResponse> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -30,26 +30,26 @@ class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : Re
                 LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             }
             PREVIEW_HOLDER->{
-                PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_preview, parent, false), interaction)
+                PreviewMangaHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_preview, parent, false), interaction)
             }
-            else-> PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_preview, parent, false), interaction)
+            else-> PreviewMangaHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_preview, parent, false), interaction)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is PreviewAnimeHolder -> {
-                holder.bind(previewAnimeList.get(position))
+            is PreviewMangaHolder -> {
+                holder.bind(previewMangaList.get(position))
             }
         }
     }
 
     override fun getItemViewType(position: Int)=if (isAdapterSet) PREVIEW_HOLDER else LOADING_ITEM_HOLDER
 
-    override fun getItemCount()=if (isAdapterSet) previewAnimeList.size else 1
+    override fun getItemCount()=if (isAdapterSet) previewMangaList.size else 1
 
-    fun submitList(list: List<PreviewAnimeResponse>) {
-        previewAnimeList.apply {
+    fun submitList(list: List<PreviewMangaResponse>) {
+        previewMangaList.apply {
             this.clear()
             this.addAll(list)
         }
@@ -57,19 +57,23 @@ class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : Re
         notifyDataSetChanged()
     }
 
-    class PreviewAnimeHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: PreviewAnimeResponse) = with(itemView) {
+    class PreviewMangaHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
+        fun bind(item: PreviewMangaResponse) = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
-
             itemView.titleText.text=item.title
             itemView.typeText.text=item.type
             itemView.scoreText.text=item.score.toString()
-            itemView.episodesText.text=if (item.episodes!=null) item.episodes.toString() else "?"
+
+            val volumesText=if (item.volumes!=null) item.volumes.toString() else "?"
+            val chaptersText=if (item.chapters!=null) "/${item.chapters}" else ""
+            val text="$volumesText $chaptersText"
+            itemView.episodesText.text=text
 
             itemView.previewImageProgress.setVisible()
-            Glide.with(itemView.context).load(item.image_url).addListener(object:RequestListener<Drawable>{
+            Glide.with(itemView.context).load(item.image_url).addListener(object:
+                RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                     itemView.previewImage.setImageResource(R.drawable.ic_no_picture)
                     itemView.previewImageProgress.setGone()
@@ -86,6 +90,6 @@ class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : Re
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: PreviewAnimeResponse)
+        fun onItemSelected(position: Int, item: PreviewMangaResponse)
     }
 }

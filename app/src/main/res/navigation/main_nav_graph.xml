@@ -4,16 +4,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/mainAnimeFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
-        android:id="@+id/mainAnimeFragment"
-        android:name="com.mrntlu.myanimeinfo2.ui.anime.MainAnimeFragment"
+        android:id="@+id/mainFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_main_to_animeInfo"
+            app:destination="@id/animeInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_main_to_mangaInfo"
+            app:destination="@id/mangaInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_main_to_schedule"
+            app:destination="@id/scheduleAnimeFragment"
+            />
+    </fragment>
     <fragment
-        android:id="@+id/mainMangaFragment"
-        android:name="com.mrntlu.myanimeinfo2.ui.manga.MainMangaFragment"
-        android:label="MainMangaFragment"
-        tools:layout="@layout/fragment_main" />
+        android:id="@+id/animeInfoFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.anime.AnimeInfoFragment"
+        android:label="fragment_anime_info"
+        tools:layout="@layout/fragment_anime_info" />
+    <fragment
+        android:id="@+id/mangaInfoFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.manga.MangaInfoFragment"
+        android:label="fragment_manga_info"
+        tools:layout="@layout/fragment_manga_info" />
+    <fragment
+        android:id="@+id/scheduleAnimeFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.anime.ScheduleAnimeFragment"
+        android:label="fragment_schedule_anime"
+        tools:layout="@layout/fragment_schedule_anime" />
 </navigation>

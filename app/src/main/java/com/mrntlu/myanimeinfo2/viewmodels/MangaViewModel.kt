@@ -2,6 +2,8 @@ package com.mrntlu.myanimeinfo2.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
@@ -14,7 +16,9 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
     private var mJob: Job?=null
 
     //Manga
-    fun getMangaByID(mal_id:Int){
+    fun getMangaByID(mal_id:Int): LiveData<MangaResponse> {
+        val liveData= MutableLiveData<MangaResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -30,11 +34,12 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     fun getMangaReviewsByID(mal_id: Int,page: Int){
@@ -60,7 +65,9 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun getTopMangas(page:Int,subtype:String){
+    fun getTopMangas(page:Int,subtype:String): LiveData<TopMangaResponse> {
+        val liveData= MutableLiveData<TopMangaResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -76,14 +83,17 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
-    fun getMangaCharactersByID(mal_id: Int){
+    fun getMangaCharactersByID(mal_id: Int): LiveData<CharactersResponse> {
+        val liveData= MutableLiveData<CharactersResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -99,11 +109,12 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     fun getMangaByGenre(genreID:Int,page:Int){

@@ -6,12 +6,9 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -42,7 +39,8 @@ class MainActivity : AppCompatActivity() {
     private fun setDrawer(){
         navigationView.setNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.main_page_menu->navController.navigate(R.id.mainAnimeFragment)
+                R.id.main_page_menu->navController.navigate(R.id.mainFragment)
+                R.id.anime_schedule->navController.navigate(R.id.scheduleAnimeFragment)
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
