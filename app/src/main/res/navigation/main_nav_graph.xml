@@ -28,21 +28,53 @@
         <action
             android:id="@+id/action_main_to_schedule"
             app:destination="@id/scheduleAnimeFragment"
-            />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/animeInfoFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.anime.AnimeInfoFragment"
         android:label="fragment_anime_info"
-        tools:layout="@layout/fragment_anime_info" />
+        tools:layout="@layout/fragment_anime_info" >
+        <action
+            android:id="@+id/action_animeInfo_to_genreDialog"
+            app:destination="@id/genreDialogFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <fragment
         android:id="@+id/mangaInfoFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.manga.MangaInfoFragment"
         android:label="fragment_manga_info"
-        tools:layout="@layout/fragment_manga_info" />
+        tools:layout="@layout/fragment_manga_info" >
+        <action
+            android:id="@+id/action_mangaInfo_to_genreDialog"
+            app:destination="@id/genreDialogFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <fragment
         android:id="@+id/scheduleAnimeFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.anime.ScheduleAnimeFragment"
         android:label="fragment_schedule_anime"
         tools:layout="@layout/fragment_schedule_anime" />
+    <dialog
+        android:id="@+id/genreDialogFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.common.GenreDialogFragment"
+        android:label="fragment_genre_dialog"
+        tools:layout="@layout/fragment_genre_dialog" >
+        <action
+            android:id="@+id/action_genreDialogFragment_to_mangaInfoFragment"
+            app:destination="@id/mangaInfoFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </dialog>
 </navigation>

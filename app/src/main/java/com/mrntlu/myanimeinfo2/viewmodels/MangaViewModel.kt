@@ -117,7 +117,9 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getMangaByGenre(genreID:Int,page:Int){
+    fun getMangaByGenre(genreID:Int,page:Int): LiveData<MangaGenreSeasonResponse> {
+        val liveData= MutableLiveData<MangaGenreSeasonResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -133,11 +135,12 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     fun getMangaBySearch(q:String, page:Int){
