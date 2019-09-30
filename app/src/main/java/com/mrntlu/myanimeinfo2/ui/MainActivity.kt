@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         navController=navHostFragment.navController
 
         setDrawer()
-        setStatusBarColor(R.color.white)
+        setStatusBarColor(R.color.white,true)
         setNavBarColor(R.color.black)
     }
 
@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         window.navigationBarColor=resources.getColor(color,theme)
     }
 
-    private fun setStatusBarColor(color:Int){
-        window.decorView.systemUiVisibility= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    fun setStatusBarColor(color:Int,isLight:Boolean){
+        if (isLight) window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor=resources.getColor(color,theme)
     }

@@ -104,4 +104,11 @@ class MainFragment : Fragment(){
         val bundle= bundleOf("mal_id" to malID)
         navController.navigate(navID,bundle)
     }
+
+    override fun onDestroyView() {
+        airingTodayRV.adapter=null
+        topMangaRV.adapter=null
+        topAiringRV.adapter=null
+        super.onDestroyView()
+    }
 }

@@ -68,13 +68,5 @@
         android:id="@+id/genreDialogFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.common.GenreDialogFragment"
         android:label="fragment_genre_dialog"
-        tools:layout="@layout/fragment_genre_dialog" >
-        <action
-            android:id="@+id/action_genreDialogFragment_to_mangaInfoFragment"
-            app:destination="@id/mangaInfoFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left" />
-    </dialog>
+        tools:layout="@layout/fragment_genre_dialog" />
 </navigation>

@@ -32,12 +32,6 @@ data class TopAnimeResponse(val top:List<PreviewAnimeResponse>)
 
 data class TopMangaResponse(val top:List<PreviewMangaResponse>)
 
-data class TopAnimeBodyResponse(val mal_id:Int,val type:String,val image_url:String,val episodes:Int?,val score:Double,
-                            val rank:Int,val title:String,val start_date:String?,val end_date:String?,val members:Int)
-
-data class TopMangaBodyResponse(val mal_id:Int,val type:String,val image_url:String,val volumes:Int?,val score:Double,
-                            val rank:Int,val title:String,val start_date:String?,val end_date:String?,val members:Int)
-
 data class AnimeResponse(val mal_id:Int,val image_url: String,val title:String,val type:String,val episodes:Int?,
                          val status:String,val airing:Boolean,val duration:String?,val score:Double,val scored_by:Int,
                          val rank: Int,val popularity:Int,val members: Int,val favorites:Int,val synopsis:String,val background:String?,
@@ -45,16 +39,16 @@ data class AnimeResponse(val mal_id:Int,val image_url: String,val title:String,v
                          val studios:List<GeneralShortResponse>?,val genres:List<GeneralShortResponse>?)
 
 data class MangaResponse(val mal_id:Int,val image_url: String,val title:String,val type:String,val volumes:Int?,val chapters:Int?,
-                         val status:String,val publishing:Boolean,val duration:String?,val score:Double,val scored_by:Int,
-                         val rank: Int,val popularity:Int,val members: Int,val favorites:Int,val synopsis:String,val background:String?,
-                         val related:RelatedAnimesResponse,val authors:List<GeneralShortResponse>?,val genres:List<GeneralShortResponse>?)
+                         val status:String,val publishing:Boolean,val score:Double,val scored_by:Int, val rank: Int,val popularity:Int,
+                         val members: Int,val favorites:Int,val synopsis:String,val background:String?, val related:RelatedAnimesResponse,
+                         val authors:List<GeneralShortResponse>?,val genres:List<GeneralShortResponse>?)
 
 data class AnimeSearchResponse(val results:List<PreviewAnimeResponse>)
 
 data class MangaSearchResponse(val results:List<PreviewMangaResponse>)
 
 data class RelatedAnimesResponse(val Adaptation:List<GeneralShortResponse>?,val Side:List<GeneralShortResponse>?,
-                                 val Other:List<GeneralShortResponse>?,val Prequel:List<GeneralShortResponse>?,val Sequel:List<GeneralShortResponse>?)
+                                 val Prequel:List<GeneralShortResponse>?,val Sequel:List<GeneralShortResponse>?)
 
 data class AnimeScheduleResponse(val monday:List<PreviewAnimeResponse>,val tuesday:List<PreviewAnimeResponse>,val wednesday:List<PreviewAnimeResponse>,val thursday:List<PreviewAnimeResponse>,
                                  val friday:List<PreviewAnimeResponse>,val saturday:List<PreviewAnimeResponse>,val sunday:List<PreviewAnimeResponse>)

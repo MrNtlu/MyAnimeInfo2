@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
@@ -22,8 +21,6 @@ class GenreDialogFragment: DialogFragment() {
     private lateinit var navController: NavController
     private var dataType by Delegates.notNull<Int>()
     private var malID by Delegates.notNull<Int>()
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

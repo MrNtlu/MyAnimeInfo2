@@ -11,10 +11,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.AnimeInfoPagerAdapter
+import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
+import kotlinx.android.synthetic.main.fragment_anime_info.*
 import kotlin.properties.Delegates
 
 class AnimeInfoFragment : Fragment() {
@@ -24,6 +27,8 @@ class AnimeInfoFragment : Fragment() {
     private lateinit var mangaViewModel: MangaViewModel
     private lateinit var commonViewModel: CommonViewModel
     private var malID by Delegates.notNull<Int>()
+
+    private lateinit var animeResponse:AnimeResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +53,15 @@ class AnimeInfoFragment : Fragment() {
 
     private fun setupObservers() {
         animeViewModel.getAnimeByID(malID).observe(viewLifecycleOwner, Observer {
+            animeResponse=it
             printLog(message = it.toString())
+            setupViewPagers(animeResponse)
         })
+    }
+
+    private fun setupViewPagers(animeResponse: AnimeResponse) {
+        val pagerAdapter=AnimeInfoPagerAdapter(childFragmentManager,animeResponse)
+        infoViewPager.adapter=pagerAdapter
+        infoTabLayout.setupWithViewPager(infoViewPager)
     }
 }
