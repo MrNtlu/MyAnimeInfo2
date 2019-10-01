@@ -41,8 +41,8 @@ class MainFragment : Fragment(){
         animeViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(AnimeViewModel::class.java)
         mangaViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(MangaViewModel::class.java)
 
-        setupObservers()
         setupRecyclerView()
+        setupObservers()
     }
 
     private fun setupObservers() {

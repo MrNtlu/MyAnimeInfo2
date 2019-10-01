@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.MangaResponse
 import com.mrntlu.myanimeinfo2.ui.common.GenreDialogFragment
 import com.mrntlu.myanimeinfo2.utils.printLog
@@ -53,9 +54,9 @@ class MangaInfoFragment : Fragment() {
         setupObservers()
         genreButton.setOnClickListener {
             //val fragmentDialog=GenreDialogFragment(mangaResponse.genres!![2].mal_id,0)
-            val bundle= bundleOf("data_type" to 0, "mal_id" to mangaResponse.genres!![2].mal_id)
-            navController.navigate(R.id.action_mangaInfo_to_genreDialog,bundle)
             //fragmentDialog.show(childFragmentManager,"dialog")
+            val bundle= bundleOf("data_type" to DataType.MANGA.code, "mal_id" to mangaResponse.genres!![2].mal_id)
+            navController.navigate(R.id.action_mangaInfo_to_genreDialog,bundle)
         }
     }
 

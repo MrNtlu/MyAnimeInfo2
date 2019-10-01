@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.adapters.AnimeInfoPagerAdapter
+import com.mrntlu.myanimeinfo2.adapters.pageradapters.AnimeInfoPagerAdapter
 import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
@@ -60,7 +60,10 @@ class AnimeInfoFragment : Fragment() {
     }
 
     private fun setupViewPagers(animeResponse: AnimeResponse) {
-        val pagerAdapter=AnimeInfoPagerAdapter(childFragmentManager,animeResponse)
+        val pagerAdapter= AnimeInfoPagerAdapter(
+            childFragmentManager,
+            animeResponse
+        )
         infoViewPager.adapter=pagerAdapter
         infoTabLayout.setupWithViewPager(infoViewPager)
     }

@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.models.DataType
+import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
@@ -19,13 +21,13 @@ class GenreDialogFragment: DialogFragment() {
     private lateinit var animeViewModel: AnimeViewModel
     private lateinit var mangaViewModel: MangaViewModel
     private lateinit var navController: NavController
-    private var dataType by Delegates.notNull<Int>()
+    private lateinit var dataType:DataType
     private var malID by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            dataType=it.getInt("data_type")
+            dataType=DataType.getByCode(it.getInt("data_type"))
             malID=it.getInt("mal_id")
         }
         setStyle(STYLE_NO_TITLE,R.style.FullScreenLightDialog)
@@ -48,7 +50,7 @@ class GenreDialogFragment: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         //navController= Navigation.findNavController(view)
 
-        if (dataType==0) setDataTypeManga(view)
+        if (dataType== MANGA) setDataTypeManga(view)
         else setDataTypeAnime(view)
     }
 

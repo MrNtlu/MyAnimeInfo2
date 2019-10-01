@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.adapters.AnimeSchedulePagerAdapter
+import com.mrntlu.myanimeinfo2.adapters.pageradapters.AnimeSchedulePagerAdapter
 import com.mrntlu.myanimeinfo2.models.AnimeScheduleResponse
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
@@ -45,7 +45,10 @@ class ScheduleAnimeFragment : Fragment() {
     }
 
     private fun setupViewPagers(animeScheduleResponse: AnimeScheduleResponse){
-        val pagerAdapter=AnimeSchedulePagerAdapter(childFragmentManager,animeScheduleResponse)
+        val pagerAdapter= AnimeSchedulePagerAdapter(
+            childFragmentManager,
+            animeScheduleResponse
+        )
         scheduleViewPager.adapter=pagerAdapter
         scheduleTabLayout.setupWithViewPager(scheduleViewPager)
         scheduleProgressBar.setGone()

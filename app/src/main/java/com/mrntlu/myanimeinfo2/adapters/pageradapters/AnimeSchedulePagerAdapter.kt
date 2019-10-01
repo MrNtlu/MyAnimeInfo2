@@ -1,4 +1,4 @@
-package com.mrntlu.myanimeinfo2.adapters
+package com.mrntlu.myanimeinfo2.adapters.pageradapters
 
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
