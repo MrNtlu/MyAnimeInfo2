@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.fragment_related.*
 
 class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment() {
 
-
     private lateinit var adaptationAdapter: RelatedListAdapter
     private lateinit var prequelAdapter: RelatedListAdapter
     private lateinit var sequelAdapter: RelatedListAdapter
@@ -92,5 +91,13 @@ class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment()
 
         if (relatedResponse.Adaptation==null && relatedResponse.Prequel==null && relatedResponse.Sequel==null && relatedResponse.Side==null) noRelationText.setVisible()
         else noRelationText.setGone()
+    }
+
+    override fun onDestroyView() {
+        adaptationsRV.adapter=null
+        prequelsRV.adapter=null
+        sequelsRV.adapter=null
+        sideStoriesRV.adapter=null
+        super.onDestroyView()
     }
 }

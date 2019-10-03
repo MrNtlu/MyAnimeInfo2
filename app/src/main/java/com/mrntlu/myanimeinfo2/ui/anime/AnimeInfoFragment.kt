@@ -15,8 +15,6 @@ import com.mrntlu.myanimeinfo2.adapters.pageradapters.AnimeInfoPagerAdapter
 import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
-import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
-import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_anime_info.*
 import kotlin.properties.Delegates
 
@@ -24,8 +22,6 @@ class AnimeInfoFragment : Fragment() {
 
     private lateinit var navController: NavController
     private lateinit var animeViewModel: AnimeViewModel
-    private lateinit var mangaViewModel: MangaViewModel
-    private lateinit var commonViewModel: CommonViewModel
     private var malID by Delegates.notNull<Int>()
 
     private lateinit var animeResponse:AnimeResponse
@@ -45,19 +41,16 @@ class AnimeInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
         animeViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(AnimeViewModel::class.java)
-        mangaViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(MangaViewModel::class.java)
-        commonViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(CommonViewModel::class.java)
 
         setupObservers()
     }
 
-    private fun setupObservers() {
-        animeViewModel.getAnimeByID(malID).observe(viewLifecycleOwner, Observer {
-            animeResponse=it
-            printLog(message = it.toString())
-            setupViewPagers(animeResponse)
-        })
-    }
+    private fun setupObservers() = animeViewModel.getAnimeByID(malID).observe(viewLifecycleOwner, Observer {
+        animeResponse=it
+        printLog(message = it.toString())
+        setupViewPagers(animeResponse)
+    })
+
 
     private fun setupViewPagers(animeResponse: AnimeResponse) {
         val pagerAdapter= AnimeInfoPagerAdapter(

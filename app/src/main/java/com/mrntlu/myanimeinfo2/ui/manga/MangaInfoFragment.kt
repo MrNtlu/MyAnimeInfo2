@@ -7,19 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.MangaResponse
-import com.mrntlu.myanimeinfo2.ui.common.GenreDialogFragment
 import com.mrntlu.myanimeinfo2.utils.printLog
-import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
-import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_manga_info.*
 import kotlin.properties.Delegates
@@ -27,9 +22,7 @@ import kotlin.properties.Delegates
 class MangaInfoFragment : Fragment() {
 
     private lateinit var navController: NavController
-    private lateinit var animeViewModel: AnimeViewModel
     private lateinit var mangaViewModel: MangaViewModel
-    private lateinit var commonViewModel: CommonViewModel
     private var malID by Delegates.notNull<Int>()
     private lateinit var mangaResponse:MangaResponse
 
@@ -47,9 +40,7 @@ class MangaInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(AnimeViewModel::class.java)
         mangaViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(MangaViewModel::class.java)
-        commonViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(CommonViewModel::class.java)
 
         setupObservers()
         genreButton.setOnClickListener {
@@ -60,10 +51,9 @@ class MangaInfoFragment : Fragment() {
         }
     }
 
-    private fun setupObservers() {
-        mangaViewModel.getMangaByID(malID).observe(viewLifecycleOwner, Observer {
-            printLog(message = it.toString())
-            mangaResponse=it
-        })
-    }
+    private fun setupObservers()=mangaViewModel.getMangaByID(malID).observe(viewLifecycleOwner, Observer {
+        printLog(message = it.toString())
+        mangaResponse=it
+    })
+
 }

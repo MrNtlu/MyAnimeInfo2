@@ -2,6 +2,8 @@ package com.mrntlu.myanimeinfo2.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mrntlu.myanimeinfo2.models.CharacterInfoResponse
 import com.mrntlu.myanimeinfo2.models.PicturesResponse
@@ -16,7 +18,9 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
     private val serviceRepository= ServiceRepository(application)
     private var mJob: Job?=null
 
-    fun getRecommendationsByID(type:String,mal_id:Int){
+    fun getRecommendationsByID(type:String,mal_id:Int): LiveData<RecommendationsResponse> {
+        val liveData= MutableLiveData<RecommendationsResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -32,14 +36,17 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
-    fun getCharacterInfoByID(character_id:Int){
+    fun getCharacterInfoByID(character_id:Int): LiveData<CharacterInfoResponse> {
+        val liveData= MutableLiveData<CharacterInfoResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -55,14 +62,17 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
-    fun getReviewsByID(type:String,mal_id:Int,page:Int){
+    fun getReviewsByID(type:String,mal_id:Int,page:Int): LiveData<ReviewsResponse> {
+        val liveData= MutableLiveData<ReviewsResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -78,14 +88,17 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
-    fun getPicturesByID(type:String,mal_id:Int){
+    fun getPicturesByID(type:String,mal_id:Int): LiveData<PicturesResponse> {
+        val liveData= MutableLiveData<PicturesResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -101,10 +114,11 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 }

@@ -65,4 +65,8 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
         adapter=characterListAdapter
     }
 
+    override fun onDestroyView() {
+        fragmentRV.adapter=null
+        super.onDestroyView()
+    }
 }
