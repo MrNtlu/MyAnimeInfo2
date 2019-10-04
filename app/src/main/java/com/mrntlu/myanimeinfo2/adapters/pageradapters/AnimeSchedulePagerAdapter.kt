@@ -1,11 +1,11 @@
 package com.mrntlu.myanimeinfo2.adapters.pageradapters
 
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import com.mrntlu.myanimeinfo2.models.AnimeScheduleResponse
 import com.mrntlu.myanimeinfo2.ui.anime.ScheduleInfoFragment
 
-class AnimeSchedulePagerAdapter(fm:FragmentManager,animeScheduleResponse: AnimeScheduleResponse):FragmentStatePagerAdapter(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class AnimeSchedulePagerAdapter(fm:FragmentManager,animeScheduleResponse: AnimeScheduleResponse): FragmentPagerAdapter(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val fragmentList= listOf(
         ScheduleInfoFragment(animeScheduleResponse.monday),

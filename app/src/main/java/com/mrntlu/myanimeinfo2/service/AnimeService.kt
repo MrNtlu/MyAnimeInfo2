@@ -50,6 +50,9 @@ interface AnimeService {
     suspend fun getMangaBySearch(@Query("q") q:String, @Query("page") page:Int):MangaSearchResponse
 
     //Common
+    @GET("producer/{mal_id}")
+    suspend fun getProducerInfoByID(@Path("mal_id") mal_id:Int):ProducerInfoResponse
+
     @GET("{type}/{mal_id}/recommendations")
     suspend fun getRecommendationsByID(@Path("type") type:String,@Path("mal_id") mal_id:Int):RecommendationsResponse
 

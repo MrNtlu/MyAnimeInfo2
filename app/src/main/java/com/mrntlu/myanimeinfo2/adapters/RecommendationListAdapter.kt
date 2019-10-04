@@ -57,7 +57,9 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
                 interaction?.onItemSelected(adapterPosition, item)
             }
             itemView.characterNameText.text=item.title
-            itemView.characterRoleText.text=item.recommendation_count.toString()
+            val recommendationCount="+${item.recommendation_count}"
+            itemView.characterRoleText.text=recommendationCount
+            itemView.characterRoleText.setTextColor(resources.getColor(R.color.green900,this.context.theme))
 
             Glide.with(itemView.context).load(item.image_url).addListener(object:
                 RequestListener<Drawable> {
@@ -69,7 +71,6 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     return false
                 }
-
             }).into(itemView.characterImage)
         }
     }

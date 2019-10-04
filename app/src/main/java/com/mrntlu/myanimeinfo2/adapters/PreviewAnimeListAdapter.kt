@@ -65,7 +65,7 @@ class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : Re
 
             itemView.titleText.text=item.title
             itemView.typeText.text=item.type
-            itemView.animeScoreText.text=item.score.toString()
+            itemView.scoreText.text=item.score.toString()
             itemView.episodesText.text=if (item.episodes!=null) item.episodes.toString() else "?"
 
             itemView.previewImageProgress.setVisible()

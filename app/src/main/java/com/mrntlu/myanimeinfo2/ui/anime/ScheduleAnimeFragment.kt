@@ -46,11 +46,16 @@ class ScheduleAnimeFragment : Fragment() {
 
     private fun setupViewPagers(animeScheduleResponse: AnimeScheduleResponse){
         val pagerAdapter= AnimeSchedulePagerAdapter(
-            childFragmentManager,
+            parentFragmentManager,
             animeScheduleResponse
         )
         scheduleViewPager.adapter=pagerAdapter
         scheduleTabLayout.setupWithViewPager(scheduleViewPager)
         scheduleProgressBar.setGone()
+    }
+
+    override fun onDestroyView() {
+        scheduleViewPager.adapter=null
+        super.onDestroyView()
     }
 }

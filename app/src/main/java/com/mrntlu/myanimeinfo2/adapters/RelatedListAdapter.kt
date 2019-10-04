@@ -5,17 +5,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
 import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
 import kotlinx.android.synthetic.main.cell_related.view.*
 
 class RelatedListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val NO_ITEM_HOLDER=0
+    private val ITEM_HOLDER=1
     private var isAdapterSet:Boolean=false
     private var relatedList:ArrayList<GeneralShortResponse> = arrayListOf()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return RelatedHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_related, parent, false), interaction)
+        return when(viewType){
+            NO_ITEM_HOLDER->{
+                NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
+            }
+            else->{
+                RelatedHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_related, parent, false), interaction)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -25,6 +34,8 @@ class RelatedListAdapter(private val interaction: Interaction? = null) : Recycle
             }
         }
     }
+
+    override fun getItemViewType(position: Int)=if (relatedList.size==0) NO_ITEM_HOLDER else ITEM_HOLDER
 
     override fun getItemCount()=relatedList.size
 

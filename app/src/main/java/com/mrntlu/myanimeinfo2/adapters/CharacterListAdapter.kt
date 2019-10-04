@@ -74,7 +74,6 @@ class CharacterListAdapter (private val interaction: Interaction? = null) : Recy
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     return false
                 }
-
             }).into(itemView.characterImage)
         }
     }

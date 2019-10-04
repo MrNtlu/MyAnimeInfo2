@@ -19,6 +19,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/scheduleTabLayout"
+        app:tabTextAppearance="@style/TabLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

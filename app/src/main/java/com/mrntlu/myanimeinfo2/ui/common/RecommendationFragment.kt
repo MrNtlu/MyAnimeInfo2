@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.RecommendationListAdapter
@@ -22,6 +25,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
 
     private lateinit var commonViewModel: CommonViewModel
     private lateinit var recommendationListAdapter:RecommendationListAdapter
+    private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recyclerview, container, false)
@@ -29,6 +33,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController= Navigation.findNavController(view)
         commonViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(CommonViewModel::class.java)
 
         setupRecyclerView()
@@ -46,7 +51,8 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
         layoutManager= LinearLayoutManager(this.context)
         recommendationListAdapter= RecommendationListAdapter(object :RecommendationListAdapter.Interaction{
             override fun onItemSelected(position: Int, item: RecommendationsBodyResponse) {
-                printLog(message = "Item ${item.mal_id} ${item.title}")
+                val bundle= bundleOf("mal_id" to item.mal_id)
+                navController.navigate(R.id.action_animeInfo_self,bundle)
             }
         })
         adapter=recommendationListAdapter

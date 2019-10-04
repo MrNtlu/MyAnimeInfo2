@@ -64,7 +64,7 @@ class PreviewMangaListAdapter(private val interaction: Interaction? = null) : Re
             }
             itemView.titleText.text=item.title
             itemView.typeText.text=item.type
-            itemView.animeScoreText.text=item.score.toString()
+            itemView.scoreText.text=item.score.toString()
 
             val volumesText=if (item.volumes!=null) item.volumes.toString() else "?"
             val chaptersText=if (item.chapters!=null) "/${item.chapters}" else ""

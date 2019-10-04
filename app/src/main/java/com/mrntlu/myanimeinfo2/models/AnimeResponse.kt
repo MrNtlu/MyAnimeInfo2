@@ -1,5 +1,9 @@
 package com.mrntlu.myanimeinfo2.models
 
+import com.google.gson.annotations.SerializedName
+
+data class ProducerInfoResponse(val anime:List<PreviewAnimeResponse>)
+
 data class GeneralShortResponse(val mal_id:Int,val type:String,val name:String)
 
 data class CharactersResponse(val characters:List<CharacterBodyResponse>)
@@ -14,7 +18,9 @@ data class RecommendationsBodyResponse(val mal_id: Int,val image_url: String,val
 
 data class ReviewsResponse(val reviews:List<ReviewsBodyResponse>)
 
-data class ReviewsBodyResponse(val mal_id: Int,val username:String,val scores:ScoresResponse,val content:String)
+data class ReviewsBodyResponse(val mal_id: Int,val content:String,val helpful_count:Int,val reviewer:ReviewerResponse)
+
+data class ReviewerResponse(val username:String,val scores:ScoresResponse,val image_url: String)
 
 data class ScoresResponse(val overall:Int,val story:Int,val animation:Int,val sound:Int,val character:Int,val enjoyment:Int)
 
@@ -22,7 +28,7 @@ data class PicturesResponse(val pictures:List<PictureBodyResponse>)
 
 data class PictureBodyResponse(val large:String,val small:String)
 
-data class RelatedResponse(val Adaptation:List<GeneralShortResponse>?, val Side:List<GeneralShortResponse>?,
+data class RelatedResponse(val Adaptation:List<GeneralShortResponse>?, @SerializedName(value = "Side story") val Side:List<GeneralShortResponse>?,
                            val Prequel:List<GeneralShortResponse>?, val Sequel:List<GeneralShortResponse>?)
 
 data class PreviewAnimeResponse(val mal_id:Int,val type:String,val image_url:String,val episodes:Int?,

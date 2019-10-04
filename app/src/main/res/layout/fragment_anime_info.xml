@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/posterImage"
-        android:layout_width="140dp"
-        android:layout_height="200dp"
+        android:layout_width="105dp"
+        android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="fitXY"
@@ -27,6 +27,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/infoTabLayout"
+        app:tabTextAppearance="@style/TabLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
