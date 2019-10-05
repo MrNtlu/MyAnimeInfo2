@@ -59,6 +59,6 @@ data class MangaSearchResponse(val results:List<PreviewMangaResponse>)
 data class AnimeScheduleResponse(val monday:List<PreviewAnimeResponse>,val tuesday:List<PreviewAnimeResponse>,val wednesday:List<PreviewAnimeResponse>,val thursday:List<PreviewAnimeResponse>,
                                  val friday:List<PreviewAnimeResponse>,val saturday:List<PreviewAnimeResponse>,val sunday:List<PreviewAnimeResponse>)
 
-data class AnimeGenreSeasonResponse(val anime:List<PreviewAnimeResponse>)
+data class AnimeGenreSeasonResponse(val mal_url:GeneralShortResponse,val anime:List<PreviewAnimeResponse>)
 
-data class MangaGenreSeasonResponse(val manga:List<PreviewMangaResponse>)
+data class MangaGenreSeasonResponse(val mal_url:GeneralShortResponse,val manga:List<PreviewMangaResponse>)

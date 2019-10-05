@@ -46,7 +46,7 @@ class MangaInfoFragment : Fragment() {
         genreButton.setOnClickListener {
             //val fragmentDialog=GenreDialogFragment(mangaResponse.genres!![2].mal_id,0)
             //fragmentDialog.show(childFragmentManager,"dialog")
-            val bundle= bundleOf("data_type" to DataType.MANGA.code, "mal_id" to mangaResponse.genres!![2].mal_id)
+            val bundle= bundleOf("genre_name" to mangaResponse.genres!![2].name,"data_type" to DataType.MANGA.code, "mal_id" to mangaResponse.genres!![2].mal_id)
             navController.navigate(R.id.action_mangaInfo_to_genreDialog,bundle)
         }
     }

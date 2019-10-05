@@ -7,20 +7,27 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="FullScreenLightDialog" parent="android:Theme.Light" >
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">false</item>
+    <style name="FullScreenLightDialog" parent="Theme.MaterialComponents.Light.Dialog" >
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="FullScreenDarkDialog" parent="android:Theme.Black" >
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">false</item>
+    <style name="FullScreenDarkDialog" parent="Theme.MaterialComponents.Dialog" >
+        <item name="colorPrimaryDark">@color/black</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="TabLayoutStyle" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="MyDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 </resources>

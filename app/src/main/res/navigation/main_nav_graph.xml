@@ -78,5 +78,9 @@
         android:id="@+id/genreDialogFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.common.GenreDialogFragment"
         android:label="fragment_genre_dialog"
-        tools:layout="@layout/fragment_genre_dialog" />
+        tools:layout="@layout/fragment_genre_dialog" >
+        <action
+            android:id="@+id/action_genreDialog_to_animeInfo"
+            app:destination="@id/animeInfoFragment" />
+    </dialog>
 </navigation>

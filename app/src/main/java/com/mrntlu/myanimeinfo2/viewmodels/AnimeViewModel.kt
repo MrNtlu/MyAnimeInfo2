@@ -120,7 +120,9 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeByGenre(genreID:Int,page:Int) {
+    fun getAnimeByGenre(genreID:Int,page:Int): LiveData<AnimeGenreSeasonResponse> {
+        val liveData=MutableLiveData<AnimeGenreSeasonResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -136,11 +138,12 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 }else{
                     //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     fun getAnimeBySeason(year:Int,season:String) {

@@ -74,7 +74,7 @@ class MainFragment : Fragment(){
     private fun setupRecyclerView() {
         topAiringRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            topAiringAdapter=PreviewAnimeListAdapter(object : PreviewAnimeListAdapter.Interaction {
+            topAiringAdapter=PreviewAnimeListAdapter(interaction = object : PreviewAnimeListAdapter.Interaction {
                 override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
                     navigateWithBundle(item.mal_id,R.id.action_main_to_animeInfo)
                 }
@@ -92,7 +92,7 @@ class MainFragment : Fragment(){
         }
         airingTodayRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            todayAiringAdapter=PreviewAnimeListAdapter(object : PreviewAnimeListAdapter.Interaction {
+            todayAiringAdapter=PreviewAnimeListAdapter(interaction = object : PreviewAnimeListAdapter.Interaction {
                 override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
                     navigateWithBundle(item.mal_id,R.id.action_main_to_animeInfo)
                 }

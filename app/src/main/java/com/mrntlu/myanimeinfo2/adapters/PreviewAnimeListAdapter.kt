@@ -17,10 +17,10 @@ import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
-class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var isAdapterSet:Boolean=false
-    private val LOADING_ITEM_HOLDER=0
+    val LOADING_ITEM_HOLDER=0
     private val PREVIEW_HOLDER=1
     private var previewAnimeList:ArrayList<PreviewAnimeResponse> = arrayListOf()
 
@@ -29,10 +29,7 @@ class PreviewAnimeListAdapter(private val interaction: Interaction? = null) : Re
             LOADING_ITEM_HOLDER->{
                 LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             }
-            PREVIEW_HOLDER->{
-                PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_preview, parent, false), interaction)
-            }
-            else-> PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_preview, parent, false), interaction)
+            else-> PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false), interaction)
         }
     }
 
