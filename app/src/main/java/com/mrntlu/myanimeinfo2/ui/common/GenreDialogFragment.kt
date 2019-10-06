@@ -13,13 +13,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
+import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
+import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
-import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_genre_dialog.*
 import kotlin.properties.Delegates
 
@@ -28,7 +29,8 @@ class GenreDialogFragment: DialogFragment() {
     private lateinit var animeViewModel: AnimeViewModel
     private lateinit var mangaViewModel: MangaViewModel
     private lateinit var navController: NavController
-    private lateinit var genreAdapter:PreviewAnimeListAdapter
+    private lateinit var animeGenreAdapter:PreviewAnimeListAdapter
+    private lateinit var mangaGenreAdapter:PreviewMangaListAdapter
     private lateinit var dataType:DataType
     private lateinit var genreName:String
     private var malID by Delegates.notNull<Int>()
@@ -70,29 +72,13 @@ class GenreDialogFragment: DialogFragment() {
         setupUI()
 
         if (dataType== MANGA){
+            setupMangaRecyclerView()
             setDataTypeManga()
         }
         else{
             setupAnimeRecyclerView()
             setDataTypeAnime()
         }
-    }
-
-    private fun setDataTypeManga() {
-        mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
-
-        mangaViewModel.getMangaByGenre(malID,1).observe(viewLifecycleOwner, Observer {
-            printLog(message = it.toString())
-        })
-    }
-
-    private fun setDataTypeAnime() {
-        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
-
-        animeViewModel.getAnimeByGenre(malID,1).observe(viewLifecycleOwner, Observer {
-            printLog(message = it.toString())
-            genreAdapter.submitList(it.anime)
-        })
     }
 
     private fun setupUI(){
@@ -102,25 +88,60 @@ class GenreDialogFragment: DialogFragment() {
         dialogGenreNameText.text=genreName
     }
 
-    private fun setupAnimeRecyclerView(){
-        genreRV.apply {
-            genreAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :PreviewAnimeListAdapter.Interaction{
-                override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
-                    val bundle= bundleOf("mal_id" to item.mal_id)
-                    navController.navigate(R.id.action_genreDialog_to_animeInfo,bundle)
-                    this@GenreDialogFragment.dismiss()
-                }
-            })
-            val gridLayoutManager=GridLayoutManager(this.context,2)
-            gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (genreAdapter.getItemViewType(position)==genreAdapter.LOADING_ITEM_HOLDER) 2 else 1
-                }
-            }
-            layoutManager=gridLayoutManager
-            adapter=genreAdapter
-        }
+    private fun setDataTypeManga() {
+        mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+
+        mangaViewModel.getMangaByGenre(malID,1).observe(viewLifecycleOwner, Observer {
+            printLog(message = it.toString())
+            mangaGenreAdapter.submitList(it.manga)
+        })
     }
+
+    private fun setDataTypeAnime() {
+        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+
+        animeViewModel.getAnimeByGenre(malID,1).observe(viewLifecycleOwner, Observer {
+            printLog(message = it.toString())
+            animeGenreAdapter.submitList(it.anime)
+        })
+    }
+
+    private fun setupMangaRecyclerView()=genreRV.apply {
+        mangaGenreAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object :PreviewMangaListAdapter.Interaction{
+            override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
+                val bundle = bundleOf("mal_id" to item.mal_id)
+                navController.navigate(R.id.action_genreDialog_to_mangaInfo, bundle)
+                this@GenreDialogFragment.dismiss()
+            }
+        })
+        val gridLayoutManager=GridLayoutManager(this.context,2)
+        gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (mangaGenreAdapter.getItemViewType(position)==mangaGenreAdapter.LOADING_ITEM_HOLDER) 2 else 1
+            }
+        }
+        layoutManager=gridLayoutManager
+        adapter=mangaGenreAdapter
+    }
+
+    private fun setupAnimeRecyclerView()=genreRV.apply {
+        animeGenreAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :PreviewAnimeListAdapter.Interaction{
+            override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
+                val bundle = bundleOf("mal_id" to item.mal_id)
+                navController.navigate(R.id.action_genreDialog_to_animeInfo, bundle)
+                this@GenreDialogFragment.dismiss()
+            }
+        })
+        val gridLayoutManager=GridLayoutManager(this.context,2)
+        gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (animeGenreAdapter.getItemViewType(position)==animeGenreAdapter.LOADING_ITEM_HOLDER) 2 else 1
+            }
+        }
+        layoutManager=gridLayoutManager
+        adapter=animeGenreAdapter
+    }
+
 
     override fun onDestroyView() {
         genreRV.adapter=null

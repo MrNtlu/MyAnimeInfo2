@@ -44,4 +44,9 @@ class AnimeProducersFragment(private val producers:List<GeneralShortResponse> ) 
             adapter=producersAdapter
         }
     }
+
+    override fun onDestroyView() {
+        fragmentRV.adapter=null
+        super.onDestroyView()
+    }
 }

@@ -83,7 +83,7 @@ class MainFragment : Fragment(){
         }
         topMangaRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            topMangaAdapter= PreviewMangaListAdapter(object : PreviewMangaListAdapter.Interaction {
+            topMangaAdapter= PreviewMangaListAdapter(interaction = object : PreviewMangaListAdapter.Interaction {
                 override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
                     navigateWithBundle(item.mal_id,R.id.action_main_to_mangaInfo)
                 }

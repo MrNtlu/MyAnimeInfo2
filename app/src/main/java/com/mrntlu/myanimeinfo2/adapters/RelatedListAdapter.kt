@@ -18,12 +18,8 @@ class RelatedListAdapter(private val interaction: Interaction? = null) : Recycle
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
-            NO_ITEM_HOLDER->{
-                NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
-            }
-            else->{
-                RelatedHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_related, parent, false), interaction)
-            }
+            NO_ITEM_HOLDER-> NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
+            else-> RelatedHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_related, parent, false), interaction)
         }
     }
 

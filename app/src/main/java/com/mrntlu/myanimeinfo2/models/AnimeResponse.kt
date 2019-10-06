@@ -45,12 +45,12 @@ data class AnimeResponse(val mal_id:Int, val image_url: String, val title:String
                          val status:String, val airing:Boolean, val duration:String?, val score:Double, val scored_by:Int,
                          val rank: Int, val popularity:Int, val members: Int, val favorites:Int, val synopsis:String, val background:String?,
                          val premiered:String?, val broadcast:String?, val related:RelatedResponse, val producers:List<GeneralShortResponse>?,
-                         val studios:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)
+                         val studios:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)//todo studios
 
 data class MangaResponse(val mal_id:Int, val image_url: String, val title:String, val type:String, val volumes:Int?, val chapters:Int?,
                          val status:String, val publishing:Boolean, val score:Double, val scored_by:Int, val rank: Int, val popularity:Int,
                          val members: Int, val favorites:Int, val synopsis:String, val background:String?, val related:RelatedResponse,
-                         val authors:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)
+                         val authors:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)//todo authors
 
 data class AnimeSearchResponse(val results:List<PreviewAnimeResponse>)
 

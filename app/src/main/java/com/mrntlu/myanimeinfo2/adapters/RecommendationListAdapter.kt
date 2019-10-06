@@ -13,6 +13,7 @@ import com.bumptech.glide.request.target.Target
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
+import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import kotlinx.android.synthetic.main.cell_character.view.*
 
 class RecommendationListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -24,11 +25,10 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
-            LOADING_ITEM_HOLDER->{
-                LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
-            }
+            LOADING_ITEM_HOLDER-> LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             else->RecommendationHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_character, parent, false), interaction)
-        }    }
+        }
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -38,7 +38,7 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
         }
     }
 
-    override fun getItemCount() = recommendationList.size
+    override fun getItemCount()=if (isAdapterSet )recommendationList.size else 1
 
     override fun getItemViewType(position: Int)=if (isAdapterSet) RECOMMENDATION_HOLDER else LOADING_ITEM_HOLDER
 
@@ -60,18 +60,7 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
             val recommendationCount="+${item.recommendation_count}"
             itemView.characterRoleText.text=recommendationCount
             itemView.characterRoleText.setTextColor(resources.getColor(R.color.green900,this.context.theme))
-
-            Glide.with(itemView.context).load(item.image_url).addListener(object:
-                RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    //todo progressbar
-                    return false
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
-            }).into(itemView.characterImage)
+            itemView.characterImage.loadWithGlide(item.image_url,itemView.characterProgressBar)
         }
     }
 

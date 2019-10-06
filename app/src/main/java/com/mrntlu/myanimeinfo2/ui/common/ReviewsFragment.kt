@@ -44,4 +44,9 @@ class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fra
         reviewsListAdapter= ReviewsListAdapter()
         adapter=reviewsListAdapter
     }
+
+    override fun onDestroyView() {
+        fragmentRV.adapter=null
+        super.onDestroyView()
+    }
 }

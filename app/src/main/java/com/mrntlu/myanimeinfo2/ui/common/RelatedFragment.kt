@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.RelatedListAdapter
 import com.mrntlu.myanimeinfo2.adapters.RelatedListAdapter.*
+import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
 import com.mrntlu.myanimeinfo2.models.RelatedResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
@@ -21,7 +23,7 @@ import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_related.*
 
-class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment() {
+class RelatedFragment(private val relatedResponse: RelatedResponse,private val dataType: DataType) : Fragment() {
 
     private lateinit var adaptationAdapter: RelatedListAdapter
     private lateinit var prequelAdapter: RelatedListAdapter
@@ -42,17 +44,17 @@ class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment()
     }
 
     private fun setListeners() {
-        if (relatedResponse.Adaptation!=null) setVisiblity(adaptationsLayout,adaptationsRV)
-        if (relatedResponse.Prequel!=null) setVisiblity(prequelsLayout,prequelsRV)
-        if (relatedResponse.Sequel!=null) setVisiblity(sequelsLayout,sequelsRV)
-        if (relatedResponse.Side!=null) setVisiblity(sideStoryLayout,sideStoriesRV)
+        if (relatedResponse.Adaptation!=null) setVisiblity(adaptationsLayout,adaptationsRV,adaptationExpandImage)
+        if (relatedResponse.Prequel!=null) setVisiblity(prequelsLayout,prequelsRV,prequelExpandImage)
+        if (relatedResponse.Sequel!=null) setVisiblity(sequelsLayout,sequelsRV,sequelExpandImage)
+        if (relatedResponse.Side!=null) setVisiblity(sideStoryLayout,sideStoriesRV,sideStoryExpandImage)
     }
 
-    private fun setVisiblity(view:View,recyclerView: RecyclerView){
+    private fun setVisiblity(view:View,recyclerView: RecyclerView,imageView: ImageView){
         view.setOnClickListener {
             if (recyclerView.isVisible) recyclerView.setGone()
             else recyclerView.setVisible()
-            adaptationExpandImage.setImageResource(if (recyclerView.isVisible) R.drawable.ic_arrow_up_24dp else R.drawable.ic_arrow_down_24dp)
+            imageView.setImageResource(if (recyclerView.isVisible) R.drawable.ic_arrow_up_24dp else R.drawable.ic_arrow_down_24dp)
         }
     }
 
@@ -65,6 +67,8 @@ class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment()
             adaptationAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     printLog(message = "Item ${item.mal_id} ${item.name}")
+                    if (dataType==DataType.MANGA) navigateWithBundle(item.mal_id,R.id.action_mangaInfo_to_animeInfo)
+                    else navigateWithBundle(item.mal_id,R.id.action_animeInfo_to_mangaInfo)
                 }
             })
             adaptationAdapter.submitList(relatedResponse.Adaptation)
@@ -76,7 +80,8 @@ class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment()
             layoutManager= LinearLayoutManager(this.context)
             prequelAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
-                    navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
+                    if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
+                    else navigateWithBundle(item.mal_id,R.id.action_mangaInfo_self)
                 }
             })
             prequelAdapter.submitList(relatedResponse.Prequel)
@@ -88,7 +93,8 @@ class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment()
             layoutManager= LinearLayoutManager(this.context)
             sequelAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
-                    navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
+                    if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
+                    else navigateWithBundle(item.mal_id,R.id.action_mangaInfo_self)
                 }
             })
             sequelAdapter.submitList(relatedResponse.Sequel)
@@ -100,7 +106,8 @@ class RelatedFragment(private val relatedResponse: RelatedResponse) : Fragment()
             layoutManager= LinearLayoutManager(this.context)
             sideStoryAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
-                    navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
+                    if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
+                    else navigateWithBundle(item.mal_id,R.id.action_mangaInfo_self)
                 }
             })
             sideStoryAdapter.submitList(relatedResponse.Side)

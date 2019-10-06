@@ -16,11 +16,12 @@ import com.mrntlu.myanimeinfo2.adapters.GenreTagListAdapter
 import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
+import com.mrntlu.myanimeinfo2.models.MangaResponse
 import com.mrntlu.myanimeinfo2.utils.setGone
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.xml.parsers.FactoryConfigurationError
 
-class DetailsFragment(private val animeResponse: AnimeResponse) : Fragment() {
+class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val mangaResponse: MangaResponse?=null,private val dataType: DataType) : Fragment() {
 
     private lateinit var genreTagListAdapter: GenreTagListAdapter
     private lateinit var navController: NavController
@@ -38,30 +39,49 @@ class DetailsFragment(private val animeResponse: AnimeResponse) : Fragment() {
     }
 
     private fun setupUI() {
-        animeResponse.let {
-            scoreText.text=it.score.toString()
-            scoredByText.text=it.scored_by.toString()
+        animeResponse?.let {
             val rank="#${it.rank}"
             val popularity="#${it.popularity}"
             val members="#${it.members}"
-            popularityText.text=popularity
-            rankedText.text=rank
-            membersText.text=members
+            setData(it.score,it.scored_by,rank,popularity,members,it.premiered,it.duration,it.episodes,it.status,it.synopsis,it.background,it.broadcast,it.genres)
+        }
+        mangaResponse?.let {
+            durationTextview.text="Volumes"
+            episodesTextview.text="Chapters"
+            val rank="#${it.rank}"
+            val popularity="#${it.popularity}"
+            val members="#${it.members}"
+            val volumes:String= it.volumes?.toString() ?: "?"
+            setData(it.score,it.scored_by,rank,popularity,members,null,volumes,it.chapters,it.status,it.synopsis,it.background,null,it.genres)
+        }
+    }
 
-            premieredText.text=it.premiered
-            durationText.text=if (it.duration==null) "?" else it.duration.toString()
-            episodesText.text=if (it.episodes==null) "?" else it.episodes.toString()
-            statusText.text=it.status
-            synopsisText.text=it.synopsis
-            if (it.background==null) backgroundCardView.setGone() else backgroundText.text=it.background
-            if (it.broadcast==null){
-                broadcastTextview.setGone()
-                broadcastText.setGone()
-            }else broadcastText.text=it.broadcast
+    private fun setData(score:Double,scoredBy:Int,rank:String,popularity:String,members:String,premiered:String?,duration:String?,episodes:Int?,status:String,
+                        synopsis:String,background:String?,broadcast:String?,genres:List<GeneralShortResponse>?){
+        scoreText.text=score.toString()
+        scoredByText.text=scoredBy.toString()
+        popularityText.text=popularity
+        rankedText.text=rank
+        membersText.text=members
+        durationText.text= duration ?: "?"
+        episodesText.text= episodes?.toString() ?: "?"
+        statusText.text=status
+        synopsisText.text=synopsis
 
-            animeResponse.genres?.let { list ->
-                setupRecyclerView(list)
-            }
+        if (premiered==null) {
+            premieredTextview.setGone()
+            premieredText.setGone()
+        }else premieredText.text=premiered
+
+        if (background==null) backgroundCardView.setGone() else backgroundText.text=background
+
+        if (broadcast==null){
+            broadcastTextview.setGone()
+            broadcastText.setGone()
+        }else broadcastText.text=broadcast
+
+        genres?.let {
+            setupRecyclerView(it)
         }
     }
 
@@ -70,8 +90,13 @@ class DetailsFragment(private val animeResponse: AnimeResponse) : Fragment() {
         layoutManager=linearLayoutManager
         genreTagListAdapter=GenreTagListAdapter(object :GenreTagListAdapter.Interaction{
             override fun onItemSelected(position: Int, item: GeneralShortResponse) {
-                val bundle= bundleOf("genre_name" to item.name,"data_type" to DataType.ANIME.code, "mal_id" to item.mal_id)
-                navController.navigate(R.id.action_animeInfo_to_genreDialog,bundle)
+                if (dataType==DataType.ANIME) {
+                    val bundle = bundleOf("genre_name" to item.name, "data_type" to DataType.ANIME.code, "mal_id" to item.mal_id)
+                    navController.navigate(R.id.action_animeInfo_to_genreDialog, bundle)
+                }else{
+                    val bundle = bundleOf("genre_name" to item.name, "data_type" to DataType.MANGA.code, "mal_id" to item.mal_id)
+                    navController.navigate(R.id.action_mangaInfo_to_genreDialog, bundle)
+                }
             }
         })
         adapter=genreTagListAdapter

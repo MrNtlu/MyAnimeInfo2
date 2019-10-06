@@ -13,6 +13,7 @@ import com.bumptech.glide.request.target.Target
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
+import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_preview.view.*
@@ -26,9 +27,7 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
-            LOADING_ITEM_HOLDER->{
-                LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
-            }
+            LOADING_ITEM_HOLDER-> LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             else-> PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false), interaction)
         }
     }
@@ -66,19 +65,7 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
             itemView.episodesText.text=if (item.episodes!=null) item.episodes.toString() else "?"
 
             itemView.previewImageProgress.setVisible()
-            Glide.with(itemView.context).load(item.image_url).addListener(object:RequestListener<Drawable>{
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    itemView.previewImage.setImageResource(R.drawable.ic_no_picture)
-                    itemView.previewImageProgress.setGone()
-                    return false
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    itemView.previewImageProgress.setGone()
-                    return false
-                }
-
-            }).into(itemView.previewImage)
+            itemView.previewImage.loadWithGlide(item.image_url,itemView.previewImageProgress)
         }
     }
 
