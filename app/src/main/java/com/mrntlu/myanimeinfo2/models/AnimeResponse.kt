@@ -10,7 +10,7 @@ data class CharactersResponse(val characters:List<CharacterBodyResponse>)
 
 data class CharacterBodyResponse(val mal_id: Int,val name: String,val image_url: String,val role:String)
 
-data class CharacterInfoResponse(val mal_id: Int,val name: String,val about:String,val member_favorites:Int,val animeography:List<CharacterBodyResponse>,val mangaography:List<CharacterBodyResponse>)
+data class CharacterInfoResponse(val mal_id: Int,val name: String,val image_url: String,val about:String,val member_favorites:Int,val animeography:List<CharacterBodyResponse>,val mangaography:List<CharacterBodyResponse>)
 
 data class RecommendationsResponse(val recommendations:List<RecommendationsBodyResponse>)
 

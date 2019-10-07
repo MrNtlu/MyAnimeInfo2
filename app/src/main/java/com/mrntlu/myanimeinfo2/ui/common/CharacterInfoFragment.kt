@@ -1,4 +1,4 @@
-package com.mrntlu.myanimeinfo2.ui.manga
+package com.mrntlu.myanimeinfo2.ui.common
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,21 +10,19 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.adapters.pageradapters.InfoPagerAdapter
-import com.mrntlu.myanimeinfo2.models.DataType
-import com.mrntlu.myanimeinfo2.models.MangaResponse
+import com.mrntlu.myanimeinfo2.adapters.pageradapters.CharacterInfoPagerAdapter
+import com.mrntlu.myanimeinfo2.models.CharacterInfoResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
-import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
+import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_info.*
 import kotlin.properties.Delegates
 
-class MangaInfoFragment : Fragment() {
+class CharacterInfoFragment : Fragment() {
 
-    private lateinit var navController: NavController
-    private lateinit var mangaViewModel: MangaViewModel
+    private lateinit var commonViewModel: CommonViewModel
     private var malID by Delegates.notNull<Int>()
-
-    private lateinit var mangaResponse:MangaResponse
+    private lateinit var navController: NavController
+    private lateinit var characterInfoResponse: CharacterInfoResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,36 +38,30 @@ class MangaInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+        commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
 
         setupObservers()
     }
 
-    private fun setupObservers()=mangaViewModel.getMangaByID(malID).observe(viewLifecycleOwner, Observer {
-        mangaResponse=it
-        setupViewPagers()
-        setupUI()
-    })
+    private fun setupObservers() {
+        commonViewModel.getCharacterInfoByID(malID).observe(viewLifecycleOwner, Observer {
+            characterInfoResponse=it
+            setupUI()
+            setupViewPagers()
+        })
+    }
 
     private fun setupUI(){
-        posterImage.loadWithGlide(mangaResponse.image_url,posterImageProgress)
+        posterImage.loadWithGlide(characterInfoResponse.image_url,posterImageProgress)
 
-        titleText.text=mangaResponse.title
-        typeText.text=mangaResponse.type
+        titleText.text=characterInfoResponse.name
+        val type="Favs: ${characterInfoResponse.member_favorites}"
+        typeText.text=type
     }
 
     private fun setupViewPagers(){
-        val pagerAdapter= InfoPagerAdapter(
-            childFragmentManager,
-            mangaResponse= mangaResponse,
-            dataType = DataType.MANGA
-        )
+        val pagerAdapter=CharacterInfoPagerAdapter(childFragmentManager,characterInfoResponse)
         infoViewPager.adapter=pagerAdapter
         infoTabLayout.setupWithViewPager(infoViewPager)
-    }
-
-    override fun onDestroyView() {
-        infoViewPager.adapter=null
-        super.onDestroyView()
     }
 }

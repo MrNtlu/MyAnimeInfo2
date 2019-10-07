@@ -37,7 +37,7 @@
         android:id="@+id/animeInfoFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.anime.AnimeInfoFragment"
         android:label="fragment_anime_info"
-        tools:layout="@layout/fragment_anime_info" >
+        tools:layout="@layout/fragment_info" >
         <action
             android:id="@+id/action_animeInfo_to_genreDialog"
             app:destination="@id/genreDialogFragment"
@@ -59,12 +59,19 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_animeInfo_to_characterInfo"
+            app:destination="@id/characterInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/mangaInfoFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.manga.MangaInfoFragment"
         android:label="fragment_manga_info"
-        tools:layout="@layout/fragment_anime_info" >
+        tools:layout="@layout/fragment_info" >
         <action
             android:id="@+id/action_mangaInfo_to_genreDialog"
             app:destination="@id/genreDialogFragment"
@@ -82,6 +89,13 @@
         <action
             android:id="@+id/action_mangaInfo_self"
             app:destination="@id/mangaInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_mangaInfo_to_characterInfo"
+            app:destination="@id/characterInfoFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -104,4 +118,24 @@
             android:id="@+id/action_genreDialog_to_mangaInfo"
             app:destination="@id/mangaInfoFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/characterInfoFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.common.CharacterInfoFragment"
+        android:label="CharacterInfoFragment"
+        tools:layout="@layout/fragment_info">
+        <action
+            android:id="@+id/action_characterInfo_to_mangaInfo"
+            app:destination="@id/mangaInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_characterInfo_to_animeInfo"
+            app:destination="@id/animeInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>

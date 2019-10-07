@@ -16,7 +16,7 @@ import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
-import kotlinx.android.synthetic.main.fragment_anime_info.*
+import kotlinx.android.synthetic.main.fragment_info.*
 import kotlin.properties.Delegates
 
 class AnimeInfoFragment : Fragment() {
@@ -35,7 +35,7 @@ class AnimeInfoFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_anime_info, container, false)
+        return inflater.inflate(R.layout.fragment_info, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
