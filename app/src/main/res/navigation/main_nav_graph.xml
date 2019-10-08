@@ -108,7 +108,7 @@
         tools:layout="@layout/fragment_schedule_anime" />
     <dialog
         android:id="@+id/genreDialogFragment"
-        android:name="com.mrntlu.myanimeinfo2.ui.common.GenreDialogFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.common.ListDialogFragment"
         android:label="fragment_genre_dialog"
         tools:layout="@layout/fragment_genre_dialog" >
         <action

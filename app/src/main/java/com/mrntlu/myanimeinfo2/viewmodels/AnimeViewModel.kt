@@ -146,6 +146,32 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
+    fun getProducerInfoByID(mal_id: Int):LiveData<ProducerInfoResponse>{
+        val liveData= MutableLiveData<ProducerInfoResponse>()
+
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
+            e.printStackTrace()
+            //todo error handling
+            //todo test with manuel time & date
+        }){
+            var response: ProducerInfoResponse?=null
+            val job= withTimeoutOrNull(TIME_OUT){
+                response=serviceRepository.getProducerInfoByID(mal_id)
+            }
+            withContext(Dispatchers.Main){
+                if (job==null){
+                    //TODO error handling
+                }else{
+                    //todo where you get the data
+                    response?.let {
+                        liveData.value=it
+                    }
+                }
+            }
+        }
+        return liveData
+    }
+
     fun getAnimeBySeason(year:Int,season:String) {
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()

@@ -12,6 +12,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.RelatedListAdapter
+import com.mrntlu.myanimeinfo2.models.DataType
+import com.mrntlu.myanimeinfo2.models.DialogType
 import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 
@@ -36,8 +38,12 @@ class AnimeProducersFragment(private val producers:List<GeneralShortResponse> ) 
             layoutManager=LinearLayoutManager(this.context)
             producersAdapter= RelatedListAdapter(object :RelatedListAdapter.Interaction{
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
-                    val bundle= bundleOf("mal_id" to item.mal_id)
-                    navController.navigate(R.id.action_animeInfo_self,bundle)
+                    val bundle = bundleOf(
+                        "genre_name" to item.name,
+                        "data_type" to DataType.ANIME.code,
+                        "dialog_type" to DialogType.PRODUCER,
+                        "mal_id" to item.mal_id)
+                    navController.navigate(R.id.action_animeInfo_to_genreDialog, bundle)
                 }
             })
             producersAdapter.submitList(producers)

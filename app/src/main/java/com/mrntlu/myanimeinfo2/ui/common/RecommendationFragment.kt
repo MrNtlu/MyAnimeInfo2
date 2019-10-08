@@ -14,6 +14,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.RecommendationListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
@@ -21,8 +22,7 @@ import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 import java.util.*
 
-class RecommendationFragment(private val dataType: DataType,private val malID:Int) : Fragment() {
-
+class RecommendationFragment(private val dataType: DataType,private val malID:Int) : Fragment(), CoroutinesErrorHandler {
     private lateinit var commonViewModel: CommonViewModel
     private lateinit var recommendationListAdapter:RecommendationListAdapter
     private lateinit var navController: NavController
@@ -41,7 +41,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     }
 
     private fun setupObservers() {
-        commonViewModel.getRecommendationsByID(dataType.name.toLowerCase(Locale.ENGLISH),malID).observe(viewLifecycleOwner,androidx.lifecycle.Observer {
+        commonViewModel.getRecommendationsByID(dataType.name.toLowerCase(Locale.ENGLISH),malID,this).observe(viewLifecycleOwner,androidx.lifecycle.Observer {
             printLog(message = it.toString())
             recommendationListAdapter.submitList(it.recommendations)
         })
@@ -50,12 +50,22 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     private fun setupRecyclerView()=fragmentRV.apply {
         layoutManager= LinearLayoutManager(this.context)
         recommendationListAdapter= RecommendationListAdapter(object :RecommendationListAdapter.Interaction{
+            override fun onErrorRefreshPressed() {
+                recommendationListAdapter.submitLoading()
+                setupObservers()
+            }
+
             override fun onItemSelected(position: Int, item: RecommendationsBodyResponse) {
                 val bundle= bundleOf("mal_id" to item.mal_id)
                 navController.navigate(R.id.action_animeInfo_self,bundle)
             }
         })
         adapter=recommendationListAdapter
+    }
+
+    override fun onError(message: String) {
+        printLog(message = message)
+        recommendationListAdapter.submitError(message)
     }
 
     override fun onDestroyView() {

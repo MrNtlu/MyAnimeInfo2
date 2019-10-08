@@ -13,10 +13,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.GenreTagListAdapter
-import com.mrntlu.myanimeinfo2.models.AnimeResponse
-import com.mrntlu.myanimeinfo2.models.DataType
-import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
-import com.mrntlu.myanimeinfo2.models.MangaResponse
+import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.utils.setGone
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.xml.parsers.FactoryConfigurationError
@@ -91,10 +88,18 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
         genreTagListAdapter=GenreTagListAdapter(object :GenreTagListAdapter.Interaction{
             override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                 if (dataType==DataType.ANIME) {
-                    val bundle = bundleOf("genre_name" to item.name, "data_type" to DataType.ANIME.code, "mal_id" to item.mal_id)
+                    val bundle = bundleOf(
+                        "genre_name" to item.name,
+                        "data_type" to DataType.ANIME.code,
+                        "dialog_type" to DialogType.GENRE,
+                        "mal_id" to item.mal_id)
                     navController.navigate(R.id.action_animeInfo_to_genreDialog, bundle)
                 }else{
-                    val bundle = bundleOf("genre_name" to item.name, "data_type" to DataType.MANGA.code, "mal_id" to item.mal_id)
+                    val bundle = bundleOf(
+                        "genre_name" to item.name,
+                        "data_type" to DataType.MANGA.code,
+                        "dialog_type" to DialogType.GENRE,
+                        "mal_id" to item.mal_id)
                     navController.navigate(R.id.action_mangaInfo_to_genreDialog, bundle)
                 }
             }

@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
 import com.mrntlu.myanimeinfo2.utils.Constants.TIME_OUT
@@ -15,38 +16,12 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
     private val serviceRepository= ServiceRepository(application)
     private var mJob: Job?=null
 
-    fun getProducerInfoByID(mal_id: Int):LiveData<ProducerInfoResponse>{
-        val liveData= MutableLiveData<ProducerInfoResponse>()
-
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
-        }){
-            var response: ProducerInfoResponse?=null
-            val job= withTimeoutOrNull(TIME_OUT){
-                response=serviceRepository.getProducerInfoByID(mal_id)
-            }
-            withContext(Dispatchers.Main){
-                if (job==null){
-                    //TODO error handling
-                }else{
-                    //todo where you get the data
-                    response?.let {
-                        liveData.value=it
-                    }
-                }
-            }
-        }
-        return liveData
-    }
-
-    fun getRecommendationsByID(type:String,mal_id:Int): LiveData<RecommendationsResponse> {
+    fun getRecommendationsByID(type:String,mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<RecommendationsResponse> {
         val liveData= MutableLiveData<RecommendationsResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
-            //todo error handling
+            errorHandler.onError(if (e.message==null) "Unknown Error!" else e.message!!)
             //todo test with manuel time & date
         }){
             var response: RecommendationsResponse?=null
@@ -55,9 +30,8 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }

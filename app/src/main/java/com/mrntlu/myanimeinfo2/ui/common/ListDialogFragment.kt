@@ -16,15 +16,15 @@ import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
+import com.mrntlu.myanimeinfo2.models.DialogType
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
-import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_genre_dialog.*
 import kotlin.properties.Delegates
 
-class GenreDialogFragment: DialogFragment() {
+class ListDialogFragment: DialogFragment() {
 
     private lateinit var animeViewModel: AnimeViewModel
     private lateinit var mangaViewModel: MangaViewModel
@@ -32,6 +32,7 @@ class GenreDialogFragment: DialogFragment() {
     private lateinit var animeGenreAdapter:PreviewAnimeListAdapter
     private lateinit var mangaGenreAdapter:PreviewMangaListAdapter
     private lateinit var dataType:DataType
+    private lateinit var dialogType:DialogType
     private lateinit var genreName:String
     private var malID by Delegates.notNull<Int>()
 
@@ -45,6 +46,7 @@ class GenreDialogFragment: DialogFragment() {
         arguments?.let {
             genreName=it.getString("genre_name","")
             dataType=DataType.getByCode(it.getInt("data_type"))
+            dialogType=DialogType.getByCode(it.getInt("dialog_type"))
             malID=it.getInt("mal_id")
         }
         setStyle(STYLE_NORMAL,R.style.FullScreenLightDialog)
@@ -72,12 +74,17 @@ class GenreDialogFragment: DialogFragment() {
         setupUI()
 
         if (dataType== MANGA){
+            mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+
             setupMangaRecyclerView()
-            setDataTypeManga()
+            setGenreManga()
         }
         else{
+            animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+
             setupAnimeRecyclerView()
-            setDataTypeAnime()
+            if (dialogType==DialogType.GENRE) setGenreAnime()
+            else setProducerAnime()
         }
     }
 
@@ -88,20 +95,20 @@ class GenreDialogFragment: DialogFragment() {
         dialogGenreNameText.text=genreName
     }
 
-    private fun setDataTypeManga() {
-        mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
-
+    private fun setGenreManga() {
         mangaViewModel.getMangaByGenre(malID,1).observe(viewLifecycleOwner, Observer {
-            printLog(message = it.toString())
             mangaGenreAdapter.submitList(it.manga)
         })
     }
 
-    private fun setDataTypeAnime() {
-        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
-
+    private fun setGenreAnime() {
         animeViewModel.getAnimeByGenre(malID,1).observe(viewLifecycleOwner, Observer {
-            printLog(message = it.toString())
+            animeGenreAdapter.submitList(it.anime)
+        })
+    }
+
+    private fun setProducerAnime(){
+        animeViewModel.getProducerInfoByID(malID).observe(viewLifecycleOwner, Observer {
             animeGenreAdapter.submitList(it.anime)
         })
     }
@@ -111,7 +118,7 @@ class GenreDialogFragment: DialogFragment() {
             override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
                 val bundle = bundleOf("mal_id" to item.mal_id)
                 navController.navigate(R.id.action_genreDialog_to_mangaInfo, bundle)
-                this@GenreDialogFragment.dismiss()
+                this@ListDialogFragment.dismiss()
             }
         })
         val gridLayoutManager=GridLayoutManager(this.context,2)
@@ -129,7 +136,7 @@ class GenreDialogFragment: DialogFragment() {
             override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
                 val bundle = bundleOf("mal_id" to item.mal_id)
                 navController.navigate(R.id.action_genreDialog_to_animeInfo, bundle)
-                this@GenreDialogFragment.dismiss()
+                this@ListDialogFragment.dismiss()
             }
         })
         val gridLayoutManager=GridLayoutManager(this.context,2)
