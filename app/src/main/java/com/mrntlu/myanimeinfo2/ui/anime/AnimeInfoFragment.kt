@@ -12,14 +12,21 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.InfoPagerAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
+import com.mrntlu.myanimeinfo2.utils.setGone
+import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
+import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.fragment_info.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-class AnimeInfoFragment : Fragment() {
+class AnimeInfoFragment : Fragment(), CoroutinesErrorHandler {
 
     private lateinit var navController: NavController
     private lateinit var animeViewModel: AnimeViewModel
@@ -41,18 +48,29 @@ class AnimeInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(AnimeViewModel::class.java)
+        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        progressbarLayout.setVisible()
 
+        setListeners()
         setupObservers()
     }
 
-    private fun setupObservers() = animeViewModel.getAnimeByID(malID).observe(viewLifecycleOwner, Observer {
+    private fun setListeners() {
+        errorLayout.errorRefreshButton.setOnClickListener {
+            progressbarLayout.setVisible()
+            errorLayout.setGone()
+            setupObservers()
+        }
+    }
+
+    private fun setupObservers() = animeViewModel.getAnimeByID(malID,this).observe(viewLifecycleOwner, Observer {
         animeResponse=it
         setupViewPagers(animeResponse)
         setupUI(animeResponse)
     })
 
     private fun setupUI(animeResponse: AnimeResponse) {
+        progressbarLayout.setGone()
         posterImage.loadWithGlide(animeResponse.image_url,posterImageProgress)
 
         titleText.text=animeResponse.title
@@ -67,6 +85,14 @@ class AnimeInfoFragment : Fragment() {
         )
         infoViewPager.adapter=pagerAdapter
         infoTabLayout.setupWithViewPager(infoViewPager)
+    }
+
+    override fun onError(message: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            progressbarLayout.setGone()
+            errorLayout.setVisible()
+            errorLayout.errorText.text=message
+        }
     }
 
     override fun onDestroyView() {

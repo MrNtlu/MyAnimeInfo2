@@ -5,9 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
 import com.mrntlu.myanimeinfo2.utils.Constants.TIME_OUT
+import com.mrntlu.myanimeinfo2.utils.printLog
 import kotlinx.coroutines.*
 
 class AnimeViewModel(application: Application): AndroidViewModel(application) {
@@ -16,13 +18,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     private var mJob:Job?=null
 
     //Anime
-    fun getAnimeByID(mal_id:Int): LiveData<AnimeResponse> {
+    fun getAnimeByID(mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeResponse> {
         val liveData=MutableLiveData<AnimeResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response:AnimeResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -30,7 +30,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -46,7 +46,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         val liveData=MutableLiveData<CharactersResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
+            //e.printStackTrace()
             //todo error handling
             //todo test with manuel time & date
         }){
@@ -68,13 +68,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getTopAnimes(page:Int,subtype:String): LiveData<TopAnimeResponse> {
+    fun getTopAnimes(page:Int,subtype:String,errorHandler: CoroutinesErrorHandler): LiveData<TopAnimeResponse> {
         val liveData=MutableLiveData<TopAnimeResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: TopAnimeResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -82,7 +80,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -94,13 +92,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeSchedule(): LiveData<AnimeScheduleResponse> {
+    fun getAnimeSchedule(errorHandler: CoroutinesErrorHandler): LiveData<AnimeScheduleResponse> {
         val liveData=MutableLiveData<AnimeScheduleResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: AnimeScheduleResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -108,7 +104,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -120,13 +116,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeByGenre(genreID:Int,page:Int): LiveData<AnimeGenreSeasonResponse> {
+    fun getAnimeByGenre(genreID:Int,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeGenreSeasonResponse> {
         val liveData=MutableLiveData<AnimeGenreSeasonResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: AnimeGenreSeasonResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -134,7 +128,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -146,13 +140,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getProducerInfoByID(mal_id: Int):LiveData<ProducerInfoResponse>{
+    fun getProducerInfoByID(mal_id: Int,errorHandler: CoroutinesErrorHandler):LiveData<ProducerInfoResponse>{
         val liveData= MutableLiveData<ProducerInfoResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: ProducerInfoResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -160,7 +152,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -214,6 +206,16 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
 
                     }
                 }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mJob?.let {
+            if (it.isActive){
+                printLog(message = "Canceled")
+                it.cancel()
             }
         }
     }

@@ -13,13 +13,14 @@ import androidx.navigation.Navigation
 
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.AnimeSchedulePagerAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.AnimeScheduleResponse
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import kotlinx.android.synthetic.main.fragment_schedule_anime.*
 
-class ScheduleAnimeFragment : Fragment() {
+class ScheduleAnimeFragment : Fragment(),CoroutinesErrorHandler {
 
     private lateinit var navController: NavController
     private lateinit var animeViewModel: AnimeViewModel
@@ -31,14 +32,14 @@ class ScheduleAnimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(AnimeViewModel::class.java)
+        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
 
         scheduleProgressBar.setVisible()
         setupObservers()
     }
 
     private fun setupObservers() {
-        animeViewModel.getAnimeSchedule().observe(viewLifecycleOwner, Observer {
+        animeViewModel.getAnimeSchedule(this).observe(viewLifecycleOwner, Observer {
             scheduleProgressBar.setGone()
             setupViewPagers(it)
         })
@@ -52,6 +53,10 @@ class ScheduleAnimeFragment : Fragment() {
         scheduleViewPager.adapter=pagerAdapter
         scheduleTabLayout.setupWithViewPager(scheduleViewPager)
         scheduleProgressBar.setGone()
+    }
+
+    override fun onError(message: String) {
+        TODO("FINISH HIM!")
     }
 
     override fun onDestroyView() {

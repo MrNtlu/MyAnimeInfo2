@@ -9,6 +9,7 @@ import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
 import com.mrntlu.myanimeinfo2.utils.Constants.TIME_OUT
+import com.mrntlu.myanimeinfo2.utils.printLog
 import kotlinx.coroutines.*
 
 class CommonViewModel(application: Application): AndroidViewModel(application) {
@@ -20,9 +21,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         val liveData= MutableLiveData<RecommendationsResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
             errorHandler.onError(if (e.message==null) "Unknown Error!" else e.message!!)
-            //todo test with manuel time & date
         }){
             var response: RecommendationsResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -41,13 +40,11 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getCharacterInfoByID(character_id:Int): LiveData<CharacterInfoResponse> {
+    fun getCharacterInfoByID(character_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<CharacterInfoResponse> {
         val liveData= MutableLiveData<CharacterInfoResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message==null) "Unknown Error!" else e.message!!)
         }){
             var response: CharacterInfoResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -55,7 +52,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -67,13 +64,11 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getReviewsByID(type:String,mal_id:Int,page:Int): LiveData<ReviewsResponse> {
+    fun getReviewsByID(type:String,mal_id:Int,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<ReviewsResponse> {
         val liveData= MutableLiveData<ReviewsResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: ReviewsResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -81,7 +76,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -93,13 +88,11 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getPicturesByID(type:String,mal_id:Int): LiveData<PicturesResponse> {
+    fun getPicturesByID(type:String,mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<PicturesResponse> {
         val liveData= MutableLiveData<PicturesResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: PicturesResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -107,7 +100,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
                     //todo where you get the data
                     response?.let {
@@ -117,5 +110,15 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
             }
         }
         return liveData
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mJob?.let {
+            if (it.isActive){
+                printLog(message = "Canceled")
+                it.cancel()
+            }
+        }
     }
 }

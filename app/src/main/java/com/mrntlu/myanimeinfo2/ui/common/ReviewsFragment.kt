@@ -10,12 +10,17 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.ReviewsListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.DataType
+import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
-class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fragment() {
+class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fragment(),CoroutinesErrorHandler {
 
     private lateinit var commonViewModel: CommonViewModel
     private lateinit var reviewsListAdapter:ReviewsListAdapter
@@ -34,15 +39,27 @@ class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fra
     }
 
     private fun setupObservers() {
-        commonViewModel.getReviewsByID(dataType.name.toLowerCase(Locale.ENGLISH),malID,1).observe(viewLifecycleOwner,androidx.lifecycle.Observer {
+        commonViewModel.getReviewsByID(dataType.name.toLowerCase(Locale.ENGLISH),malID,1,this).observe(viewLifecycleOwner,androidx.lifecycle.Observer {
             reviewsListAdapter.submitList(it.reviews)
         })
     }
 
     private fun setupRecyclerView() =fragmentRV.apply {
         layoutManager=LinearLayoutManager(this.context)
-        reviewsListAdapter= ReviewsListAdapter()
+        reviewsListAdapter= ReviewsListAdapter(object :ReviewsListAdapter.Interaction{
+            override fun onErrorRefreshPressed() {
+                reviewsListAdapter.submitLoading()
+                setupObservers()
+            }
+        })
         adapter=reviewsListAdapter
+    }
+
+    override fun onError(message: String) {
+        printLog(message = message)
+        GlobalScope.launch(Dispatchers.Main) {
+            reviewsListAdapter.submitError(message)
+        }
     }
 
     override fun onDestroyView() {

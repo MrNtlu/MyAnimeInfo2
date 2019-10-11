@@ -15,12 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MainFragment : Fragment(){
@@ -39,42 +43,71 @@ class MainFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(AnimeViewModel::class.java)
-        mangaViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(MangaViewModel::class.java)
+        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
 
         setupRecyclerView()
         setupObservers()
     }
 
     private fun setupObservers() {
-        animeViewModel.getTopAnimes(1,resources.getStringArray(R.array.topAnimeSubtypes)[1].toLowerCase(Locale.ENGLISH)).observe(viewLifecycleOwner,Observer{
-            topAiringAdapter.submitList(it.top)
-        })
-
-        mangaViewModel.getTopMangas(1,resources.getStringArray(R.array.topMangaSubtypes)[0].toLowerCase(Locale.ENGLISH)).observe(viewLifecycleOwner, Observer {
-            topMangaAdapter.submitList(it.top)
-        })
-
-        animeViewModel.getAnimeSchedule().observe(viewLifecycleOwner, Observer {
-            val scheduleList=when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)){
-                Calendar.MONDAY->it.monday
-                Calendar.TUESDAY->it.tuesday
-                Calendar.WEDNESDAY->it.wednesday
-                Calendar.THURSDAY->it.thursday
-                Calendar.FRIDAY->it.friday
-                Calendar.SATURDAY->it.saturday
-                Calendar.SUNDAY->it.sunday
-                else -> it.monday
-            }
-            todayAiringAdapter.submitList(scheduleList)
-
-        })
+        setTopAiringAnimeObserver()
+        setTopMangaObserver()
+        setAiringTodayObserver()
     }
+
+    private fun setTopAiringAnimeObserver()= animeViewModel.getTopAnimes(1,resources.getStringArray(R.array.topAnimeSubtypes)[1].toLowerCase(Locale.ENGLISH),
+        object :CoroutinesErrorHandler{
+            override fun onError(message: String) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    topAiringAdapter.submitError(message)
+                }
+            }
+        }).observe(viewLifecycleOwner,Observer{
+        topAiringAdapter.submitList(it.top)
+    })
+
+    private fun setTopMangaObserver()=mangaViewModel.getTopMangas(1,resources.getStringArray(R.array.topMangaSubtypes)[0].toLowerCase(Locale.ENGLISH),
+        object :CoroutinesErrorHandler{
+            override fun onError(message: String) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    topMangaAdapter.submitError(message)
+                }
+            }
+        }).observe(viewLifecycleOwner, Observer {
+        topMangaAdapter.submitList(it.top)
+    })
+
+    private fun setAiringTodayObserver()=animeViewModel.getAnimeSchedule(object :CoroutinesErrorHandler{
+        override fun onError(message: String) {
+            GlobalScope.launch(Dispatchers.Main) {
+                todayAiringAdapter.submitError(message)
+            }
+        }
+    }).observe(viewLifecycleOwner, Observer {
+        val scheduleList=when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)){
+            Calendar.MONDAY->it.monday
+            Calendar.TUESDAY->it.tuesday
+            Calendar.WEDNESDAY->it.wednesday
+            Calendar.THURSDAY->it.thursday
+            Calendar.FRIDAY->it.friday
+            Calendar.SATURDAY->it.saturday
+            Calendar.SUNDAY->it.sunday
+            else -> it.monday
+        }
+        todayAiringAdapter.submitList(scheduleList)
+
+    })
 
     private fun setupRecyclerView() {
         topAiringRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             topAiringAdapter=PreviewAnimeListAdapter(interaction = object : PreviewAnimeListAdapter.Interaction {
+                override fun onErrorRefreshPressed() {
+                    topAiringAdapter.submitLoading()
+                    setTopAiringAnimeObserver()
+                }
+
                 override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
                     navigateWithBundle(item.mal_id,R.id.action_main_to_animeInfo)
                 }
@@ -84,6 +117,11 @@ class MainFragment : Fragment(){
         topMangaRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             topMangaAdapter= PreviewMangaListAdapter(interaction = object : PreviewMangaListAdapter.Interaction {
+                override fun onErrorRefreshPressed() {
+                    topMangaAdapter.submitLoading()
+                    setTopMangaObserver()
+                }
+
                 override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
                     navigateWithBundle(item.mal_id,R.id.action_main_to_mangaInfo)
                 }
@@ -93,6 +131,11 @@ class MainFragment : Fragment(){
         airingTodayRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             todayAiringAdapter=PreviewAnimeListAdapter(interaction = object : PreviewAnimeListAdapter.Interaction {
+                override fun onErrorRefreshPressed() {
+                    todayAiringAdapter.submitLoading()
+                    setAiringTodayObserver()
+                }
+
                 override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
                     navigateWithBundle(item.mal_id,R.id.action_main_to_animeInfo)
                 }

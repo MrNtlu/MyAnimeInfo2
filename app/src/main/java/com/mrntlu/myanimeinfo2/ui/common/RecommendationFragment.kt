@@ -20,6 +20,9 @@ import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class RecommendationFragment(private val dataType: DataType,private val malID:Int) : Fragment(), CoroutinesErrorHandler {
@@ -34,7 +37,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        commonViewModel = ViewModelProviders.of(view.context as AppCompatActivity).get(CommonViewModel::class.java)
+        commonViewModel = ViewModelProviders.of(this).get(CommonViewModel::class.java)
 
         setupRecyclerView()
         setupObservers()
@@ -64,8 +67,9 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     }
 
     override fun onError(message: String) {
-        printLog(message = message)
-        recommendationListAdapter.submitError(message)
+        GlobalScope.launch(Dispatchers.Main) {
+            recommendationListAdapter.submitError(message)
+        }
     }
 
     override fun onDestroyView() {

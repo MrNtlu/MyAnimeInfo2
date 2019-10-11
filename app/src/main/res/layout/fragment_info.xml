@@ -80,4 +80,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/posterImage"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progressbarLayout"
+        android:visibility="gone"
+        layout="@layout/loading_layout"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/errorLayout"
+        android:visibility="gone"
+        layout="@layout/cell_error"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

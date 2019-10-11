@@ -11,13 +11,20 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.CharacterInfoPagerAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.CharacterInfoResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
+import com.mrntlu.myanimeinfo2.utils.setGone
+import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
+import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.fragment_info.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-class CharacterInfoFragment : Fragment() {
+class CharacterInfoFragment : Fragment(), CoroutinesErrorHandler{
 
     private lateinit var commonViewModel: CommonViewModel
     private var malID by Delegates.notNull<Int>()
@@ -39,12 +46,22 @@ class CharacterInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
         commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        progressbarLayout.setVisible()
 
+        setListeners()
         setupObservers()
     }
 
+    private fun setListeners() {
+        errorLayout.errorRefreshButton.setOnClickListener {
+            progressbarLayout.setVisible()
+            errorLayout.setGone()
+            setupObservers()
+        }
+    }
+
     private fun setupObservers() {
-        commonViewModel.getCharacterInfoByID(malID).observe(viewLifecycleOwner, Observer {
+        commonViewModel.getCharacterInfoByID(malID,this).observe(viewLifecycleOwner, Observer {
             characterInfoResponse=it
             setupUI()
             setupViewPagers()
@@ -52,6 +69,7 @@ class CharacterInfoFragment : Fragment() {
     }
 
     private fun setupUI(){
+        progressbarLayout.setGone()
         posterImage.loadWithGlide(characterInfoResponse.image_url,posterImageProgress)
 
         titleText.text=characterInfoResponse.name
@@ -63,5 +81,18 @@ class CharacterInfoFragment : Fragment() {
         val pagerAdapter=CharacterInfoPagerAdapter(childFragmentManager,characterInfoResponse)
         infoViewPager.adapter=pagerAdapter
         infoTabLayout.setupWithViewPager(infoViewPager)
+    }
+
+    override fun onError(message: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            progressbarLayout.setGone()
+            errorLayout.setVisible()
+            errorLayout.errorText.text=message
+        }
+    }
+
+    override fun onDestroyView() {
+        infoViewPager.adapter=null
+        super.onDestroyView()
     }
 }

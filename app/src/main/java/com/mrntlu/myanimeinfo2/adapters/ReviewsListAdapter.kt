@@ -6,23 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.models.ReviewsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
+import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_reviews.view.*
 
-class ReviewsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ReviewsListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var isAdapterSet:Boolean=false
+    private var isAdapterSet=false
+    private var isErrorOccured=false
     private val LOADING_ITEM_HOLDER=0
     private val REVIEW_HOLDER=1
+    private val ERROR_HOLDER=2
+    private var errorMessage="Error!"
     private var reviewsList:ArrayList<ReviewsBodyResponse> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             LOADING_ITEM_HOLDER-> LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
+            ERROR_HOLDER-> ErrorItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_error,parent,false))
             else->ReviewsHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_reviews, parent, false))
         }
     }
@@ -32,12 +38,19 @@ class ReviewsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             is ReviewsHolder -> {
                 holder.bind(reviewsList.get(position))
             }
+            is ErrorItemViewHolder->{
+                holder.itemView.errorText.text=errorMessage
+
+                holder.itemView.errorRefreshButton.setOnClickListener {
+                    interaction?.onErrorRefreshPressed()
+                }
+            }
         }
     }
 
-    override fun getItemViewType(position: Int)=if (isAdapterSet) REVIEW_HOLDER else LOADING_ITEM_HOLDER
+    override fun getItemViewType(position: Int)=if (isAdapterSet) { if(isErrorOccured) ERROR_HOLDER else REVIEW_HOLDER }else LOADING_ITEM_HOLDER
 
-    override fun getItemCount()=if (isAdapterSet) reviewsList.size else 1
+    override fun getItemCount()=if (isAdapterSet) if (isErrorOccured) 1 else reviewsList.size else 1
 
     fun submitList(list: List<ReviewsBodyResponse>) {
         reviewsList.apply {
@@ -45,6 +58,20 @@ class ReviewsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             this.addAll(list)
         }
         isAdapterSet=true
+        isErrorOccured=false
+        notifyDataSetChanged()
+    }
+
+    fun submitLoading(){
+        isAdapterSet=false
+        isErrorOccured=false
+        notifyDataSetChanged()
+    }
+
+    fun submitError(message:String){
+        isAdapterSet=true
+        isErrorOccured=true
+        errorMessage=message
         notifyDataSetChanged()
     }
 
@@ -70,5 +97,9 @@ class ReviewsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             itemView.reviewText.text=item.content
             itemView.userImage.loadWithGlide(item.reviewer.image_url,itemView.reviewProgressBar)
         }
+    }
+
+    interface Interaction {
+        fun onErrorRefreshPressed()
     }
 }

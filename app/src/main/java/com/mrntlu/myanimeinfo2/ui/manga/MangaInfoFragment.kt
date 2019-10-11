@@ -11,14 +11,21 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.InfoPagerAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.MangaResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
+import com.mrntlu.myanimeinfo2.utils.setGone
+import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
+import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.fragment_info.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-class MangaInfoFragment : Fragment() {
+class MangaInfoFragment : Fragment(), CoroutinesErrorHandler {
 
     private lateinit var navController: NavController
     private lateinit var mangaViewModel: MangaViewModel
@@ -41,17 +48,28 @@ class MangaInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
         mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+        progressbarLayout.setVisible()
 
+        setListeners()
         setupObservers()
     }
 
-    private fun setupObservers()=mangaViewModel.getMangaByID(malID).observe(viewLifecycleOwner, Observer {
+    private fun setListeners() {
+        errorLayout.errorRefreshButton.setOnClickListener {
+            progressbarLayout.setVisible()
+            errorLayout.setGone()
+            setupObservers()
+        }
+    }
+
+    private fun setupObservers()=mangaViewModel.getMangaByID(malID,this).observe(viewLifecycleOwner, Observer {
         mangaResponse=it
         setupViewPagers()
         setupUI()
     })
 
     private fun setupUI(){
+        progressbarLayout.setGone()
         posterImage.loadWithGlide(mangaResponse.image_url,posterImageProgress)
 
         titleText.text=mangaResponse.title
@@ -66,6 +84,14 @@ class MangaInfoFragment : Fragment() {
         )
         infoViewPager.adapter=pagerAdapter
         infoTabLayout.setupWithViewPager(infoViewPager)
+    }
+
+    override fun onError(message: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            progressbarLayout.setGone()
+            errorLayout.setVisible()
+            errorLayout.errorText.text=message
+        }
     }
 
     override fun onDestroyView() {
