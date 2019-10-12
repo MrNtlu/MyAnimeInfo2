@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -60,6 +61,11 @@ class AnimeInfoFragment : Fragment(), CoroutinesErrorHandler {
             progressbarLayout.setVisible()
             errorLayout.setGone()
             setupObservers()
+        }
+
+        posterImage.setOnClickListener {
+            val bundle= bundleOf("mal_id" to malID, "data_type" to DataType.ANIME.code)
+            navController.navigate(R.id.action_animeInfo_to_pictures,bundle)
         }
     }
 

@@ -23,7 +23,6 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
     private lateinit var genreTagListAdapter: GenreTagListAdapter
     private lateinit var navController: NavController
 
-    //TODO if anime animeResponse else mangaResponse
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
     }

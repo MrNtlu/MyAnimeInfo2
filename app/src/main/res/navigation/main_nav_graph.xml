@@ -66,6 +66,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_animeInfo_to_pictures"
+            app:destination="@id/picturesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/mangaInfoFragment"
@@ -96,6 +103,13 @@
         <action
             android:id="@+id/action_mangaInfo_to_characterInfo"
             app:destination="@id/characterInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_mangaInfo_to_pictures"
+            app:destination="@id/picturesFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -138,4 +152,10 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/picturesFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.common.PicturesFragment"
+        android:label="PicturesFragment"
+        tools:layout="@layout/fragment_pictures"/>
 </navigation>

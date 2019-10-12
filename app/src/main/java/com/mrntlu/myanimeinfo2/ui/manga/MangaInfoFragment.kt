@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -59,6 +60,11 @@ class MangaInfoFragment : Fragment(), CoroutinesErrorHandler {
             progressbarLayout.setVisible()
             errorLayout.setGone()
             setupObservers()
+        }
+
+        posterImage.setOnClickListener {
+            val bundle= bundleOf("mal_id" to malID, "data_type" to DataType.MANGA.code)
+            navController.navigate(R.id.action_mangaInfo_to_pictures,bundle)
         }
     }
 

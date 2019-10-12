@@ -7,16 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.anime.ScheduleAnimeFragment">
 
-    <ProgressBar
-        android:id="@+id/scheduleProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:progressBarStyleLarge"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/scheduleTabLayout"
         app:tabTextAppearance="@style/TabLayoutStyle"
@@ -37,4 +27,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scheduleTabLayout"/>
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progressbarLayout"
+        android:visibility="gone"
+        layout="@layout/loading_layout"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/errorLayout"
+        android:visibility="gone"
+        layout="@layout/cell_error"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

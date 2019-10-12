@@ -18,7 +18,14 @@ import com.mrntlu.myanimeinfo2.models.AnimeScheduleResponse
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
+import kotlinx.android.synthetic.main.cell_error.view.*
+import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_schedule_anime.*
+import kotlinx.android.synthetic.main.fragment_schedule_anime.errorLayout
+import kotlinx.android.synthetic.main.fragment_schedule_anime.progressbarLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ScheduleAnimeFragment : Fragment(),CoroutinesErrorHandler {
 
@@ -33,30 +40,42 @@ class ScheduleAnimeFragment : Fragment(),CoroutinesErrorHandler {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
         animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        progressbarLayout.setVisible()
 
-        scheduleProgressBar.setVisible()
+        setListeners()
         setupObservers()
+    }
+
+    private fun setListeners() {
+        errorLayout.errorRefreshButton.setOnClickListener {
+            progressbarLayout.setVisible()
+            errorLayout.setGone()
+            setupObservers()
+        }
     }
 
     private fun setupObservers() {
         animeViewModel.getAnimeSchedule(this).observe(viewLifecycleOwner, Observer {
-            scheduleProgressBar.setGone()
             setupViewPagers(it)
         })
     }
 
     private fun setupViewPagers(animeScheduleResponse: AnimeScheduleResponse){
+        progressbarLayout.setGone()
         val pagerAdapter= AnimeSchedulePagerAdapter(
             parentFragmentManager,
             animeScheduleResponse
         )
         scheduleViewPager.adapter=pagerAdapter
         scheduleTabLayout.setupWithViewPager(scheduleViewPager)
-        scheduleProgressBar.setGone()
     }
 
     override fun onError(message: String) {
-        TODO("FINISH HIM!")
+        GlobalScope.launch(Dispatchers.Main) {
+            progressbarLayout.setGone()
+            errorLayout.setVisible()
+            errorLayout.errorText.text=message
+        }
     }
 
     override fun onDestroyView() {

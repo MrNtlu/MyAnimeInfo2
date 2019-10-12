@@ -16,7 +16,6 @@ import com.mrntlu.myanimeinfo2.utils.printLog
 
 class InfoPagerAdapter(fm: FragmentManager, private val dataType: DataType, animeResponse: AnimeResponse?=null, mangaResponse: MangaResponse?=null): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT){
 
-    //Todo consider making it common and get type
     private lateinit var animeFragmentList:List<Fragment>
 
     private lateinit var mangaFragmentList:List<Fragment>
