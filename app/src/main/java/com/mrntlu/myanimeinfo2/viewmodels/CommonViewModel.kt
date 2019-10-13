@@ -54,7 +54,6 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }

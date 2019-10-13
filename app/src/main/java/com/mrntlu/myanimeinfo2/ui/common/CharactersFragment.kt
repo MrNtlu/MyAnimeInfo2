@@ -13,6 +13,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.CharacterListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.CharacterBodyResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
@@ -20,6 +21,9 @@ import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CharactersFragment(private val malID:Int,private val dataType:DataType): Fragment() {
 
@@ -51,7 +55,13 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
                 characterListAdapter.submitList(it.characters)
             })
         }else{
-            animeViewModel.getAnimeCharactersByID(malID).observe(viewLifecycleOwner, Observer {
+            animeViewModel.getAnimeCharactersByID(malID,object :CoroutinesErrorHandler{
+                override fun onError(message: String) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        characterListAdapter.submitError(message)
+                    }
+                }
+            }).observe(viewLifecycleOwner, Observer {
                 characterListAdapter.submitList(it.characters)
             })
         }
@@ -60,6 +70,11 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
     private fun setupRecyclerView()= fragmentRV.apply {
         layoutManager=LinearLayoutManager(this.context)
         characterListAdapter= CharacterListAdapter(object :CharacterListAdapter.Interaction{
+            override fun onErrorRefreshPressed() {
+                characterListAdapter.submitLoading()
+                setupObservers()
+            }
+
             override fun onItemSelected(position: Int, item: CharacterBodyResponse) {
                 val bundle= bundleOf("mal_id" to item.mal_id)
                 navController.navigate(if (dataType==MANGA) R.id.action_mangaInfo_to_characterInfo else R.id.action_animeInfo_to_characterInfo,bundle)

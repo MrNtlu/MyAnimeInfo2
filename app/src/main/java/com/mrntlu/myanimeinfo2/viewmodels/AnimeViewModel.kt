@@ -32,7 +32,6 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -42,13 +41,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeCharactersByID(mal_id: Int): LiveData<CharactersResponse> {
+    fun getAnimeCharactersByID(mal_id: Int,errorHandler: CoroutinesErrorHandler): LiveData<CharactersResponse> {
         val liveData=MutableLiveData<CharactersResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            //e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response:CharactersResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -56,9 +53,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
