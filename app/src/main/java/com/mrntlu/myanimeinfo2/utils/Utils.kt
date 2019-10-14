@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -62,3 +63,5 @@ fun ImageView.loadWithGlide(imageUrl:String,progressBar: ProgressBar)= Glide.wit
     }
 
 }).into(this)
+
+fun SearchView.getStringQuery()=this.query.toString()

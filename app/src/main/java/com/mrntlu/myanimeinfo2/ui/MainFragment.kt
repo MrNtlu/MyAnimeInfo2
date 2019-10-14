@@ -12,10 +12,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.llollox.androidtoggleswitch.widgets.ToggleSwitch
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
@@ -46,8 +48,29 @@ class MainFragment : Fragment(){
         animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
         mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
 
+        setToggle()
+        setListeners()
         setupRecyclerView()
         setupObservers()
+    }
+
+    private fun setToggle() {
+        dataTypeToggle.setCheckedPosition(0)
+    }
+
+    private fun setListeners() {
+        searchView.setOnClickListener {
+            searchView.isIconified=false
+        }
+
+        searchView.setOnQueryTextFocusChangeListener { view, b ->
+            if (b) {
+                val dataType=DataType.getByCode(dataTypeToggle.getCheckedPosition())
+                val bundle= bundleOf("data_type" to dataType.code)
+                navController.navigate(R.id.action_main_to_search,bundle)
+            }
+            searchView.isIconified=true
+        }
     }
 
     private fun setupObservers() {

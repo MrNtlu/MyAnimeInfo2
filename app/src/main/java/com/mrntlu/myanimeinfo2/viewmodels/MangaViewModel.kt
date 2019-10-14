@@ -32,7 +32,6 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -40,29 +39,6 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
         }
         return liveData
-    }
-
-    fun getMangaReviewsByID(mal_id: Int,page: Int){
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
-        }){
-            var response: ReviewsResponse?=null
-            val job= withTimeoutOrNull(TIME_OUT){
-                response=serviceRepository.getMangaReviewsByID(mal_id,page)
-            }
-            withContext(Dispatchers.Main){
-                if (job==null){
-                    //TODO error handling
-                }else{
-                    //todo where you get the data
-                    response?.let {
-
-                    }
-                }
-            }
-        }
     }
 
     fun getTopMangas(page:Int,subtype:String,errorHandler: CoroutinesErrorHandler): LiveData<TopMangaResponse> {
@@ -79,7 +55,6 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -89,13 +64,11 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getMangaCharactersByID(mal_id: Int): LiveData<CharactersResponse> {
+    fun getMangaCharactersByID(mal_id: Int,errorHandler: CoroutinesErrorHandler): LiveData<CharactersResponse> {
         val liveData= MutableLiveData<CharactersResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
         }){
             var response: CharactersResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -103,9 +76,8 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -129,7 +101,6 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -139,7 +110,9 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getMangaBySearch(q:String, page:Int){
+    fun getMangaBySearch(q:String, page:Int): LiveData<MangaSearchResponse> {
+        val liveData= MutableLiveData<MangaSearchResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -153,13 +126,13 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     //TODO error handling
                 }else{
-                    //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     override fun onCleared() {

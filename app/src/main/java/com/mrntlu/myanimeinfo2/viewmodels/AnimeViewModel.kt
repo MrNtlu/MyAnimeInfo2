@@ -78,7 +78,6 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -102,7 +101,6 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -126,7 +124,6 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -150,7 +147,6 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     errorHandler.onError("Error, timeout!")
                 }else{
-                    //todo where you get the data
                     response?.let {
                         liveData.value=it
                     }
@@ -183,7 +179,9 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun getAnimeBySearch(q:String,page:Int) {
+    fun getAnimeBySearch(q:String,page:Int): LiveData<AnimeSearchResponse> {
+        val liveData= MutableLiveData<AnimeSearchResponse>()
+
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
             //todo error handling
@@ -197,13 +195,13 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
                 if (job==null){
                     //TODO error handling
                 }else{
-                    //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
     override fun onCleared() {

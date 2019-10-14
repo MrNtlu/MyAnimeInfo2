@@ -32,6 +32,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_main_to_search"
+            app:destination="@+id/searchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/animeInfoFragment"
@@ -158,4 +165,24 @@
         android:name="com.mrntlu.myanimeinfo2.ui.common.PicturesFragment"
         android:label="PicturesFragment"
         tools:layout="@layout/fragment_pictures"/>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.common.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_search_to_mangaInfo"
+            app:destination="@id/mangaInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_search_to_animeInfo"
+            app:destination="@id/animeInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>

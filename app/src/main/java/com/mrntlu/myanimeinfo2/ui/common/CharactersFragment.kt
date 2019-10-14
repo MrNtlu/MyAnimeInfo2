@@ -39,11 +39,9 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        if (dataType==MANGA){
-            mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
-        }else{
-            animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
-        }
+        if (dataType==MANGA) mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+        else animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+
 
         setupRecyclerView()
         setupObservers()
@@ -51,20 +49,27 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
 
     private fun setupObservers() {
         if (dataType==MANGA){
-            mangaViewModel.getMangaCharactersByID(malID).observe(viewLifecycleOwner, Observer {
+            mangaViewModel.getMangaCharactersByID(malID,object :CoroutinesErrorHandler{
+                override fun onError(message: String) {
+                    submitError(message)
+                }
+
+            }).observe(viewLifecycleOwner, Observer {
                 characterListAdapter.submitList(it.characters)
             })
         }else{
             animeViewModel.getAnimeCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        characterListAdapter.submitError(message)
-                    }
+                    submitError(message)
                 }
             }).observe(viewLifecycleOwner, Observer {
                 characterListAdapter.submitList(it.characters)
             })
         }
+    }
+
+    private fun submitError(message:String)=GlobalScope.launch(Dispatchers.Main) {
+        characterListAdapter.submitError(message)
     }
 
     private fun setupRecyclerView()= fragmentRV.apply {

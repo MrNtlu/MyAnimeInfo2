@@ -36,6 +36,8 @@ class CharacterDataographyFragment(private val dataList:List<CharacterBodyRespon
     private fun setupRecyclerView()=fragmentRV.apply {
         layoutManager= LinearLayoutManager(this.context)
         listAdapter= CharacterListAdapter(object :CharacterListAdapter.Interaction{
+            override fun onErrorRefreshPressed() {}
+
             override fun onItemSelected(position: Int, item: CharacterBodyResponse) {
                 val bundle= bundleOf("mal_id" to item.mal_id)
                 navController.navigate(if (dataType== DataType.MANGA) R.id.action_characterInfo_to_mangaInfo else R.id.action_characterInfo_to_animeInfo,bundle)
