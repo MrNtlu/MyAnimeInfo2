@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
@@ -21,8 +22,8 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
     fun getMangaByID(mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<MangaResponse> {
         val liveData= MutableLiveData<MangaResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: MangaResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -30,7 +31,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -44,8 +45,8 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
     fun getTopMangas(page:Int,subtype:String,errorHandler: CoroutinesErrorHandler): LiveData<TopMangaResponse> {
         val liveData= MutableLiveData<TopMangaResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: TopMangaResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -53,7 +54,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -67,8 +68,8 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
     fun getMangaCharactersByID(mal_id: Int,errorHandler: CoroutinesErrorHandler): LiveData<CharactersResponse> {
         val liveData= MutableLiveData<CharactersResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: CharactersResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -76,7 +77,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -90,8 +91,8 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
     fun getMangaByGenre(genreID:Int,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<MangaGenreSeasonResponse> {
         val liveData= MutableLiveData<MangaGenreSeasonResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: MangaGenreSeasonResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -99,7 +100,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -110,13 +111,11 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getMangaBySearch(q:String, page:Int): LiveData<MangaSearchResponse> {
+    fun getMangaBySearch(q:String, page:Int,errorHandler: CoroutinesErrorHandler): LiveData<MangaSearchResponse> {
         val liveData= MutableLiveData<MangaSearchResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: MangaSearchResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -124,7 +123,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it

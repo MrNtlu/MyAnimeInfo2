@@ -73,6 +73,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 
     implementation 'com.llollox:androidtoggleswitch:2.0.1'
+    implementation 'com.airbnb.android:lottie:3.1.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 

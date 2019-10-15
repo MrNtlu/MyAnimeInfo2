@@ -82,7 +82,7 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
     }
 
     private fun setupRecyclerView(list: List<GeneralShortResponse>) =genreListRV.apply {
-        val linearLayoutManager=LinearLayoutManager(this.context,LinearLayoutManager.HORIZONTAL,false)
+        val linearLayoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         layoutManager=linearLayoutManager
         genreTagListAdapter=GenreTagListAdapter(object :GenreTagListAdapter.Interaction{
             override fun onItemSelected(position: Int, item: GeneralShortResponse) {
@@ -90,14 +90,14 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
                     val bundle = bundleOf(
                         "genre_name" to item.name,
                         "data_type" to DataType.ANIME.code,
-                        "dialog_type" to DialogType.GENRE,
+                        "dialog_type" to DialogType.GENRE.code,
                         "mal_id" to item.mal_id)
                     navController.navigate(R.id.action_animeInfo_to_genreDialog, bundle)
                 }else{
                     val bundle = bundleOf(
                         "genre_name" to item.name,
                         "data_type" to DataType.MANGA.code,
-                        "dialog_type" to DialogType.GENRE,
+                        "dialog_type" to DialogType.GENRE.code,
                         "mal_id" to item.mal_id)
                     navController.navigate(R.id.action_mangaInfo_to_genreDialog, bundle)
                 }

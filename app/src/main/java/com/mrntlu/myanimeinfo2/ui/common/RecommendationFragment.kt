@@ -51,7 +51,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     }
 
     private fun setupRecyclerView()=fragmentRV.apply {
-        layoutManager= LinearLayoutManager(this.context)
+        layoutManager= LinearLayoutManager(context)
         recommendationListAdapter= RecommendationListAdapter(object :RecommendationListAdapter.Interaction{
             override fun onErrorRefreshPressed() {
                 recommendationListAdapter.submitLoading()

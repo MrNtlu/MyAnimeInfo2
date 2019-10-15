@@ -1,11 +1,13 @@
 package com.mrntlu.myanimeinfo2.utils
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -49,7 +51,7 @@ fun isInternetAvailable(context: Context): Boolean {
     return result
 }
 
-fun ImageView.loadWithGlide(imageUrl:String,progressBar: ProgressBar)= Glide.with(this.context).load(imageUrl).addListener(object :
+fun ImageView.loadWithGlide(imageUrl:String,progressBar: ProgressBar)= Glide.with(context).load(imageUrl).addListener(object :
     RequestListener<Drawable> {
     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
         this@loadWithGlide.setImageResource(R.drawable.ic_no_picture)
@@ -65,3 +67,14 @@ fun ImageView.loadWithGlide(imageUrl:String,progressBar: ProgressBar)= Glide.wit
 }).into(this)
 
 fun SearchView.getStringQuery()=this.query.toString()
+
+fun View.hideKeyboard() {
+    val inputMethodManager =
+        (context as Activity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    val currentFocusedView = (context as Activity).currentFocus
+    currentFocusedView?.let {
+        inputMethodManager.hideSoftInputFromWindow(
+            currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+}

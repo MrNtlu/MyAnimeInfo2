@@ -34,7 +34,7 @@ class CharacterDataographyFragment(private val dataList:List<CharacterBodyRespon
     }
 
     private fun setupRecyclerView()=fragmentRV.apply {
-        layoutManager= LinearLayoutManager(this.context)
+        layoutManager= LinearLayoutManager(context)
         listAdapter= CharacterListAdapter(object :CharacterListAdapter.Interaction{
             override fun onErrorRefreshPressed() {}
 

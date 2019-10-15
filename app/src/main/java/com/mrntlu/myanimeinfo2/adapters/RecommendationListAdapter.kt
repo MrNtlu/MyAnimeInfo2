@@ -82,7 +82,7 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
             itemView.characterNameText.text=item.title
             val recommendationCount="+${item.recommendation_count}"
             itemView.characterRoleText.text=recommendationCount
-            itemView.characterRoleText.setTextColor(resources.getColor(R.color.green900,this.context.theme))
+            itemView.characterRoleText.setTextColor(resources.getColor(R.color.green900,context.theme))
             itemView.characterImage.loadWithGlide(item.image_url,itemView.characterProgressBar)
         }
     }

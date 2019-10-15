@@ -51,7 +51,9 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
         if (dataType==MANGA){
             mangaViewModel.getMangaCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
-                    submitError(message)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        submitError(message)
+                    }
                 }
 
             }).observe(viewLifecycleOwner, Observer {
@@ -60,7 +62,9 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
         }else{
             animeViewModel.getAnimeCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
-                    submitError(message)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        submitError(message)
+                    }
                 }
             }).observe(viewLifecycleOwner, Observer {
                 characterListAdapter.submitList(it.characters)
@@ -73,7 +77,7 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
     }
 
     private fun setupRecyclerView()= fragmentRV.apply {
-        layoutManager=LinearLayoutManager(this.context)
+        layoutManager=LinearLayoutManager(context)
         characterListAdapter= CharacterListAdapter(object :CharacterListAdapter.Interaction{
             override fun onErrorRefreshPressed() {
                 characterListAdapter.submitLoading()

@@ -130,7 +130,7 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
                 this@ListDialogFragment.dismiss()
             }
         })
-        val gridLayoutManager=GridLayoutManager(this.context,2)
+        val gridLayoutManager=GridLayoutManager(context,2)
         gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (mangaGenreAdapter.getItemViewType(position)==mangaGenreAdapter.PREVIEW_HOLDER) 1 else 2
@@ -155,7 +155,7 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
             }
         })
 
-        val gridLayoutManager=GridLayoutManager(this.context,2)
+        val gridLayoutManager=GridLayoutManager(context,2)
         gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (animeGenreAdapter.getItemViewType(position)==animeGenreAdapter.PREVIEW_HOLDER) 1 else 2

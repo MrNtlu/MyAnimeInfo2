@@ -126,7 +126,15 @@
         android:id="@+id/scheduleAnimeFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.anime.ScheduleAnimeFragment"
         android:label="fragment_schedule_anime"
-        tools:layout="@layout/fragment_schedule_anime" />
+        tools:layout="@layout/fragment_schedule_anime" >
+        <action
+            android:id="@+id/action_scheduleAnime_to_animeInfo"
+            app:destination="@id/animeInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
     <dialog
         android:id="@+id/genreDialogFragment"
         android:name="com.mrntlu.myanimeinfo2.ui.common.ListDialogFragment"

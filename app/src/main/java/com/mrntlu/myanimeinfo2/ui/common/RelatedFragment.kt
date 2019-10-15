@@ -63,7 +63,7 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
 
         if (relatedResponse.Adaptation==null) adaptationsLayout.setGone()
         else adaptationsRV.apply {
-            layoutManager= LinearLayoutManager(this.context)
+            layoutManager= LinearLayoutManager(context)
             adaptationAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     printLog(message = "Item ${item.mal_id} ${item.name}")
@@ -77,7 +77,7 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
 
         if (relatedResponse.Prequel==null) prequelsLayout.setGone()
         else prequelsRV.apply {
-            layoutManager= LinearLayoutManager(this.context)
+            layoutManager= LinearLayoutManager(context)
             prequelAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
@@ -90,7 +90,7 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
 
         if (relatedResponse.Sequel==null) sequelsLayout.setGone()
         else sequelsRV.apply {
-            layoutManager= LinearLayoutManager(this.context)
+            layoutManager= LinearLayoutManager(context)
             sequelAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
@@ -103,7 +103,7 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
 
         if (relatedResponse.Side==null) sideStoryLayout.setGone()
         else sideStoriesRV.apply {
-            layoutManager= LinearLayoutManager(this.context)
+            layoutManager= LinearLayoutManager(context)
             sideStoryAdapter= RelatedListAdapter(object : Interaction {
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)

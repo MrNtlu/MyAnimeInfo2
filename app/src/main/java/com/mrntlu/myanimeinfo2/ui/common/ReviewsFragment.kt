@@ -45,7 +45,7 @@ class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fra
     }
 
     private fun setupRecyclerView() =fragmentRV.apply {
-        layoutManager=LinearLayoutManager(this.context)
+        layoutManager=LinearLayoutManager(context)
         reviewsListAdapter= ReviewsListAdapter(object :ReviewsListAdapter.Interaction{
             override fun onErrorRefreshPressed() {
                 reviewsListAdapter.submitLoading()

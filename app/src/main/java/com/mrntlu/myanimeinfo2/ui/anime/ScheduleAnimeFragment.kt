@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_schedule_anime.progressbarLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class ScheduleAnimeFragment : Fragment(),CoroutinesErrorHandler {
 
@@ -68,6 +69,19 @@ class ScheduleAnimeFragment : Fragment(),CoroutinesErrorHandler {
         )
         scheduleViewPager.adapter=pagerAdapter
         scheduleTabLayout.setupWithViewPager(scheduleViewPager)
+
+        val position=when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)){
+            Calendar.MONDAY-> 0
+            Calendar.TUESDAY-> 1
+            Calendar.WEDNESDAY-> 2
+            Calendar.THURSDAY-> 3
+            Calendar.FRIDAY-> 4
+            Calendar.SATURDAY->5
+            Calendar.SUNDAY-> 6
+            else -> 0
+        }
+        val tab=scheduleTabLayout.getTabAt(position)
+        tab?.select()
     }
 
     override fun onError(message: String) {

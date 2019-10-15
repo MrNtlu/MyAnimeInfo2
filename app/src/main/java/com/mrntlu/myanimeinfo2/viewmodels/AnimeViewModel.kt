@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.repository.ServiceRepository
@@ -21,8 +22,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getAnimeByID(mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeResponse> {
         val liveData=MutableLiveData<AnimeResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response:AnimeResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -30,7 +31,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -44,8 +45,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getAnimeCharactersByID(mal_id: Int,errorHandler: CoroutinesErrorHandler): LiveData<CharactersResponse> {
         val liveData=MutableLiveData<CharactersResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response:CharactersResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -53,7 +54,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -67,8 +68,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getTopAnimes(page:Int,subtype:String,errorHandler: CoroutinesErrorHandler): LiveData<TopAnimeResponse> {
         val liveData=MutableLiveData<TopAnimeResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: TopAnimeResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -76,7 +77,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -90,8 +91,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getAnimeSchedule(errorHandler: CoroutinesErrorHandler): LiveData<AnimeScheduleResponse> {
         val liveData=MutableLiveData<AnimeScheduleResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: AnimeScheduleResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -99,7 +100,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -113,8 +114,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getAnimeByGenre(genreID:Int,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeGenreSeasonResponse> {
         val liveData=MutableLiveData<AnimeGenreSeasonResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: AnimeGenreSeasonResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -122,7 +123,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -136,8 +137,8 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getProducerInfoByID(mal_id: Int,errorHandler: CoroutinesErrorHandler):LiveData<ProducerInfoResponse>{
         val liveData= MutableLiveData<ProducerInfoResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            errorHandler.onError(if (e.message == null) "Unknown Error!" else e.message!!)
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: ProducerInfoResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -145,7 +146,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    errorHandler.onError("Error, timeout!")
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it
@@ -156,11 +157,12 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeBySeason(year:Int,season:String) {
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
+    fun getAnimeBySeason(year:Int,season:String): LiveData<AnimeGenreSeasonResponse> {
+        val liveData= MutableLiveData<AnimeGenreSeasonResponse>()
+
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            //errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
             //todo error handling
-            //todo test with manuel time & date
         }){
             var response: AnimeGenreSeasonResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -169,23 +171,22 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             withContext(Dispatchers.Main){
                 if (job==null){
                     //TODO error handling
+                    //errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
-                    //todo where you get the data
                     response?.let {
-
+                        liveData.value=it
                     }
                 }
             }
         }
+        return liveData
     }
 
-    fun getAnimeBySearch(q:String,page:Int): LiveData<AnimeSearchResponse> {
+    fun getAnimeBySearch(q:String,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeSearchResponse> {
         val liveData= MutableLiveData<AnimeSearchResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
-            e.printStackTrace()
-            //todo error handling
-            //todo test with manuel time & date
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: AnimeSearchResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -193,7 +194,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it

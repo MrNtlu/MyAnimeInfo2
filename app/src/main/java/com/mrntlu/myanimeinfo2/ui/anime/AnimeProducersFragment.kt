@@ -35,13 +35,13 @@ class AnimeProducersFragment(private val producers:List<GeneralShortResponse> ) 
 
     private fun setupRecyclerView() {
         fragmentRV.apply {
-            layoutManager=LinearLayoutManager(this.context)
+            layoutManager=LinearLayoutManager(context)
             producersAdapter= RelatedListAdapter(object :RelatedListAdapter.Interaction{
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     val bundle = bundleOf(
                         "genre_name" to item.name,
                         "data_type" to DataType.ANIME.code,
-                        "dialog_type" to DialogType.PRODUCER,
+                        "dialog_type" to DialogType.PRODUCER.code,
                         "mal_id" to item.mal_id)
                     navController.navigate(R.id.action_animeInfo_to_genreDialog, bundle)
                 }
