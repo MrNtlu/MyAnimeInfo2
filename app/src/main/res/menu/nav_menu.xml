@@ -14,29 +14,35 @@
     <item android:title="Anime">
         <menu>
             <item
-                android:title="Main Page"
+                android:title="Top Lists"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_popcorn"
                 android:id="@+id/anime_by_genre"/>
             <item
                 android:title="Schedule"
                 app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_calendar_small"
+                android:icon="@drawable/ic_oscar"
                 android:id="@+id/anime_schedule"/>
+
+            <item
+                android:title="Search Anime"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_magnifying_glass"
+                android:id="@+id/anime_search"/>
         </menu>
     </item>
 
     <item android:title="Manga">
         <menu>
             <item
-                android:title="Main Page"
-                app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_magnifying_glass"
+                android:title="Top Lists"
+                app:showAsAction="always"
+                android:icon="@drawable/ic_comic_book"
                 android:id="@+id/search_anime"/>
             <item
-                android:title="Main Page"
-                app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_anime_boy_with_tie"
+                android:title="Search Manga"
+                app:showAsAction="always"
+                android:icon="@drawable/ic_search"
                 android:id="@+id/search_user"/>
         </menu>
     </item>
