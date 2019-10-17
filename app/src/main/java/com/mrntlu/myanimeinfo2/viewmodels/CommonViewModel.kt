@@ -90,7 +90,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
     fun getPicturesByID(type:String,mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<PicturesResponse> {
         val liveData= MutableLiveData<PicturesResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: PicturesResponse?=null

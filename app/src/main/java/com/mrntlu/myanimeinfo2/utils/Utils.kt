@@ -54,7 +54,7 @@ fun isInternetAvailable(context: Context): Boolean {
 fun ImageView.loadWithGlide(imageUrl:String,progressBar: ProgressBar)= Glide.with(context).load(imageUrl).addListener(object :
     RequestListener<Drawable> {
     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-        this@loadWithGlide.setImageResource(R.drawable.ic_no_picture)
+        Glide.with(context).load(R.drawable.ic_no_picture).into(this@loadWithGlide)
         progressBar.setGone()
         return false
     }

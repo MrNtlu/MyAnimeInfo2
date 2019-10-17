@@ -16,18 +16,18 @@
             <item
                 android:title="Top Lists"
                 app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_popcorn"
-                android:id="@+id/anime_by_genre"/>
+                android:icon="@drawable/ic_oscar"
+                android:id="@+id/top_anime_list"/>
             <item
                 android:title="Schedule"
                 app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_oscar"
+                android:icon="@drawable/ic_calendar_small"
                 android:id="@+id/anime_schedule"/>
 
             <item
                 android:title="Search Anime"
                 app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_magnifying_glass"
+                android:icon="@drawable/ic_search"
                 android:id="@+id/anime_search"/>
         </menu>
     </item>
@@ -37,13 +37,13 @@
             <item
                 android:title="Top Lists"
                 app:showAsAction="always"
-                android:icon="@drawable/ic_comic_book"
-                android:id="@+id/search_anime"/>
+                android:icon="@drawable/ic_oscar"
+                android:id="@+id/top_manga_list"/>
             <item
                 android:title="Search Manga"
                 app:showAsAction="always"
-                android:icon="@drawable/ic_search"
-                android:id="@+id/search_user"/>
+                android:icon="@drawable/ic_comic_book"
+                android:id="@+id/manga_search"/>
         </menu>
     </item>
 </menu>

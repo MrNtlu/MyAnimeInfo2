@@ -39,7 +39,14 @@
         android:layout_marginBottom="8dp"
         app:backgroundTint="@color/white"
         app:tint="@color/materialBlack"
-        android:src="@drawable/ic_arrow_down_24dp"
+        android:src="@drawable/ic_file_download_black_24dp"
         app:layout_constraintBottom_toBottomOf="@+id/pictureViewpager"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/errorLayout"
+        android:visibility="gone"
+        layout="@layout/cell_error"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
