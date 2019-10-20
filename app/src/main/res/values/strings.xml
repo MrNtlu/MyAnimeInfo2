@@ -7,7 +7,7 @@
     <string name="close">close</string>
 
     <string-array name="topAnimeSubtypes">
-        <item></item>
+        <item>all</item>
         <item>airing</item>
         <item>upcoming</item>
         <item>tv</item>
@@ -19,7 +19,7 @@
     </string-array>
 
     <string-array name="topMangaSubtypes">
-        <item></item>
+        <item>all</item>
         <item>manga</item>
         <item>novels</item>
         <item>oneshots</item>
@@ -32,4 +32,7 @@
 
     <string name="internet_error">Error! Please check your internet connection and refresh.</string>
     <string name="timeout_try_again">Error, timeout! Please try again.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

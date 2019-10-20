@@ -18,6 +18,7 @@
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_oscar"
                 android:id="@+id/top_anime_list"/>
+
             <item
                 android:title="Schedule"
                 app:showAsAction="ifRoom"
@@ -29,6 +30,11 @@
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_search"
                 android:id="@+id/anime_search"/>
+
+            <item
+                android:title="Coming Soon..."
+                app:showAsAction="ifRoom"
+                android:id="@+id/soon"/>
         </menu>
     </item>
 
@@ -39,11 +45,26 @@
                 app:showAsAction="always"
                 android:icon="@drawable/ic_oscar"
                 android:id="@+id/top_manga_list"/>
+
             <item
                 android:title="Search Manga"
                 app:showAsAction="always"
                 android:icon="@drawable/ic_comic_book"
                 android:id="@+id/manga_search"/>
+
+            <item
+                android:title="Coming Soon..."
+                app:showAsAction="ifRoom"
+                android:id="@+id/soon2"/>
+        </menu>
+    </item>
+
+    <item android:title="Others">
+        <menu>
+            <item
+                android:title="Coming Soon..."
+                app:showAsAction="always"
+                android:id="@+id/about_me"/>
         </menu>
     </item>
 </menu>

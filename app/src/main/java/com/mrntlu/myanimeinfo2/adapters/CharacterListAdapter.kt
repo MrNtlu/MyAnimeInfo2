@@ -33,7 +33,7 @@ class CharacterListAdapter (private val interaction: Interaction? = null) : Recy
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CharacterHolder -> {
-                holder.bind(characterList.get(position))
+                holder.bind(characterList[position])
             }
             is ErrorItemViewHolder->{
                 holder.itemView.errorText.text=errorMessage

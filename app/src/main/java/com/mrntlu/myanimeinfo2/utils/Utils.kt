@@ -18,6 +18,9 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.ui.MainActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 object Constants{
     const val TIME_OUT=5000L
@@ -29,6 +32,13 @@ fun View.setGone(){
 
 fun View.setVisible(){
     this.visibility=View.VISIBLE
+}
+
+fun String.makeCapital()=substring(0,1).toUpperCase(Locale.ENGLISH)+substring(1)
+
+fun View.setToolbarTitle(title:String){
+    val activity:MainActivity?=(context as MainActivity)
+    if (activity!=null) activity.toolbar.title = title
 }
 
 fun showToast(context: Context?, message: String) = Toast.makeText(context,message,Toast.LENGTH_SHORT).show()

@@ -59,8 +59,6 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
     }
 
     private fun setupRecyclerView() {
-        printLog(message = relatedResponse.toString())
-
         if (relatedResponse.Adaptation==null) adaptationsLayout.setGone()
         else adaptationsRV.apply {
             layoutManager= LinearLayoutManager(context)

@@ -90,7 +90,7 @@ class MainFragment : Fragment(){
         topAiringAdapter.submitList(it.top)
     })
 
-    private fun setTopMangaObserver()=mangaViewModel.getTopMangas(1,resources.getStringArray(R.array.topMangaSubtypes)[0].toLowerCase(Locale.ENGLISH),
+    private fun setTopMangaObserver()=mangaViewModel.getTopMangas(1,"",
         object :CoroutinesErrorHandler{
             override fun onError(message: String) {
                 GlobalScope.launch(Dispatchers.Main) {
