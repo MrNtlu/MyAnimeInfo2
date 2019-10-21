@@ -7,6 +7,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.ads.AdListener
@@ -15,10 +16,7 @@ import com.google.android.gms.ads.MobileAds
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.ui.manga.MangaInfoFragment
-import com.mrntlu.myanimeinfo2.utils.makeCapital
-import com.mrntlu.myanimeinfo2.utils.printLog
-import com.mrntlu.myanimeinfo2.utils.setGone
-import com.mrntlu.myanimeinfo2.utils.setVisible
+import com.mrntlu.myanimeinfo2.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -38,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.animeInfoFragment->"Anime Info"
                 R.id.topListFragment->{
                     if (arguments!=null){
-                        val dataType=DataType.getByCode(arguments.getInt("data_Type"))
+                        val dataType=DataType.getByCode(arguments.getInt("data_type"))
                         "Top ${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()} List"
                     } else "Top List"
                 }
@@ -47,13 +45,14 @@ class MainActivity : AppCompatActivity() {
                 R.id.characterInfoFragment-> "Character Info"
                 R.id.searchFragment->{
                     if (arguments!=null){
-                        val dataType=DataType.getByCode(arguments.getInt("data_Type"))
+                        val dataType=DataType.getByCode(arguments.getInt("data_type"))
                         "Search ${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()}"
                     } else "Search"
                 }
                 R.id.picturesFragment->"Pictures"
                 else->""
             }
+            if (!adView.isVisible && isInternetAvailable(this)) setAds()
         }
         setAds()
 
@@ -100,10 +99,10 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.main_page_menu->navController.navigate(R.id.mainFragment)
                 R.id.anime_schedule->navController.navigate(R.id.scheduleAnimeFragment)
-                R.id.top_anime_list->navController.navigate(R.id.topListFragment,bundleOf("data_Type" to DataType.ANIME.code))
-                R.id.top_manga_list->navController.navigate(R.id.topListFragment, bundleOf("data_Type" to DataType.MANGA.code))
-                R.id.anime_search->navController.navigate(R.id.searchFragment, bundleOf("data_Type" to DataType.ANIME.code))
-                R.id.manga_search->navController.navigate(R.id.searchFragment, bundleOf("data_Type" to DataType.MANGA.code))
+                R.id.top_anime_list->navController.navigate(R.id.topListFragment,bundleOf("data_type" to DataType.ANIME.code))
+                R.id.top_manga_list->navController.navigate(R.id.topListFragment, bundleOf("data_type" to DataType.MANGA.code))
+                R.id.anime_search->navController.navigate(R.id.searchFragment, bundleOf("data_type" to DataType.ANIME.code))
+                R.id.manga_search->navController.navigate(R.id.searchFragment, bundleOf("data_type" to DataType.MANGA.code))
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

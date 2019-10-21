@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
+import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setVisible
@@ -20,11 +21,13 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
     private val LOADING_ITEM_HOLDER=0
     val PREVIEW_HOLDER=1
     private val ERROR_HOLDER=2
+    private val NO_ITEM_HOLDER=3
     private var errorMessage="Error!"
     private var previewAnimeList:ArrayList<PreviewAnimeResponse> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
+            NO_ITEM_HOLDER-> NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
             LOADING_ITEM_HOLDER-> LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             ERROR_HOLDER-> ErrorItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_error,parent,false))
             else-> PreviewAnimeHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false), interaction)
@@ -34,7 +37,7 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is PreviewAnimeHolder -> {
-                holder.bind(previewAnimeList.get(position))
+                holder.bind(previewAnimeList[position])
             }
             is ErrorItemViewHolder->{
                 holder.itemView.errorText.text=errorMessage
@@ -46,9 +49,15 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
         }
     }
 
-    override fun getItemCount()=if (isAdapterSet) if (isErrorOccured) 1 else previewAnimeList.size else 1
+    override fun getItemCount()=if (isAdapterSet && !isErrorOccured && previewAnimeList.size!=0) previewAnimeList.size else 1
 
-    override fun getItemViewType(position: Int)=if (isAdapterSet){ if (isErrorOccured) ERROR_HOLDER else PREVIEW_HOLDER }else LOADING_ITEM_HOLDER
+    override fun getItemViewType(position: Int)=if (isAdapterSet){
+        when{
+            isErrorOccured->ERROR_HOLDER
+            previewAnimeList.size==0->NO_ITEM_HOLDER
+            else->PREVIEW_HOLDER
+        }
+    }else LOADING_ITEM_HOLDER
 
     fun submitList(list: List<PreviewAnimeResponse>) {
         previewAnimeList.apply {

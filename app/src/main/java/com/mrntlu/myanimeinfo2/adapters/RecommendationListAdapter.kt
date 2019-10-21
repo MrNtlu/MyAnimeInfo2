@@ -20,12 +20,13 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
     private val LOADING_ITEM_HOLDER=0
     private val RECOMMENDATION_HOLDER=1
     private val ERROR_HOLDER=2
+    private val NO_ITEM_HOLDER=3
     private var errorMessage="Error!"
     private var recommendationList:ArrayList<RecommendationsBodyResponse> = arrayListOf()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
+            NO_ITEM_HOLDER-> NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
             LOADING_ITEM_HOLDER-> LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             ERROR_HOLDER->ErrorItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_error,parent,false))
             else->RecommendationHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_character, parent, false), interaction)
@@ -47,9 +48,15 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
         }
     }
 
-    override fun getItemCount()=if (isAdapterSet) if (isErrorOccured) 1 else recommendationList.size else 1
+    override fun getItemCount()= if (isAdapterSet && !isErrorOccured && recommendationList.size!=0) recommendationList.size else 1
 
-    override fun getItemViewType(position: Int)=if (isAdapterSet){ if (isErrorOccured) ERROR_HOLDER else RECOMMENDATION_HOLDER }else LOADING_ITEM_HOLDER
+    override fun getItemViewType(position: Int)=if (isAdapterSet){
+        when {
+            isErrorOccured -> ERROR_HOLDER
+            recommendationList.size==0 -> NO_ITEM_HOLDER
+            else -> RECOMMENDATION_HOLDER
+        }
+    }else LOADING_ITEM_HOLDER
 
     fun submitList(list: List<RecommendationsBodyResponse>) {
         recommendationList.apply {

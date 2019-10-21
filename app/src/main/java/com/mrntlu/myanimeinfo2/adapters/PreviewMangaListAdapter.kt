@@ -7,26 +7,37 @@ import android.view.ViewGroup
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
+import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import com.mrntlu.myanimeinfo2.adapters.viewholders.PaginationLoadingViewHolder
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
+import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
 class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    //Conditions
     private var isAdapterSet:Boolean=false
     private var isErrorOccured=false
+    private var isPaginationLoading=false
+    //Holders
     private val LOADING_ITEM_HOLDER=0
     val PREVIEW_HOLDER=1
     private val ERROR_HOLDER=2
+    private val NO_ITEM_HOLDER=3
+    private val PAGINATION_LOADING_HOLDER=4
+
     private var errorMessage="Error!"
     private var previewMangaList:ArrayList<PreviewMangaResponse> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
+            NO_ITEM_HOLDER-> NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
             LOADING_ITEM_HOLDER-> LoadingItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_loading_item,parent,false))
             ERROR_HOLDER-> ErrorItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_error,parent,false))
+            PAGINATION_LOADING_HOLDER-> PaginationLoadingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_pagination_loading,parent,false))
             else-> PreviewMangaHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false), interaction)
         }
     }
@@ -34,7 +45,7 @@ class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,priva
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is PreviewMangaHolder -> {
-                holder.bind(previewMangaList.get(position))
+                holder.bind(previewMangaList[position])
             }
             is ErrorItemViewHolder->{
                 holder.itemView.errorText.text=errorMessage
@@ -46,9 +57,18 @@ class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,priva
         }
     }
 
-    override fun getItemCount()=if (isAdapterSet) if (isErrorOccured) 1 else previewMangaList.size else 1
+    override fun getItemCount()=if (isAdapterSet && !isErrorOccured && previewMangaList.size!=0 && !isPaginationLoading) previewMangaList.size
+    else if (isAdapterSet && !isErrorOccured && isPaginationLoading) previewMangaList.size+1
+    else 1
 
-    override fun getItemViewType(position: Int)=if (isAdapterSet){ if (isErrorOccured) ERROR_HOLDER else PREVIEW_HOLDER }else LOADING_ITEM_HOLDER
+    override fun getItemViewType(position: Int)=if (isAdapterSet){
+        when{
+            isErrorOccured->ERROR_HOLDER
+            previewMangaList.size==0->NO_ITEM_HOLDER
+            isPaginationLoading && position==previewMangaList.size->PAGINATION_LOADING_HOLDER
+            else->PREVIEW_HOLDER
+        }
+    }else LOADING_ITEM_HOLDER
 
     fun submitList(list: List<PreviewMangaResponse>) {
         previewMangaList.apply {
@@ -70,6 +90,23 @@ class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,priva
         isAdapterSet=true
         isErrorOccured=true
         errorMessage=message
+        notifyDataSetChanged()
+    }
+
+    //Pagination
+    fun submitPaginationLoading(){
+        isPaginationLoading=true
+        notifyDataSetChanged()
+    }
+
+    fun submitPaginationError(){
+        isPaginationLoading=false
+        notifyDataSetChanged()
+    }
+
+    fun submitPaginationList(list:List<PreviewMangaResponse>){
+        isPaginationLoading=false
+        previewMangaList.addAll(list)
         notifyDataSetChanged()
     }
 

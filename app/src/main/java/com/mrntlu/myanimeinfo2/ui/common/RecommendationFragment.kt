@@ -45,7 +45,6 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
 
     private fun setupObservers() {
         commonViewModel.getRecommendationsByID(dataType.name.toLowerCase(Locale.ENGLISH),malID,this).observe(viewLifecycleOwner,androidx.lifecycle.Observer {
-            printLog(message = it.toString())
             recommendationListAdapter.submitList(it.recommendations)
         })
     }
@@ -60,7 +59,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
 
             override fun onItemSelected(position: Int, item: RecommendationsBodyResponse) {
                 val bundle= bundleOf("mal_id" to item.mal_id)
-                navController.navigate(R.id.action_animeInfo_self,bundle)
+                navController.navigate(if (dataType==DataType.ANIME) R.id.action_animeInfo_self else R.id.action_mangaInfo_self,bundle)
             }
         })
         adapter=recommendationListAdapter

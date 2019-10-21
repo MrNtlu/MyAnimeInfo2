@@ -26,14 +26,14 @@ class RelatedListAdapter(private val interaction: Interaction? = null) : Recycle
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is RelatedHolder -> {
-                holder.bind(relatedList.get(position))
+                holder.bind(relatedList[position])
             }
         }
     }
 
     override fun getItemViewType(position: Int)=if (relatedList.size==0) NO_ITEM_HOLDER else ITEM_HOLDER
 
-    override fun getItemCount()=relatedList.size
+    override fun getItemCount()=if (relatedList.size==0) 1 else relatedList.size
 
     fun submitList(list: List<GeneralShortResponse>) {
         relatedList.apply {

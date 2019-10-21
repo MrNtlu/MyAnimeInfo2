@@ -63,7 +63,7 @@ class MainFragment : Fragment(){
             searchView.isIconified=false
         }
 
-        searchView.setOnQueryTextFocusChangeListener { view, b ->
+        searchView.setOnQueryTextFocusChangeListener { _, b ->
             if (b) {
                 val dataType=DataType.getByCode(dataTypeToggle.getCheckedPosition())
                 val bundle= bundleOf("data_type" to dataType.code)

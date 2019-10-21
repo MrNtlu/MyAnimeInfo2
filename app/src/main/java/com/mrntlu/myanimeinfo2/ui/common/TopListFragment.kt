@@ -5,13 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import androidx.core.os.bundleOf
+import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
@@ -22,11 +25,15 @@ import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.makeCapital
+import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.utils.setToolbarTitle
 import com.mrntlu.myanimeinfo2.utils.showToast
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_top_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -39,11 +46,13 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var topAnimeListAdapter: PreviewAnimeListAdapter
     private lateinit var topMangaListAdapter: PreviewMangaListAdapter
     private var subType:String=""
+    private var isLoading=false
+    private var pageNum=1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            dataType=DataType.getByCode(it.getInt("data_Type"))
+            dataType=DataType.getByCode(it.getInt("data_type"))
         }
     }
 
@@ -73,7 +82,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
                 override fun onItemSelected(position: Int, item: String) {
                     if (if (position==0) subType!="" else subType!=item) {
                         subType = if (position == 0) "" else item.toLowerCase(Locale.ENGLISH)
-
+                        pageNum=1
                         if (dataType == ANIME) {
                             topAnimeListAdapter.submitLoading()
                             setAnimeObserver()
@@ -96,6 +105,27 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
             }
             layoutManager=gridLayoutManager
             adapter=if (dataType==ANIME) setAnimeAdapter() else setMangaAdapter()
+
+            var isScrolling=false
+            this.addOnScrollListener(object:RecyclerView.OnScrollListener(){
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    isScrolling = newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) topAnimeListAdapter.itemCount-1 else topMangaListAdapter.itemCount-1) && !isLoading){
+                        isLoading=true
+                        pageNum++
+                        if (dataType==ANIME) setAnimeObserver()
+                        else {
+                            topMangaListAdapter.submitPaginationLoading()
+                            setMangaObserver()
+                        }
+                    }
+                }
+            })
         }
     }
 
@@ -136,13 +166,27 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setMangaObserver(){
-        mangaViewModel.getTopMangas(1,subType,this).observe(viewLifecycleOwner, Observer {
-            topMangaListAdapter.submitList(it.top)
+        mangaViewModel.getTopMangas(pageNum,subType,this).observe(viewLifecycleOwner, Observer {
+            if (pageNum==1) topMangaListAdapter.submitList(it.top)
+            else {
+                isLoading=false
+                topMangaListAdapter.submitPaginationList(it.top)
+            }
         })
     }
 
     override fun onError(message: String) {
-        if (dataType==ANIME) topAnimeListAdapter.submitError(message) else topMangaListAdapter.submitError(message)
+        GlobalScope.launch(Dispatchers.Main) {
+            if (pageNum == 1) if (dataType == ANIME) topAnimeListAdapter.submitError(message) else topMangaListAdapter.submitError(
+                message
+            )
+            else {
+                isLoading = false
+                pageNum--
+                topMangaListAdapter.submitPaginationError()
+                showToast(context, "Error while loading more items...")
+            }
+        }
     }
 
     override fun onDestroyView() {
