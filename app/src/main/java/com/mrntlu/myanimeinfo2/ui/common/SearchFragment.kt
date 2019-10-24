@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
@@ -38,6 +40,10 @@ class SearchFragment : Fragment() {
     private lateinit var searchAnimeAdapter: PreviewAnimeListAdapter
     private lateinit var navController: NavController
     private lateinit var dataType:DataType
+
+    private var isLoading=false
+    private var pageNum=1
+    private var mQuery=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,11 +76,11 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     if (it.length>2 && it.isNotEmpty() && it.isNotBlank()){
+                        mQuery=it
                         searchAnim.setVisible()
-                        if (dataType==MANGA) setupMangaRecyclerView()
-                        else setupAnimeRecyclerView()
+                        setupRecyclerView()
 
-                        setupObservers(it)
+                        setupObservers()
                         searchView.clearFocus()
                     }
                     else showToast(searchView.context,"Query should be longer than 2")
@@ -84,9 +90,9 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun setupObservers(query:String){
+    private fun setupObservers(){
         if (dataType==MANGA){
-            mangaViewModel.getMangaBySearch(query,1,object :CoroutinesErrorHandler{
+            mangaViewModel.getMangaBySearch(mQuery,pageNum,object :CoroutinesErrorHandler{
                 override fun onError(message: String){
                     GlobalScope.launch(Dispatchers.Main) {
                         searchMangaAdapter.submitError(message)
@@ -94,11 +100,16 @@ class SearchFragment : Fragment() {
                     }
                 }
             }).observe(viewLifecycleOwner, Observer {
-                searchMangaAdapter.submitList(it.results)
-                searchAnim.setGone()
+                if (pageNum==1) {
+                    searchMangaAdapter.submitList(it.results)
+                    searchAnim.setGone()
+                }else{
+                    isLoading=false
+                    searchMangaAdapter.submitPaginationList(it.results)
+                }
             })
         }else{
-            animeViewModel.getAnimeBySearch(query,1,object :CoroutinesErrorHandler{
+            animeViewModel.getAnimeBySearch(mQuery,pageNum,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
                     GlobalScope.launch(Dispatchers.Main) {
                         searchAnimeAdapter.submitError(message)
@@ -106,59 +117,79 @@ class SearchFragment : Fragment() {
                     }
                 }
             }).observe(viewLifecycleOwner, Observer {
-                searchAnimeAdapter.submitList(it.results)
-                searchAnim.setGone()
+                if (pageNum==1) {
+                    searchAnimeAdapter.submitList(it.results)
+                    searchAnim.setGone()
+                }else{
+                    isLoading=false
+                    searchAnimeAdapter.submitPaginationList(it.results)
+                }
             })
         }
     }
 
-    private fun setupMangaRecyclerView(){
+    private fun setupRecyclerView(){
         searchRV.apply {
-            searchMangaAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object :PreviewMangaListAdapter.Interaction{
-                override fun onErrorRefreshPressed() {
-                    searchMangaAdapter.submitLoading()
-                    setupObservers(searchView.getStringQuery())
-                }
-
-                override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
-                    val bundle = bundleOf("mal_id" to item.mal_id)
-                    navController.navigate(R.id.action_search_to_mangaInfo, bundle)
-                }
-            })
             val gridLayoutManager=GridLayoutManager(context,2)
             gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return if (searchMangaAdapter.getItemViewType(position)==searchMangaAdapter.PREVIEW_HOLDER) 1 else 2
+                    return if (dataType==MANGA) if (searchMangaAdapter.getItemViewType(position)==searchMangaAdapter.ITEM_HOLDER) 1 else 2
+                    else if (searchAnimeAdapter.getItemViewType(position)==searchAnimeAdapter.ITEM_HOLDER) 1 else 2
                 }
             }
             layoutManager=gridLayoutManager
-            adapter=searchMangaAdapter
+            adapter=if (dataType==ANIME) setAnimeAdapter() else setMangaAdapter()
+
+            var isScrolling=false
+            this.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    isScrolling=newState==AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) searchAnimeAdapter.itemCount-1 else searchMangaAdapter.itemCount-1) && !isLoading){
+                        isLoading=true
+                        pageNum++
+                        if (dataType==ANIME) searchAnimeAdapter.submitPaginationLoading()
+                        else searchMangaAdapter.submitPaginationLoading()
+
+                        setupObservers()
+                    }
+                }
+            })
         }
     }
 
-    private fun setupAnimeRecyclerView(){
-        searchRV.apply {
-            searchAnimeAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :PreviewAnimeListAdapter.Interaction{
-                override fun onErrorRefreshPressed() {
-                    searchAnimeAdapter.submitLoading()
-                    setupObservers(searchView.getStringQuery())
-                }
-
-                override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
-                    val bundle = bundleOf("mal_id" to item.mal_id)
-                    navController.navigate(R.id.action_search_to_animeInfo, bundle)
-                }
-            })
-
-            val gridLayoutManager=GridLayoutManager(context,2)
-            gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (searchAnimeAdapter.getItemViewType(position)==searchAnimeAdapter.PREVIEW_HOLDER) 1 else 2
-                }
+    private fun setAnimeAdapter():PreviewAnimeListAdapter{
+        searchAnimeAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :PreviewAnimeListAdapter.Interaction{
+            override fun onErrorRefreshPressed() {
+                searchAnimeAdapter.submitLoading()
+                setupObservers()
             }
-            layoutManager=gridLayoutManager
-            adapter=searchAnimeAdapter
-        }
+
+            override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
+                val bundle = bundleOf("mal_id" to item.mal_id)
+                navController.navigate(R.id.action_search_to_animeInfo, bundle)
+            }
+        })
+        return searchAnimeAdapter
+    }
+
+    private fun setMangaAdapter():PreviewMangaListAdapter{
+        searchMangaAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object :PreviewMangaListAdapter.Interaction{
+            override fun onErrorRefreshPressed() {
+                searchMangaAdapter.submitLoading()
+                setupObservers()
+            }
+
+            override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
+                val bundle = bundleOf("mal_id" to item.mal_id)
+                navController.navigate(R.id.action_search_to_mangaInfo, bundle)
+            }
+        })
+        return searchMangaAdapter
     }
 
     override fun onDestroyView() {

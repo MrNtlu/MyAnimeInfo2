@@ -45,6 +45,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var mangaViewModel: MangaViewModel
     private lateinit var topAnimeListAdapter: PreviewAnimeListAdapter
     private lateinit var topMangaListAdapter: PreviewMangaListAdapter
+
     private var subType:String=""
     private var isLoading=false
     private var pageNum=1
@@ -63,7 +64,6 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        //view.setToolbarTitle("Top ${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()} List")
         setupRecyclerView()
 
         if (dataType==ANIME){
@@ -99,8 +99,8 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
             val gridLayoutManager= GridLayoutManager(context,2)
             gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return if (dataType==ANIME) if (topAnimeListAdapter.getItemViewType(position)==topAnimeListAdapter.PREVIEW_HOLDER) 1 else 2
-                    else if (topMangaListAdapter.getItemViewType(position)==topMangaListAdapter.PREVIEW_HOLDER) 1 else 2
+                    return if (dataType==ANIME) if (topAnimeListAdapter.getItemViewType(position)==topAnimeListAdapter.ITEM_HOLDER) 1 else 2
+                    else if (topMangaListAdapter.getItemViewType(position)==topMangaListAdapter.ITEM_HOLDER) 1 else 2
                 }
             }
             layoutManager=gridLayoutManager
@@ -110,7 +110,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
             this.addOnScrollListener(object:RecyclerView.OnScrollListener(){
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    isScrolling = newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;
+                    isScrolling = newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL //checks if currently scrolling
                 }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -118,7 +118,10 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
                     if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) topAnimeListAdapter.itemCount-1 else topMangaListAdapter.itemCount-1) && !isLoading){
                         isLoading=true
                         pageNum++
-                        if (dataType==ANIME) setAnimeObserver()
+                        if (dataType==ANIME){
+                            topAnimeListAdapter.submitPaginationLoading()
+                            setAnimeObserver()
+                        }
                         else {
                             topMangaListAdapter.submitPaginationLoading()
                             setMangaObserver()
@@ -131,14 +134,14 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
 
     private fun setMangaAdapter(): PreviewMangaListAdapter {
         topMangaListAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object :PreviewMangaListAdapter.Interaction{
-            override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
-                val bundle = bundleOf("mal_id" to item.mal_id)
-                navController.navigate(R.id.action_topList_to_mangaInfo, bundle)
-            }
-
             override fun onErrorRefreshPressed() {
                 topMangaListAdapter.submitLoading()
                 setMangaObserver()
+            }
+
+            override fun onItemSelected(position: Int, item: PreviewMangaResponse) {
+                val bundle = bundleOf("mal_id" to item.mal_id)
+                navController.navigate(R.id.action_topList_to_mangaInfo, bundle)
             }
         })
         return topMangaListAdapter
@@ -160,8 +163,12 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setAnimeObserver(){
-        animeViewModel.getTopAnimes(1,subType,this).observe(viewLifecycleOwner, Observer {
-            topAnimeListAdapter.submitList(it.top)
+        animeViewModel.getTopAnimes(pageNum,subType,this).observe(viewLifecycleOwner, Observer {
+            if (pageNum==1) topAnimeListAdapter.submitList(it.top)
+            else{
+                isLoading=false
+                topAnimeListAdapter.submitPaginationList(it.top)
+            }
         })
     }
 

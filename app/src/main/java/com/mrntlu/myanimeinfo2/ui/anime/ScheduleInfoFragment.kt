@@ -42,7 +42,7 @@ class ScheduleInfoFragment(private val scheduleAnimeList:List<PreviewAnimeRespon
         val gridLayoutManager= GridLayoutManager(context,2)
         gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (scheduleAdapter.getItemViewType(position)==scheduleAdapter.PREVIEW_HOLDER) 1 else 2
+                return if (scheduleAdapter.getItemViewType(position)==scheduleAdapter.ITEM_HOLDER) 1 else 2
             }
         }
         layoutManager=gridLayoutManager
