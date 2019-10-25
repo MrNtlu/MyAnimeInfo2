@@ -1,8 +1,10 @@
 package com.mrntlu.myanimeinfo2.adapters
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.cell_error.view.*
 
-abstract class BaseAdapter<T>:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     //Conditions
     protected var isAdapterSet=false
@@ -17,6 +19,21 @@ abstract class BaseAdapter<T>:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected var errorMessage="Error!"
     protected var arrayList:ArrayList<T> = arrayListOf()
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            ITEM_HOLDER -> {
+                (holder as ItemHolder<T>).bind(arrayList[position])
+            }
+            ERROR_HOLDER ->{
+                holder.itemView.errorText.text=errorMessage
+
+                holder.itemView.errorRefreshButton.setOnClickListener {
+                    interaction?.onErrorRefreshPressed()
+                }
+            }
+        }
+    }
 
     override fun getItemViewType(position: Int)=if (isAdapterSet){
         when{
@@ -69,5 +86,15 @@ abstract class BaseAdapter<T>:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         isPaginationLoading=false
         arrayList.addAll(list)
         notifyDataSetChanged()
+    }
+
+    abstract class ItemHolder<T> constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(item: T)
+    }
+
+    interface Interaction<T> {
+        fun onItemSelected(position: Int, item: T)
+
+        fun onErrorRefreshPressed()
     }
 }

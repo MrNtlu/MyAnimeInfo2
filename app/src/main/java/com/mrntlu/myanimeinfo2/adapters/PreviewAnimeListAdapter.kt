@@ -15,7 +15,7 @@ import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
-class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,private val interaction: Interaction? = null) : BaseAdapter<PreviewAnimeResponse>() {
+class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,override val interaction: Interaction<PreviewAnimeResponse>? = null) : BaseAdapter<PreviewAnimeResponse>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -27,23 +27,8 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is PreviewAnimeHolder -> {
-                holder.bind(arrayList[position])
-            }
-            is ErrorItemViewHolder->{
-                holder.itemView.errorText.text=errorMessage
-
-                holder.itemView.errorRefreshButton.setOnClickListener {
-                    interaction?.onErrorRefreshPressed()
-                }
-            }
-        }
-    }
-
-    class PreviewAnimeHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: PreviewAnimeResponse) = with(itemView) {
+    class PreviewAnimeHolder constructor(itemView: View, private val interaction: Interaction<PreviewAnimeResponse>?) : ItemHolder<PreviewAnimeResponse>(itemView) {
+        override fun bind(item: PreviewAnimeResponse):Unit = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
@@ -58,9 +43,4 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,priva
         }
     }
 
-    interface Interaction {
-        fun onErrorRefreshPressed()
-
-        fun onItemSelected(position: Int, item: PreviewAnimeResponse)
-    }
 }

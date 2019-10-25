@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.adapters.TopListTypeAdapter
@@ -65,6 +67,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
         setupRecyclerView()
+        setListeners()
 
         if (dataType==ANIME){
             animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
@@ -75,7 +78,16 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
         }
     }
 
+    private fun setListeners() {
+        goUpFAB.setOnClickListener {
+            goUpFAB.hide()
+            topListRV.scrollToPosition(0)
+        }
+    }
+
     private fun setupRecyclerView(){
+        pageNum=1
+
         topListTypeRV.apply {
             layoutManager= LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
             adapter=TopListTypeAdapter(resources.getStringArray(if (dataType==ANIME) R.array.topAnimeSubtypes else R.array.topMangaSubtypes).toCollection(ArrayList()),object :TopListTypeAdapter.Interaction{
@@ -99,8 +111,11 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
             val gridLayoutManager= GridLayoutManager(context,2)
             gridLayoutManager.spanSizeLookup=object: GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return if (dataType==ANIME) if (topAnimeListAdapter.getItemViewType(position)==topAnimeListAdapter.ITEM_HOLDER) 1 else 2
-                    else if (topMangaListAdapter.getItemViewType(position)==topMangaListAdapter.ITEM_HOLDER) 1 else 2
+                    return if (dataType==ANIME){
+                        if (topAnimeListAdapter.getItemViewType(position)==topAnimeListAdapter.ITEM_HOLDER) 1 else 2
+                    } else{
+                        if (topMangaListAdapter.getItemViewType(position)==topMangaListAdapter.ITEM_HOLDER) 1 else 2
+                    }
                 }
             }
             layoutManager=gridLayoutManager
@@ -110,20 +125,27 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
             this.addOnScrollListener(object:RecyclerView.OnScrollListener(){
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    isScrolling = newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL //checks if currently scrolling
+                    isScrolling = newState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE //checks if currently scrolling
                 }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
+                    if (dy<=-8 && gridLayoutManager.findLastVisibleItemPosition()>15) goUpFAB.show()
+                    else if (gridLayoutManager.findLastVisibleItemPosition()>15 && dy in -7..7) if (goUpFAB.isVisible) goUpFAB.show() else goUpFAB.hide()
+                    else goUpFAB.hide()
+
+
                     if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) topAnimeListAdapter.itemCount-1 else topMangaListAdapter.itemCount-1) && !isLoading){
                         isLoading=true
                         pageNum++
                         if (dataType==ANIME){
                             topAnimeListAdapter.submitPaginationLoading()
+                            (this@apply).scrollToPosition(topAnimeListAdapter.itemCount-1)
                             setAnimeObserver()
                         }
                         else {
                             topMangaListAdapter.submitPaginationLoading()
+                            (this@apply).scrollToPosition(topMangaListAdapter.itemCount-1)
                             setMangaObserver()
                         }
                     }
@@ -133,7 +155,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setMangaAdapter(): PreviewMangaListAdapter {
-        topMangaListAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object :PreviewMangaListAdapter.Interaction{
+        topMangaListAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object : BaseAdapter.Interaction<PreviewMangaResponse>{
             override fun onErrorRefreshPressed() {
                 topMangaListAdapter.submitLoading()
                 setMangaObserver()
@@ -148,7 +170,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setAnimeAdapter(): PreviewAnimeListAdapter {
-        topAnimeListAdapter=PreviewAnimeListAdapter(R.layout.cell_preview_large,object :PreviewAnimeListAdapter.Interaction{
+        topAnimeListAdapter=PreviewAnimeListAdapter(R.layout.cell_preview_large,object :BaseAdapter.Interaction<PreviewAnimeResponse>{
             override fun onErrorRefreshPressed() {
                 topAnimeListAdapter.submitLoading()
                 setAnimeObserver()
@@ -184,14 +206,17 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
 
     override fun onError(message: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            if (pageNum == 1) if (dataType == ANIME) topAnimeListAdapter.submitError(message) else topMangaListAdapter.submitError(
-                message
-            )
+            printLog(message = message)
+            if (pageNum == 1){
+                if (dataType == ANIME) topAnimeListAdapter.submitError(message)
+                else topMangaListAdapter.submitError(message)
+            }
             else {
                 isLoading = false
                 pageNum--
-                topMangaListAdapter.submitPaginationError()
-                showToast(context, "Error while loading more items...")
+                if (dataType==ANIME) topAnimeListAdapter.submitPaginationError()
+                else topMangaListAdapter.submitPaginationError()
+                showToast(context,"Failed to load more. $message")
             }
         }
     }

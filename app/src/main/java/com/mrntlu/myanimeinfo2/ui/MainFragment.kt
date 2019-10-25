@@ -14,6 +14,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.llollox.androidtoggleswitch.widgets.ToggleSwitch
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -125,7 +126,7 @@ class MainFragment : Fragment(){
     private fun setupRecyclerView() {
         topAiringRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            topAiringAdapter=PreviewAnimeListAdapter(interaction = object : PreviewAnimeListAdapter.Interaction {
+            topAiringAdapter=PreviewAnimeListAdapter(interaction = object :BaseAdapter.Interaction<PreviewAnimeResponse> {
                 override fun onErrorRefreshPressed() {
                     topAiringAdapter.submitLoading()
                     setTopAiringAnimeObserver()
@@ -139,7 +140,7 @@ class MainFragment : Fragment(){
         }
         topMangaRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            topMangaAdapter= PreviewMangaListAdapter(interaction = object : PreviewMangaListAdapter.Interaction {
+            topMangaAdapter= PreviewMangaListAdapter(interaction = object : BaseAdapter.Interaction<PreviewMangaResponse> {
                 override fun onErrorRefreshPressed() {
                     topMangaAdapter.submitLoading()
                     setTopMangaObserver()
@@ -153,7 +154,7 @@ class MainFragment : Fragment(){
         }
         airingTodayRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            todayAiringAdapter=PreviewAnimeListAdapter(interaction = object : PreviewAnimeListAdapter.Interaction {
+            todayAiringAdapter=PreviewAnimeListAdapter(interaction = object : BaseAdapter.Interaction<PreviewAnimeResponse> {
                 override fun onErrorRefreshPressed() {
                     todayAiringAdapter.submitLoading()
                     setAiringTodayObserver()

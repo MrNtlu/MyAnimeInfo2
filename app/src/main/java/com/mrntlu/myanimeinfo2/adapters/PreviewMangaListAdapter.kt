@@ -16,7 +16,7 @@ import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
-class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,private val interaction: Interaction? = null) : BaseAdapter<PreviewMangaResponse>() {
+class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview, override val interaction: Interaction<PreviewMangaResponse>? = null) : BaseAdapter<PreviewMangaResponse>(interaction) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -28,23 +28,8 @@ class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,priva
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is PreviewMangaHolder -> {
-                holder.bind(arrayList[position])
-            }
-            is ErrorItemViewHolder->{
-                holder.itemView.errorText.text=errorMessage
-
-                holder.itemView.errorRefreshButton.setOnClickListener {
-                    interaction?.onErrorRefreshPressed()
-                }
-            }
-        }
-    }
-
-    class PreviewMangaHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: PreviewMangaResponse) = with(itemView) {
+    class PreviewMangaHolder constructor(itemView: View, private val interaction: Interaction<PreviewMangaResponse>?) : ItemHolder<PreviewMangaResponse>(itemView) {
+        override fun bind(item: PreviewMangaResponse): Unit = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
@@ -60,11 +45,5 @@ class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview,priva
             itemView.previewImageProgress.setVisible()
             itemView.previewImage.loadWithGlide(item.image_url,itemView.previewImageProgress)
         }
-    }
-
-    interface Interaction {
-        fun onItemSelected(position: Int, item: PreviewMangaResponse)
-
-        fun onErrorRefreshPressed()
     }
 }

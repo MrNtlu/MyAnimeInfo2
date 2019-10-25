@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -15,6 +16,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -25,14 +27,14 @@ import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.*
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
-import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.goUpFAB
 import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), CoroutinesErrorHandler {
 
     private lateinit var animeViewModel: AnimeViewModel
     private lateinit var mangaViewModel: MangaViewModel
@@ -63,9 +65,18 @@ class SearchFragment : Fragment() {
         else animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
 
         setSearchView()
+        setListeners()
+    }
+
+    private fun setListeners() {
+        goUpFAB.setOnClickListener {
+            goUpFAB.hide()
+            searchRV.scrollToPosition(0)
+        }
     }
 
     private fun setSearchView() {
+        pageNum=1
         searchView.isIconified=false
 
         searchView.setOnCloseListener{true}
@@ -92,14 +103,7 @@ class SearchFragment : Fragment() {
 
     private fun setupObservers(){
         if (dataType==MANGA){
-            mangaViewModel.getMangaBySearch(mQuery,pageNum,object :CoroutinesErrorHandler{
-                override fun onError(message: String){
-                    GlobalScope.launch(Dispatchers.Main) {
-                        searchMangaAdapter.submitError(message)
-                        searchAnim.setGone()
-                    }
-                }
-            }).observe(viewLifecycleOwner, Observer {
+            mangaViewModel.getMangaBySearch(mQuery,pageNum,this).observe(viewLifecycleOwner, Observer {
                 if (pageNum==1) {
                     searchMangaAdapter.submitList(it.results)
                     searchAnim.setGone()
@@ -109,14 +113,7 @@ class SearchFragment : Fragment() {
                 }
             })
         }else{
-            animeViewModel.getAnimeBySearch(mQuery,pageNum,object :CoroutinesErrorHandler{
-                override fun onError(message: String) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        searchAnimeAdapter.submitError(message)
-                        searchAnim.setGone()
-                    }
-                }
-            }).observe(viewLifecycleOwner, Observer {
+            animeViewModel.getAnimeBySearch(mQuery,pageNum,this).observe(viewLifecycleOwner, Observer {
                 if (pageNum==1) {
                     searchAnimeAdapter.submitList(it.results)
                     searchAnim.setGone()
@@ -144,16 +141,26 @@ class SearchFragment : Fragment() {
             this.addOnScrollListener(object :RecyclerView.OnScrollListener(){
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    isScrolling=newState==AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+                    isScrolling = newState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE //checks if currently scrolling
                 }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
+                    if (dy<=-8 && gridLayoutManager.findLastVisibleItemPosition()>15) goUpFAB.show()
+                    else if (gridLayoutManager.findLastVisibleItemPosition()>15 && dy in -7..7) if (goUpFAB.isVisible) goUpFAB.show() else goUpFAB.hide()
+                    else goUpFAB.hide()
+
                     if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) searchAnimeAdapter.itemCount-1 else searchMangaAdapter.itemCount-1) && !isLoading){
                         isLoading=true
                         pageNum++
-                        if (dataType==ANIME) searchAnimeAdapter.submitPaginationLoading()
-                        else searchMangaAdapter.submitPaginationLoading()
+                        if (dataType==ANIME){
+                            searchAnimeAdapter.submitPaginationLoading()
+                            (this@apply).scrollToPosition(searchAnimeAdapter.itemCount-1)
+                        }
+                        else {
+                            searchMangaAdapter.submitPaginationLoading()
+                            (this@apply).scrollToPosition(searchMangaAdapter.itemCount-1)
+                        }
 
                         setupObservers()
                     }
@@ -163,7 +170,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setAnimeAdapter():PreviewAnimeListAdapter{
-        searchAnimeAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :PreviewAnimeListAdapter.Interaction{
+        searchAnimeAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :BaseAdapter.Interaction<PreviewAnimeResponse>{
             override fun onErrorRefreshPressed() {
                 searchAnimeAdapter.submitLoading()
                 setupObservers()
@@ -178,7 +185,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setMangaAdapter():PreviewMangaListAdapter{
-        searchMangaAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object :PreviewMangaListAdapter.Interaction{
+        searchMangaAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object : BaseAdapter.Interaction<PreviewMangaResponse>{
             override fun onErrorRefreshPressed() {
                 searchMangaAdapter.submitLoading()
                 setupObservers()
@@ -190,6 +197,24 @@ class SearchFragment : Fragment() {
             }
         })
         return searchMangaAdapter
+    }
+
+    override fun onError(message: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            searchAnim.setGone()
+            if (pageNum==1){
+                if (dataType==MANGA) searchMangaAdapter.submitError(message)
+                else searchAnimeAdapter.submitError(message)
+            }
+            else{
+                isLoading=false
+                pageNum--
+                if (dataType==MANGA) searchMangaAdapter.submitPaginationError()
+                else searchAnimeAdapter.submitPaginationError()
+
+                showToast(context,"Failed to load more. $message")
+            }
+        }
     }
 
     override fun onDestroyView() {

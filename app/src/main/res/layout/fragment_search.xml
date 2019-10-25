@@ -35,6 +35,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:visibility="visible"
+            android:scrollbars="vertical"
+            android:scrollbarSize="3dp"
+            android:scrollbarThumbVertical="@color/materialBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,5 +56,19 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/search_loop"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/goUpFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_arrow_up_24dp"
+            app:backgroundTint="@color/materialBlack"
+            app:fabSize="normal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
