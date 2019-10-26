@@ -7,9 +7,9 @@ import kotlinx.android.synthetic.main.cell_error.view.*
 abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     //Conditions
-    protected var isAdapterSet=false
-    protected var isErrorOccured=false
-    protected var isPaginationLoading=false
+    private var isAdapterSet=false
+    private var isErrorOccured=false
+    private var isPaginationLoading=false
     //Holders
     protected val LOADING_ITEM_HOLDER=0
     val ITEM_HOLDER=1
@@ -17,8 +17,8 @@ abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):Recy
     protected val NO_ITEM_HOLDER=3
     protected val PAGINATION_LOADING_HOLDER=4
 
-    protected var errorMessage="Error!"
-    protected var arrayList:ArrayList<T> = arrayListOf()
+    private var errorMessage="Error!"
+    private var arrayList:ArrayList<T> = arrayListOf()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {

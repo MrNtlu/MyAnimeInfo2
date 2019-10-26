@@ -44,6 +44,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var dataType:DataType
 
     private var isLoading=false
+    private var isSearching=false
     private var pageNum=1
     private var mQuery=""
 
@@ -86,8 +87,10 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    if (it.length>2 && it.isNotEmpty() && it.isNotBlank()){
+                    if (isSearching) showToast(searchView.context,"Searching...")
+                    else if (!isSearching && it.length>2 && it.isNotEmpty() && it.isNotBlank()){
                         mQuery=it
+                        isSearching=true
                         searchAnim.setVisible()
                         setupRecyclerView()
 
@@ -105,6 +108,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
         if (dataType==MANGA){
             mangaViewModel.getMangaBySearch(mQuery,pageNum,this).observe(viewLifecycleOwner, Observer {
                 if (pageNum==1) {
+                    isSearching=false
                     searchMangaAdapter.submitList(it.results)
                     searchAnim.setGone()
                 }else{
@@ -115,6 +119,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
         }else{
             animeViewModel.getAnimeBySearch(mQuery,pageNum,this).observe(viewLifecycleOwner, Observer {
                 if (pageNum==1) {
+                    isSearching=false
                     searchAnimeAdapter.submitList(it.results)
                     searchAnim.setGone()
                 }else{
@@ -203,6 +208,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
         GlobalScope.launch(Dispatchers.Main) {
             searchAnim.setGone()
             if (pageNum==1){
+                isSearching=false
                 if (dataType==MANGA) searchMangaAdapter.submitError(message)
                 else searchAnimeAdapter.submitError(message)
             }
