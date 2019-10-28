@@ -21,7 +21,7 @@ class ServiceRepository(application: Application) {
 
     suspend fun getAnimeByGenre(genreID:Int,page:Int)=apiClient.getAnimeByGenre(genreID,page)
 
-    suspend fun getAnimeBySeason(year:Int,season:String)=apiClient.getAnimeBySeason(year,season)
+    suspend fun getAnimeBySeason(year:String,season:String)=apiClient.getAnimeBySeason(year,season)
 
     suspend fun getAnimeBySearch(q:String,page:Int)=apiClient.getAnimeBySearch(q,page)
 

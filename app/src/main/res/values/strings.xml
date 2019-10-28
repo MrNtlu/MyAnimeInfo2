@@ -30,6 +30,13 @@
         <item>favorite</item>
     </string-array>
 
+    <string-array name="seasonNames">
+        <item>winter</item>
+        <item>spring</item>
+        <item>summer</item>
+        <item>fall</item>
+    </string-array>
+
     <string name="internet_error">Error! Please check your internet connection and refresh.</string>
     <string name="timeout_try_again">Error, timeout! Please try again.</string>
 

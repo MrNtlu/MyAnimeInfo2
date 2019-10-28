@@ -25,7 +25,7 @@ interface AnimeService {
     suspend fun getAnimeByGenre(@Path("genreID") genreID:Int,@Path("page") page:Int):AnimeGenreSeasonResponse
 
     @GET("season/{year}/{season}")
-    suspend fun getAnimeBySeason(@Path("year") year:Int,@Path("season")season:String):AnimeGenreSeasonResponse
+    suspend fun getAnimeBySeason(@Path("year") year:String,@Path("season")season:String):AnimeGenreSeasonResponse
 
     @GET("search/anime")
     suspend fun getAnimeBySearch(@Query("q") q:String, @Query("page") page:Int):AnimeSearchResponse

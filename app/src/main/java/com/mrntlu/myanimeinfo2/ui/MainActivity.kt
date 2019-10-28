@@ -15,7 +15,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.models.DataType
-import com.mrntlu.myanimeinfo2.ui.manga.MangaInfoFragment
 import com.mrntlu.myanimeinfo2.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -32,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, arguments ->
             toolbar.title=when(destination.id){
+                R.id.animeSeasonFragment->"Anime by Season"
                 R.id.mangaInfoFragment->"Manga Info"
                 R.id.animeInfoFragment->"Anime Info"
                 R.id.topListFragment->{
@@ -97,13 +97,15 @@ class MainActivity : AppCompatActivity() {
     private fun setDrawer(){
         navigationView.setNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.main_page_menu->navController.navigate(R.id.mainFragment)
-                R.id.anime_schedule->navController.navigate(R.id.scheduleAnimeFragment)
-                R.id.top_anime_list->navController.navigate(R.id.topListFragment,bundleOf("data_type" to DataType.ANIME.code))
-                R.id.top_manga_list->navController.navigate(R.id.topListFragment, bundleOf("data_type" to DataType.MANGA.code))
-                R.id.anime_search->navController.navigate(R.id.searchFragment, bundleOf("data_type" to DataType.ANIME.code))
-                R.id.manga_search->navController.navigate(R.id.searchFragment, bundleOf("data_type" to DataType.MANGA.code))
+                R.id.main_page_menu->navController.navigate(R.id.action_global_main)
+                R.id.anime_schedule->navController.navigate(R.id.action_global_scheduleAnime)
+                R.id.top_anime_list->navController.navigate(R.id.action_global_topList,bundleOf("data_type" to DataType.ANIME.code))
+                R.id.anime_by_season->navController.navigate(R.id.action_global_animeSeason)
+                R.id.top_manga_list->navController.navigate(R.id.action_global_topList, bundleOf("data_type" to DataType.MANGA.code))
+                R.id.anime_search->navController.navigate(R.id.action_global_search, bundleOf("data_type" to DataType.ANIME.code))
+                R.id.manga_search->navController.navigate(R.id.action_global_search, bundleOf("data_type" to DataType.MANGA.code))
             }
+
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }

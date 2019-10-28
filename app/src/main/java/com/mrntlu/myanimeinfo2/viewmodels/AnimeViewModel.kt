@@ -157,12 +157,11 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeBySeason(year:Int,season:String): LiveData<AnimeGenreSeasonResponse> {
+    fun getAnimeBySeason(year:String,season:String,errorHandler: CoroutinesErrorHandler): LiveData<AnimeGenreSeasonResponse> {
         val liveData= MutableLiveData<AnimeGenreSeasonResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
-            //errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
-            //todo error handling
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: AnimeGenreSeasonResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
@@ -170,8 +169,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
             }
             withContext(Dispatchers.Main){
                 if (job==null){
-                    //TODO error handling
-                    //errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
                 }else{
                     response?.let {
                         liveData.value=it

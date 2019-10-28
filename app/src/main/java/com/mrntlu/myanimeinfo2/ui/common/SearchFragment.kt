@@ -43,7 +43,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var navController: NavController
     private lateinit var dataType:DataType
 
-    private var isLoading=false
+    private var isPaginating=false
     private var isSearching=false
     private var pageNum=1
     private var mQuery=""
@@ -112,7 +112,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
                     searchMangaAdapter.submitList(it.results)
                     searchAnim.setGone()
                 }else{
-                    isLoading=false
+                    isPaginating=false
                     searchMangaAdapter.submitPaginationList(it.results)
                 }
             })
@@ -123,7 +123,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
                     searchAnimeAdapter.submitList(it.results)
                     searchAnim.setGone()
                 }else{
-                    isLoading=false
+                    isPaginating=false
                     searchAnimeAdapter.submitPaginationList(it.results)
                 }
             })
@@ -155,8 +155,8 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
                     else if (gridLayoutManager.findLastVisibleItemPosition()>15 && dy in -7..7) if (goUpFAB.isVisible) goUpFAB.show() else goUpFAB.hide()
                     else goUpFAB.hide()
 
-                    if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) searchAnimeAdapter.itemCount-1 else searchMangaAdapter.itemCount-1) && !isLoading){
-                        isLoading=true
+                    if (isScrolling && gridLayoutManager.findLastCompletelyVisibleItemPosition()==(if (dataType==ANIME) searchAnimeAdapter.itemCount-1 else searchMangaAdapter.itemCount-1) && !isPaginating){
+                        isPaginating=true
                         pageNum++
                         if (dataType==ANIME){
                             searchAnimeAdapter.submitPaginationLoading()
@@ -213,7 +213,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
                 else searchAnimeAdapter.submitError(message)
             }
             else{
-                isLoading=false
+                isPaginating=false
                 pageNum--
                 if (dataType==MANGA) searchMangaAdapter.submitPaginationError()
                 else searchAnimeAdapter.submitPaginationError()

@@ -32,6 +32,12 @@
                 android:id="@+id/anime_search"/>
 
             <item
+                android:title="Anime by Season"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_search"
+                android:id="@+id/anime_by_season"/>
+
+            <item
                 android:title="Coming Soon..."
                 app:showAsAction="ifRoom"
                 android:id="@+id/soon"/>

@@ -64,7 +64,7 @@ class ScheduleAnimeFragment : Fragment(),CoroutinesErrorHandler {
     private fun setupViewPagers(animeScheduleResponse: AnimeScheduleResponse){
         progressbarLayout.setGone()
         val pagerAdapter= AnimeSchedulePagerAdapter(
-            parentFragmentManager,
+            childFragmentManager,
             animeScheduleResponse
         )
         scheduleViewPager.adapter=pagerAdapter
