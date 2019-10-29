@@ -6,9 +6,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AnimeService {
-    //https://github.com/MrNtlu/MyAnimeInfo/blob/master/app/src/main/java/com/mrntlu/myanimeinfo/service/repository/AnimeAPI.java
-    //Anime
 
+    //Anime
     @GET("anime/{mal_id}")
     suspend fun getAnimeByID(@Path("mal_id") mal_id:Int):AnimeResponse
 
@@ -33,9 +32,6 @@ interface AnimeService {
     //Manga
     @GET("manga/{mal_id}")
     suspend fun getMangaByID(@Path("mal_id") mal_id:Int):MangaResponse
-
-    @GET("manga/{mal_id}/reviews/{page}")
-    suspend fun getMangaReviewsByID(@Path("mal_id") mal_id:Int,@Path("page") page:Int):ReviewsResponse
 
     @GET("top/manga/{page}/{subtype}")
     suspend fun getTopMangas(@Path("page") page:Int,@Path("subtype") subtype:String):TopMangaResponse
@@ -64,4 +60,14 @@ interface AnimeService {
 
     @GET("{type}/{mal_id}/pictures")
     suspend fun getPicturesByID(@Path("type") type:String,@Path("mal_id") mal_id:Int):PicturesResponse
+
+    //Others
+    @GET("user/{user_name}/profile")
+    suspend fun getUserProfile(@Path("user_name")username:String):UserProfileResponse
+
+    @GET("user/{user_name}/animelist")
+    suspend fun getUserAnimeList(@Path("user_name")userName:String):UserAnimeListBody
+
+    @GET("user/{user_name}/mangalist")
+    suspend fun getUserMangaList(@Path("user_name")userName:String):UserMangaListBody
 }

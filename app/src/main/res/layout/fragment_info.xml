@@ -93,4 +93,20 @@
         android:id="@+id/errorLayout"
         android:visibility="gone"
         layout="@layout/cell_error"/>
+
+    <TextView
+        android:id="@+id/clickMoreText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#8C000000"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:text="Click  for more..."
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/posterImage"
+        app:layout_constraintEnd_toEndOf="@+id/posterImage"
+        app:layout_constraintStart_toStartOf="@+id/posterImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

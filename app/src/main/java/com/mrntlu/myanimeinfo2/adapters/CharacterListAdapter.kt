@@ -24,8 +24,6 @@ class CharacterListAdapter (private val interaction: Interaction? = null) : Recy
     private var errorMessage="Error!"
     private var characterList:ArrayList<CharacterBodyResponse> = arrayListOf()
 
-    //TODO no character
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             NO_ITEM_HOLDER-> NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))

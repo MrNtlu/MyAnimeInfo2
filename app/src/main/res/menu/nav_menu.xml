@@ -48,13 +48,13 @@
         <menu>
             <item
                 android:title="Top Lists"
-                app:showAsAction="always"
+                app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_oscar"
                 android:id="@+id/top_manga_list"/>
 
             <item
                 android:title="Search Manga"
-                app:showAsAction="always"
+                app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_comic_book"
                 android:id="@+id/manga_search"/>
 
@@ -67,6 +67,12 @@
 
     <item android:title="Others">
         <menu>
+            <item
+                android:title="Search User"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_anime_boy_with_tie"
+                android:id="@+id/search_user"/>
+
             <item
                 android:title="Coming Soon..."
                 app:showAsAction="always"

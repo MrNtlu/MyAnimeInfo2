@@ -45,12 +45,12 @@ data class AnimeResponse(val mal_id:Int, val image_url: String, val title:String
                          val status:String, val airing:Boolean, val duration:String?, val score:Double, val scored_by:Int,
                          val rank: Int, val popularity:Int, val members: Int, val favorites:Int, val synopsis:String, val background:String?,
                          val premiered:String?, val broadcast:String?, val related:RelatedResponse, val producers:List<GeneralShortResponse>?,
-                         val studios:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)//todo studios
+                         val studios:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)
 
 data class MangaResponse(val mal_id:Int, val image_url: String, val title:String, val type:String, val volumes:Int?, val chapters:Int?,
                          val status:String, val publishing:Boolean, val score:Double, val scored_by:Int, val rank: Int, val popularity:Int,
                          val members: Int, val favorites:Int, val synopsis:String, val background:String?, val related:RelatedResponse,
-                         val authors:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)//todo authors
+                         val authors:List<GeneralShortResponse>?, val genres:List<GeneralShortResponse>?)
 
 data class AnimeSearchResponse(val results:List<PreviewAnimeResponse>)
 
@@ -62,3 +62,26 @@ data class AnimeScheduleResponse(val monday:List<PreviewAnimeResponse>,val tuesd
 data class AnimeGenreSeasonResponse(val mal_url:GeneralShortResponse,val anime:List<PreviewAnimeResponse>)
 
 data class MangaGenreSeasonResponse(val mal_url:GeneralShortResponse,val manga:List<PreviewMangaResponse>)
+
+//User
+data class UserProfileResponse(val username: String, val image_url: String, val anime_stats:UserAnimeStats, val manga_stats:UserMangaStats,val favorites:UserFavsResponse)
+
+data class UserFavsResponse(val anime:UserShortResponse, val manga:UserShortResponse, val characters:UserShortResponse, val people:UserShortResponse)
+
+data class UserShortResponse(val mal_id: Int,val image_url: String,val name: String)
+
+data class UserAnimeStats(val days_watched: Double, val mean_score: Double, val watching: Int, val completed: Int,
+                          val on_hold: Int, val dropped: Int, val plan_to_watch: Int,val rewatched:Int,val episodes_watched: Int)
+
+data class UserMangaStats(val days_read: Double, val mean_score: Double, val reading: Int, val completed: Int,
+                          val on_hold: Int, val dropped: Int, val plan_to_read: Int,val reread:Int,val chapters_read: Int,val volumes_read: Int)
+
+data class UserAnimeListResponse(val anime:UserAnimeListBody)
+
+data class UserMangaListResponse(val manga:UserMangaListBody)
+
+data class UserAnimeListBody(val mal_id: Int,val title: String,val image_url: String,val type: String,val watching_status:Int,val score: Double,val watched_episodes:Int,val total_episodes:Int)
+
+data class UserMangaListBody(val mal_id: Int,val title: String,val image_url: String,val type: String,val reading_status:Int,val score: Double,val read_chapters:Int,
+                             val read_volumes:Int,val total_chapters:Int,val total_volumes:Int)
+

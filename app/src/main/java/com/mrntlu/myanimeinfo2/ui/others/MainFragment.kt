@@ -1,18 +1,16 @@
-package com.mrntlu.myanimeinfo2.ui
+package com.mrntlu.myanimeinfo2.ui.others
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.llollox.androidtoggleswitch.widgets.ToggleSwitch
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
@@ -21,7 +19,6 @@ import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
-import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -71,6 +68,20 @@ class MainFragment : Fragment(){
                 navController.navigate(R.id.action_main_to_search,bundle)
             }
             searchView.isIconified=true
+        }
+
+        topAiringText.setOnClickListener {
+            val bundle= bundleOf("data_type" to DataType.ANIME.code,"sub_type" to "airing")
+            navController.navigate(R.id.action_main_to_topList,bundle)
+        }
+
+        topMangaText.setOnClickListener {
+            val bundle= bundleOf("data_type" to DataType.MANGA.code)
+            navController.navigate(R.id.action_main_to_topList,bundle)
+        }
+
+        airingTodayText.setOnClickListener {
+            navController.navigate(R.id.action_main_to_schedule)
         }
     }
 

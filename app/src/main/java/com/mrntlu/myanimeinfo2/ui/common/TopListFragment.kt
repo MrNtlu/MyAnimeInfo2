@@ -48,7 +48,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var topAnimeListAdapter: PreviewAnimeListAdapter
     private lateinit var topMangaListAdapter: PreviewMangaListAdapter
 
-    private var subType:String=""
+    private var subType=""
     private var isLoading=false
     private var pageNum=1
 
@@ -56,6 +56,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
         super.onCreate(savedInstanceState)
         arguments?.let {
             dataType=DataType.getByCode(it.getInt("data_type"))
+            subType=it.getString("sub_type","")
         }
     }
 

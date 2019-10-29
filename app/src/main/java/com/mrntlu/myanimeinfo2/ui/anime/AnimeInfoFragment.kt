@@ -78,6 +78,7 @@ class AnimeInfoFragment : Fragment(), CoroutinesErrorHandler {
     private fun setupUI(animeResponse: AnimeResponse) {
         progressbarLayout.setGone()
         posterImage.loadWithGlide(animeResponse.image_url,posterImageProgress)
+        clickMoreText.setVisible()
 
         titleText.text=animeResponse.title
         typeText.text=animeResponse.type

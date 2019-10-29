@@ -1,10 +1,8 @@
 package com.mrntlu.myanimeinfo2.repository
 
 import android.app.Application
-import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.service.AnimeService
 import com.mrntlu.myanimeinfo2.service.RetrofitClient
-import retrofit2.Response
 
 class ServiceRepository(application: Application) {
 
@@ -28,8 +26,6 @@ class ServiceRepository(application: Application) {
     //Manga
     suspend fun getMangaByID(mal_id:Int)=apiClient.getMangaByID(mal_id)
 
-    suspend fun getMangaReviewsByID(mal_id: Int,page: Int)=apiClient.getMangaReviewsByID(mal_id,page)
-
     suspend fun getTopMangas(page:Int,subtype:String)=apiClient.getTopMangas(page,subtype)
 
     suspend fun getMangaCharactersByID(mal_id: Int)=apiClient.getMangaCharactersByID(mal_id)
@@ -43,13 +39,16 @@ class ServiceRepository(application: Application) {
 
     suspend fun getRecommendationsByID(type:String,mal_id:Int)=apiClient.getRecommendationsByID(type,mal_id)
 
-
     suspend fun getCharacterInfoByID(character_id:Int)=apiClient.getCharacterInfoByID(character_id)
-
 
     suspend fun getReviewsByID(type:String,mal_id:Int,page:Int)=apiClient.getReviewsByID(type,mal_id,page)
 
-
     suspend fun getPicturesByID(type:String,mal_id:Int)=apiClient.getPicturesByID(type,mal_id)
 
+    //Others
+    suspend fun getUserProfile(username:String)=apiClient.getUserProfile(username)
+
+    suspend fun getUserAnimeList(username:String)=apiClient.getUserAnimeList(username)
+
+    suspend fun getUserMangaList(username:String)=apiClient.getUserMangaList(username)
 }

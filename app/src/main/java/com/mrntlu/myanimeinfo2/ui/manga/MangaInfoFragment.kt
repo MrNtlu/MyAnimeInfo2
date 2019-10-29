@@ -77,6 +77,7 @@ class MangaInfoFragment : Fragment(), CoroutinesErrorHandler {
     private fun setupUI(){
         progressbarLayout.setGone()
         posterImage.loadWithGlide(mangaResponse.image_url,posterImageProgress)
+        clickMoreText.setVisible()
 
         titleText.text=mangaResponse.title
         typeText.text=mangaResponse.type

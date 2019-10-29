@@ -110,6 +110,75 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
+    fun getUserProfile(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserProfileResponse> {
+        val liveData=MutableLiveData<UserProfileResponse>()
+
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
+        }){
+            var response:UserProfileResponse?=null
+            val job= withTimeoutOrNull(TIME_OUT){
+                response=serviceRepository.getUserProfile(username)
+            }
+            withContext(Dispatchers.Main){
+                if (job==null){
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
+                }else{
+                    response?.let {
+                        liveData.value=it
+                    }
+                }
+            }
+        }
+        return liveData
+    }
+
+    fun getUserAnimeList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserAnimeListBody> {
+        val liveData=MutableLiveData<UserAnimeListBody>()
+
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
+        }){
+            var response:UserAnimeListBody?=null
+            val job= withTimeoutOrNull(TIME_OUT){
+                response=serviceRepository.getUserAnimeList(username)
+            }
+            withContext(Dispatchers.Main){
+                if (job==null){
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
+                }else{
+                    response?.let {
+                        liveData.value=it
+                    }
+                }
+            }
+        }
+        return liveData
+    }
+
+    fun getUserMangaList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserMangaListBody> {
+        val liveData=MutableLiveData<UserMangaListBody>()
+
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
+        }){
+            var response:UserMangaListBody?=null
+            val job= withTimeoutOrNull(TIME_OUT){
+                response=serviceRepository.getUserMangaList(username)
+            }
+            withContext(Dispatchers.Main){
+                if (job==null){
+                    errorHandler.onError(getApplication<Application>().getString(R.string.timeout_try_again))
+                }else{
+                    response?.let {
+                        liveData.value=it
+                    }
+                }
+            }
+        }
+        return liveData
+    }
+
     override fun onCleared() {
         super.onCleared()
         mJob?.let {

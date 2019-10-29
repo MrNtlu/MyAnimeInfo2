@@ -21,7 +21,7 @@ class GenreTagListAdapter(private val interaction: Interaction? = null) : Recycl
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is GenreTagHolder -> {
-                holder.bind(genreTagList.get(position))
+                holder.bind(genreTagList[position])
             }
         }
     }
