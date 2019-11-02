@@ -6,6 +6,7 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/cellNoItem"
         android:layout_width="wrap_content"
@@ -13,15 +14,16 @@
         android:drawableStart="@drawable/ic_error_outline_black_24dp"
         android:drawablePadding="4dp"
         android:drawableTint="@android:color/darker_gray"
-        android:textColor="@android:color/darker_gray"
         android:ellipsize="end"
         android:gravity="center"
         android:text="Nothing Found!"
+        android:textColor="@android:color/darker_gray"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.325" />
 </androidx.constraintlayout.widget.ConstraintLayout>

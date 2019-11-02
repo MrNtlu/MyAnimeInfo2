@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import kotlinx.android.synthetic.main.cell_no_item.view.*
 
 class UserPastSearchListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -26,6 +27,9 @@ class UserPastSearchListAdapter(private val interaction: Interaction? = null) : 
             is UserPastSearchViewHolder->{
                 holder.bind(userPastSearchList[position])
             }
+            is NoItemViewHolder->{
+                holder.itemView.cellNoItem.text="Nothing searched before :("
+            }
         }
     }
 
@@ -38,7 +42,6 @@ class UserPastSearchListAdapter(private val interaction: Interaction? = null) : 
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition,item)
             }
-
         }
     }
 

@@ -42,7 +42,6 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
         if (dataType==MANGA) mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
         else animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
 
-
         setupRecyclerView()
         setupObservers()
     }
@@ -52,7 +51,7 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
             mangaViewModel.getMangaCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        submitError(message)
+                        characterListAdapter.submitError(message)
                     }
                 }
 
@@ -63,17 +62,13 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
             animeViewModel.getAnimeCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        submitError(message)
+                        characterListAdapter.submitError(message)
                     }
                 }
             }).observe(viewLifecycleOwner, Observer {
                 characterListAdapter.submitList(it.characters)
             })
         }
-    }
-
-    private fun submitError(message:String)=GlobalScope.launch(Dispatchers.Main) {
-        characterListAdapter.submitError(message)
     }
 
     private fun setupRecyclerView()= fragmentRV.apply {

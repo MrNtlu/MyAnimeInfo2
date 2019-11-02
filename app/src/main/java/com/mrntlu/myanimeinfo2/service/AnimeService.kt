@@ -66,8 +66,8 @@ interface AnimeService {
     suspend fun getUserProfile(@Path("user_name")username:String):UserProfileResponse
 
     @GET("user/{user_name}/animelist")
-    suspend fun getUserAnimeList(@Path("user_name")userName:String):UserAnimeListBody
+    suspend fun getUserAnimeList(@Path("user_name")userName:String):UserAnimeListResponse
 
     @GET("user/{user_name}/mangalist")
-    suspend fun getUserMangaList(@Path("user_name")userName:String):UserMangaListBody
+    suspend fun getUserMangaList(@Path("user_name")userName:String):UserMangaListResponse
 }

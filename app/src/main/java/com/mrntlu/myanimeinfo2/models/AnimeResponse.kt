@@ -66,7 +66,7 @@ data class MangaGenreSeasonResponse(val mal_url:GeneralShortResponse,val manga:L
 //User
 data class UserProfileResponse(val username: String, val image_url: String, val anime_stats:UserAnimeStats, val manga_stats:UserMangaStats,val favorites:UserFavsResponse)
 
-data class UserFavsResponse(val anime:UserShortResponse, val manga:UserShortResponse, val characters:UserShortResponse, val people:UserShortResponse)
+data class UserFavsResponse(val anime:List<UserShortResponse>, val manga:List<UserShortResponse>, val characters:List<UserShortResponse>, val people:List<UserShortResponse>)
 
 data class UserShortResponse(val mal_id: Int,val image_url: String,val name: String)
 
@@ -76,9 +76,9 @@ data class UserAnimeStats(val days_watched: Double, val mean_score: Double, val 
 data class UserMangaStats(val days_read: Double, val mean_score: Double, val reading: Int, val completed: Int,
                           val on_hold: Int, val dropped: Int, val plan_to_read: Int,val reread:Int,val chapters_read: Int,val volumes_read: Int)
 
-data class UserAnimeListResponse(val anime:UserAnimeListBody)
+data class UserAnimeListResponse(val anime:List<UserAnimeListBody>)
 
-data class UserMangaListResponse(val manga:UserMangaListBody)
+data class UserMangaListResponse(val manga:List<UserMangaListBody>)
 
 data class UserAnimeListBody(val mal_id: Int,val title: String,val image_url: String,val type: String,val watching_status:Int,val score: Double,val watched_episodes:Int,val total_episodes:Int)
 

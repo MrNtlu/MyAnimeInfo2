@@ -133,13 +133,13 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getUserAnimeList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserAnimeListBody> {
-        val liveData=MutableLiveData<UserAnimeListBody>()
+    fun getUserAnimeList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserAnimeListResponse> {
+        val liveData=MutableLiveData<UserAnimeListResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
-            var response:UserAnimeListBody?=null
+            var response:UserAnimeListResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
                 response=serviceRepository.getUserAnimeList(username)
             }
@@ -156,13 +156,13 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getUserMangaList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserMangaListBody> {
-        val liveData=MutableLiveData<UserMangaListBody>()
+    fun getUserMangaList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserMangaListResponse> {
+        val liveData=MutableLiveData<UserMangaListResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
-            var response:UserMangaListBody?=null
+            var response:UserMangaListResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
                 response=serviceRepository.getUserMangaList(username)
             }
