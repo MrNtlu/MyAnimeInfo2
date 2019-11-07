@@ -20,6 +20,7 @@ import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
@@ -175,7 +176,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setAnimeAdapter():PreviewAnimeListAdapter{
-        searchAnimeAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :BaseAdapter.Interaction<PreviewAnimeResponse>{
+        searchAnimeAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object : Interaction<PreviewAnimeResponse>{
             override fun onErrorRefreshPressed() {
                 searchAnimeAdapter.submitLoading()
                 setupObservers()
@@ -190,7 +191,7 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setMangaAdapter():PreviewMangaListAdapter{
-        searchMangaAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object : BaseAdapter.Interaction<PreviewMangaResponse>{
+        searchMangaAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object : Interaction<PreviewMangaResponse> {
             override fun onErrorRefreshPressed() {
                 searchMangaAdapter.submitLoading()
                 setupObservers()

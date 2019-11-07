@@ -9,6 +9,7 @@ import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.ReviewsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setGone
@@ -16,16 +17,7 @@ import com.mrntlu.myanimeinfo2.utils.setVisible
 import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_reviews.view.*
 
-class ReviewsListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var isAdapterSet=false
-    private var isErrorOccured=false
-    private val LOADING_ITEM_HOLDER=0
-    private val REVIEW_HOLDER=1
-    private val ERROR_HOLDER=2
-    private val NO_ITEM_HOLDER=3
-    private var errorMessage="Error!"
-    private var reviewsList:ArrayList<ReviewsBodyResponse> = arrayListOf()
+class ReviewsListAdapter(override val interaction: Interaction<ReviewsBodyResponse>? = null) : BaseAdapter<ReviewsBodyResponse>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -36,56 +28,8 @@ class ReviewsListAdapter(private val interaction: Interaction? = null) : Recycle
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ReviewsHolder -> {
-                holder.bind(reviewsList[position])
-            }
-            is ErrorItemViewHolder->{
-                holder.itemView.errorText.text=errorMessage
-
-                holder.itemView.errorRefreshButton.setOnClickListener {
-                    interaction?.onErrorRefreshPressed()
-                }
-            }
-        }
-    }
-
-    override fun getItemViewType(position: Int)=if (isAdapterSet) {
-        when{
-            isErrorOccured->ERROR_HOLDER
-            reviewsList.size==0->NO_ITEM_HOLDER
-            else ->REVIEW_HOLDER
-        }
-    }else LOADING_ITEM_HOLDER
-
-    override fun getItemCount()=if (isAdapterSet && !isErrorOccured && reviewsList.size!=0) reviewsList.size else 1
-
-    fun submitList(list: List<ReviewsBodyResponse>) {
-        reviewsList.apply {
-            this.clear()
-            this.addAll(list)
-        }
-        isAdapterSet=true
-        isErrorOccured=false
-        notifyDataSetChanged()
-    }
-
-    fun submitLoading(){
-        isAdapterSet=false
-        isErrorOccured=false
-        notifyDataSetChanged()
-    }
-
-    fun submitError(message:String){
-        isAdapterSet=true
-        isErrorOccured=true
-        errorMessage=message
-        notifyDataSetChanged()
-    }
-
-    class ReviewsHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: ReviewsBodyResponse) = with(itemView) {
+    class ReviewsHolder constructor(itemView: View) : ItemHolder<ReviewsBodyResponse>(itemView) {
+        override fun bind(item: ReviewsBodyResponse):Unit = with(itemView) {
             itemView.setOnClickListener {
                 if (itemView.reviewText.isVisible){
                     itemView.reviewText.setGone()
@@ -106,9 +50,5 @@ class ReviewsListAdapter(private val interaction: Interaction? = null) : Recycle
             itemView.reviewText.text=item.content
             itemView.userImage.loadWithGlide(item.reviewer.image_url,itemView.reviewProgressBar)
         }
-    }
-
-    interface Interaction {
-        fun onErrorRefreshPressed()
     }
 }

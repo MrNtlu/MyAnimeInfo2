@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.ReviewsListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
+import com.mrntlu.myanimeinfo2.models.ReviewsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
@@ -46,7 +48,9 @@ class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fra
 
     private fun setupRecyclerView() =fragmentRV.apply {
         layoutManager=LinearLayoutManager(context)
-        reviewsListAdapter= ReviewsListAdapter(object :ReviewsListAdapter.Interaction{
+        reviewsListAdapter= ReviewsListAdapter(object : Interaction<ReviewsBodyResponse> {
+            override fun onItemSelected(position: Int, item: ReviewsBodyResponse) {}
+
             override fun onErrorRefreshPressed() {
                 reviewsListAdapter.submitLoading()
                 setupObservers()

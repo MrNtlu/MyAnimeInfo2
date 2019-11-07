@@ -12,13 +12,11 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.utils.makeCapital
-import com.mrntlu.myanimeinfo2.utils.printLog
-import com.mrntlu.myanimeinfo2.utils.showToast
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import kotlinx.android.synthetic.main.fragment_anime_season.*
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +24,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, BaseAdapter.Interaction<PreviewAnimeResponse> {
+class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<PreviewAnimeResponse> {
 
     private lateinit var animeViewModel: AnimeViewModel
     private lateinit var seasonAnimeAdapter: PreviewAnimeListAdapter

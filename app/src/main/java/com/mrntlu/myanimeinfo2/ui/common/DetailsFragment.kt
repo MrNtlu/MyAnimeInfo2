@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.GenreTagListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.utils.setGone
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -84,7 +85,7 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
     private fun setupRecyclerView(list: List<GeneralShortResponse>) =genreListRV.apply {
         val linearLayoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         layoutManager=linearLayoutManager
-        genreTagListAdapter=GenreTagListAdapter(object :GenreTagListAdapter.Interaction{
+        genreTagListAdapter=GenreTagListAdapter(object : Interaction<GeneralShortResponse> {
             override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                 if (dataType==DataType.ANIME) {
                     val bundle = bundleOf(
@@ -102,6 +103,8 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
                     navController.navigate(R.id.action_mangaInfo_to_genreDialog, bundle)
                 }
             }
+
+            override fun onErrorRefreshPressed() {}
         })
         adapter=genreTagListAdapter
         genreTagListAdapter.submitList(list)

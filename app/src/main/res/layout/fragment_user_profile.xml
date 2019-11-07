@@ -1,78 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.others.UserProfileFragment">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/userProfileImage"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="18dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/userProfileName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textColor="@color/materialBlack"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/userProfileImage"
-        app:layout_constraintTop_toTopOf="@+id/userProfileImage" />
-    <include
-        layout="@layout/loading_layout"
-        android:visibility="gone"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FAFAFA"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/userMangaListButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/transparent"
-        android:drawableTop="@drawable/ic_superheroes_comic_book"
-        android:padding="4dp"
-        android:text="Manga List"
-        android:drawablePadding="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/userAnimeListButton"
-        app:layout_constraintTop_toTopOf="@+id/userAnimeListButton" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userProfileImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/userAnimeListButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="4dp"
-        android:background="@android:color/transparent"
-        android:drawableTop="@drawable/ic_streaming"
-        android:drawablePadding="3dp"
-        android:padding="4dp"
-        android:text="Anime List"
-        app:layout_constraintEnd_toStartOf="@+id/userMangaListButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
+                <Button
+                    android:id="@+id/userMangaListButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/white"
+                    android:drawableTop="@drawable/ic_bookshelf"
+                    android:drawablePadding="6dp"
+                    android:padding="4dp"
+                    android:text="Manga List"
+                    android:textAllCaps="false"
+                    android:textColor="@color/materialBlack"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/userAnimeListButton"
+                    app:layout_constraintTop_toTopOf="@+id/userAnimeListButton" />
 
-    <ProgressBar
-        android:id="@+id/userProfileProgress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
-        app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
-        app:layout_constraintStart_toStartOf="@+id/userProfileImage"
-        app:layout_constraintTop_toTopOf="@+id/userProfileImage" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/userAnimeListButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@android:color/white"
+                    android:drawableTop="@drawable/ic_television"
+                    android:drawablePadding="6dp"
+                    android:padding="4dp"
+                    android:text="Anime List"
+                    android:textAllCaps="false"
+                    android:textColor="@color/materialBlack"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
+                    app:layout_constraintEnd_toStartOf="@+id/userMangaListButton"
+                    app:layout_constraintStart_toEndOf="@+id/userProfileImage"
+                    app:layout_constraintTop_toBottomOf="@+id/userProfileName" />
+
+                <TextView
+                    android:id="@+id/userProfileName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/materialBlack"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/userProfileImage"
+                    app:layout_constraintTop_toTopOf="@+id/userProfileImage" />
+
+                <ProgressBar
+                    android:id="@+id/userProfileProgress"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
+                    app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
+                    app:layout_constraintStart_toStartOf="@+id/userProfileImage"
+                    app:layout_constraintTop_toTopOf="@+id/userProfileImage" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/profileTablayout"
+            app:tabTextAppearance="@style/TabLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabGravity="center"
+            app:tabMode="auto" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/profileViewPager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileTablayout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/progressbarLayout"
+        layout="@layout/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/errorLayout"
+        android:visibility="gone"
+        layout="@layout/cell_error"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.RecommendationListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.printLog
@@ -51,7 +52,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
 
     private fun setupRecyclerView()=fragmentRV.apply {
         layoutManager= LinearLayoutManager(context)
-        recommendationListAdapter= RecommendationListAdapter(object :RecommendationListAdapter.Interaction{
+        recommendationListAdapter= RecommendationListAdapter(object : Interaction<RecommendationsBodyResponse> {
             override fun onErrorRefreshPressed() {
                 recommendationListAdapter.submitLoading()
                 setupObservers()

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.RelatedListAdapter
 import com.mrntlu.myanimeinfo2.adapters.RelatedListAdapter.*
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
 import com.mrntlu.myanimeinfo2.models.RelatedResponse
@@ -62,7 +63,9 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
         if (relatedResponse.Adaptation==null) adaptationsLayout.setGone()
         else adaptationsRV.apply {
             layoutManager= LinearLayoutManager(context)
-            adaptationAdapter= RelatedListAdapter(object : Interaction {
+            adaptationAdapter= RelatedListAdapter(object : Interaction<GeneralShortResponse> {
+                override fun onErrorRefreshPressed() {}
+
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     printLog(message = "Item ${item.mal_id} ${item.name}")
                     if (dataType==DataType.MANGA) navigateWithBundle(item.mal_id,R.id.action_mangaInfo_to_animeInfo)
@@ -76,7 +79,9 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
         if (relatedResponse.Prequel==null) prequelsLayout.setGone()
         else prequelsRV.apply {
             layoutManager= LinearLayoutManager(context)
-            prequelAdapter= RelatedListAdapter(object : Interaction {
+            prequelAdapter= RelatedListAdapter(object : Interaction<GeneralShortResponse> {
+                override fun onErrorRefreshPressed() {}
+
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
                     else navigateWithBundle(item.mal_id,R.id.action_mangaInfo_self)
@@ -89,7 +94,9 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
         if (relatedResponse.Sequel==null) sequelsLayout.setGone()
         else sequelsRV.apply {
             layoutManager= LinearLayoutManager(context)
-            sequelAdapter= RelatedListAdapter(object : Interaction {
+            sequelAdapter= RelatedListAdapter(object : Interaction<GeneralShortResponse> {
+                override fun onErrorRefreshPressed() {}
+
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
                     else navigateWithBundle(item.mal_id,R.id.action_mangaInfo_self)
@@ -102,7 +109,9 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
         if (relatedResponse.Side==null) sideStoryLayout.setGone()
         else sideStoriesRV.apply {
             layoutManager= LinearLayoutManager(context)
-            sideStoryAdapter= RelatedListAdapter(object : Interaction {
+            sideStoryAdapter= RelatedListAdapter(object : Interaction<GeneralShortResponse> {
+                override fun onErrorRefreshPressed() {}
+
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
                     if (dataType==DataType.ANIME) navigateWithBundle(item.mal_id,R.id.action_animeInfo_self)
                     else navigateWithBundle(item.mal_id,R.id.action_mangaInfo_self)

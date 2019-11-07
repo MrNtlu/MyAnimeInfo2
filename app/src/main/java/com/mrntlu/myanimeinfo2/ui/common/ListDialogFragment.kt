@@ -19,6 +19,7 @@ import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.models.DialogType
@@ -187,7 +188,7 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
     }
 
     private fun setMangaAdapter(): PreviewMangaListAdapter {
-        mangaGenreAdapter=PreviewMangaListAdapter(R.layout.cell_preview_large,object :BaseAdapter.Interaction<PreviewMangaResponse>{
+        mangaGenreAdapter=PreviewMangaListAdapter(R.layout.cell_preview_large,object : Interaction<PreviewMangaResponse> {
             override fun onErrorRefreshPressed() {
                 mangaGenreAdapter.submitLoading()
                 setGenreMangaObserver()
@@ -203,7 +204,7 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
     }
 
     private fun setAnimeAdapter(): PreviewAnimeListAdapter {
-        animeGenreAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object :BaseAdapter.Interaction<PreviewAnimeResponse>{
+        animeGenreAdapter=PreviewAnimeListAdapter (R.layout.cell_preview_large,object : Interaction<PreviewAnimeResponse>{
             override fun onErrorRefreshPressed() {
                 animeGenreAdapter.submitLoading()
                 if (dialogType==DialogType.GENRE) setGenreAnimeObserver()

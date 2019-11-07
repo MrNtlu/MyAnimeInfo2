@@ -9,13 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-
 import com.mrntlu.myanimeinfo2.R
+import com.mrntlu.myanimeinfo2.adapters.pageradapters.UserProfilePagerAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.models.UserFavsResponse
 import com.mrntlu.myanimeinfo2.models.UserProfileResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
-import com.mrntlu.myanimeinfo2.utils.printLog
+import com.mrntlu.myanimeinfo2.utils.setGone
+import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
+import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -44,10 +47,9 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
         commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        progressbarLayout.setVisible()
 
         setListeners()
-        setupRecyclerView()
-        setViewPager()
         setupObserver()
     }
 
@@ -59,35 +61,48 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
         userMangaListButton.setOnClickListener {
 
         }
+
+        errorLayout.errorRefreshButton.setOnClickListener {
+            progressbarLayout.setVisible()
+            errorLayout.setGone()
+            setupObserver()
+        }
     }
 
     private fun setUI(){
         userProfileImage.loadWithGlide(userProfileResponse.image_url,userProfileProgress)
         userProfileName.text=userProfileResponse.username
+        progressbarLayout.setGone()
     }
 
-    private fun setViewPager() {
-
-    }
-
-    private fun setupRecyclerView() {
+    private fun setViewPager(userFavsResponse: UserFavsResponse) {
+        val pagerAdapter=UserProfilePagerAdapter(
+            childFragmentManager,
+            userFavsResponse
+        )
+        profileViewPager.adapter=pagerAdapter
+        profileTablayout.setupWithViewPager(profileViewPager)
+        profileTablayout.getTabAt(0)?.setIcon(R.drawable.ic_growth)
     }
 
     private fun setupObserver() {
         commonViewModel.getUserProfile(username,this).observe(viewLifecycleOwner, Observer {
             userProfileResponse=it
-            printLog(message = it.toString())
             setUI()
+            setViewPager(it.favorites)
         })
     }
 
     override fun onError(message: String) {
         GlobalScope.launch(Dispatchers.Main){
-            printLog(message= message)
+            progressbarLayout.setGone()
+            errorLayout.setVisible()
+            errorLayout.errorText.text=message
         }
     }
 
     override fun onDestroyView() {
+        profileViewPager.adapter=null
         super.onDestroyView()
     }
 }

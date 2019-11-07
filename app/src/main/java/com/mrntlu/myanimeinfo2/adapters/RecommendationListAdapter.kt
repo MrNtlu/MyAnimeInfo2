@@ -8,21 +8,13 @@ import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import kotlinx.android.synthetic.main.cell_character.view.*
 import kotlinx.android.synthetic.main.cell_error.view.*
 
-class RecommendationListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var isAdapterSet=false
-    private var isErrorOccured=false
-    private val LOADING_ITEM_HOLDER=0
-    private val RECOMMENDATION_HOLDER=1
-    private val ERROR_HOLDER=2
-    private val NO_ITEM_HOLDER=3
-    private var errorMessage="Error!"
-    private var recommendationList:ArrayList<RecommendationsBodyResponse> = arrayListOf()
+class RecommendationListAdapter(override val interaction: Interaction<RecommendationsBodyResponse>? = null):BaseAdapter<RecommendationsBodyResponse>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -33,56 +25,8 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is RecommendationHolder -> {
-                holder.bind(recommendationList[position])
-            }
-            is ErrorItemViewHolder->{
-                holder.itemView.errorText.text=errorMessage
-
-                holder.itemView.errorRefreshButton.setOnClickListener {
-                    interaction?.onErrorRefreshPressed()
-                }
-            }
-        }
-    }
-
-    override fun getItemCount()= if (isAdapterSet && !isErrorOccured && recommendationList.size!=0) recommendationList.size else 1
-
-    override fun getItemViewType(position: Int)=if (isAdapterSet){
-        when {
-            isErrorOccured -> ERROR_HOLDER
-            recommendationList.size==0 -> NO_ITEM_HOLDER
-            else -> RECOMMENDATION_HOLDER
-        }
-    }else LOADING_ITEM_HOLDER
-
-    fun submitList(list: List<RecommendationsBodyResponse>) {
-        recommendationList.apply {
-            this.clear()
-            this.addAll(list)
-        }
-        isAdapterSet=true
-        isErrorOccured=false
-        notifyDataSetChanged()
-    }
-
-    fun submitLoading(){
-        isAdapterSet=false
-        isErrorOccured=false
-        notifyDataSetChanged()
-    }
-
-    fun submitError(message:String){
-        isAdapterSet=true
-        isErrorOccured=true
-        errorMessage=message
-        notifyDataSetChanged()
-    }
-
-    class RecommendationHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: RecommendationsBodyResponse) = with(itemView) {
+    class RecommendationHolder constructor(itemView: View, private val interaction: Interaction<RecommendationsBodyResponse>?) : ItemHolder<RecommendationsBodyResponse>(itemView) {
+        override fun bind(item: RecommendationsBodyResponse):Unit = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
@@ -92,11 +36,5 @@ class RecommendationListAdapter(private val interaction: Interaction? = null) : 
             itemView.characterRoleText.setTextColor(resources.getColor(R.color.green900,context.theme))
             itemView.characterImage.loadWithGlide(item.image_url,itemView.characterProgressBar)
         }
-    }
-
-    interface Interaction {
-        fun onItemSelected(position: Int, item: RecommendationsBodyResponse)
-
-        fun onErrorRefreshPressed()
     }
 }

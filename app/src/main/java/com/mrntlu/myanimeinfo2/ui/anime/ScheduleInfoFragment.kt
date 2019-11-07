@@ -10,8 +10,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 
@@ -32,7 +32,7 @@ class ScheduleInfoFragment(private val scheduleAnimeList:List<PreviewAnimeRespon
     }
 
     private fun setupRecyclerView()=fragmentRV.apply {
-        scheduleAdapter= PreviewAnimeListAdapter(R.layout.cell_preview_large,object : BaseAdapter.Interaction<PreviewAnimeResponse>{
+        scheduleAdapter= PreviewAnimeListAdapter(R.layout.cell_preview_large,object : Interaction<PreviewAnimeResponse> {
             override fun onErrorRefreshPressed() {}
 
             override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {

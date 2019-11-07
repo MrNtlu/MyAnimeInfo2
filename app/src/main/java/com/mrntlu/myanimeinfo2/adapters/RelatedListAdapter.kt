@@ -6,15 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
 import kotlinx.android.synthetic.main.cell_related.view.*
 
-class RelatedListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val NO_ITEM_HOLDER=0
-    private val ITEM_HOLDER=1
-    private var isAdapterSet:Boolean=false
-    private var relatedList:ArrayList<GeneralShortResponse> = arrayListOf()
+class RelatedListAdapter(override val interaction: Interaction<GeneralShortResponse>? = null) : BaseAdapter<GeneralShortResponse>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -23,38 +19,13 @@ class RelatedListAdapter(private val interaction: Interaction? = null) : Recycle
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is RelatedHolder -> {
-                holder.bind(relatedList[position])
-            }
-        }
-    }
-
-    override fun getItemViewType(position: Int)=if (relatedList.size==0) NO_ITEM_HOLDER else ITEM_HOLDER
-
-    override fun getItemCount()=if (relatedList.size==0) 1 else relatedList.size
-
-    fun submitList(list: List<GeneralShortResponse>) {
-        relatedList.apply {
-            this.clear()
-            this.addAll(list)
-        }
-        isAdapterSet=true
-        notifyDataSetChanged()
-    }
-
-    class RelatedHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: GeneralShortResponse) = with(itemView) {
+    class RelatedHolder constructor(itemView: View, private val interaction: Interaction<GeneralShortResponse>?) : ItemHolder<GeneralShortResponse>(itemView) {
+        override fun bind(item: GeneralShortResponse):Unit = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
             itemView.relatedDataText.text=item.name
         }
-    }
-
-    interface Interaction {
-        fun onItemSelected(position: Int, item: GeneralShortResponse)
     }
 }

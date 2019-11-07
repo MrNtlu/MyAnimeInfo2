@@ -9,13 +9,13 @@ import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.PaginationLoadingViewHolder
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setVisible
-import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
-class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,override val interaction: Interaction<PreviewAnimeResponse>? = null) : BaseAdapter<PreviewAnimeResponse>() {
+class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview, override val interaction: Interaction<PreviewAnimeResponse>? = null) : BaseAdapter<PreviewAnimeResponse>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -42,5 +42,4 @@ class PreviewAnimeListAdapter(private val layout:Int=R.layout.cell_preview,overr
             itemView.previewImage.loadWithGlide(item.image_url,itemView.previewImageProgress)
         }
     }
-
 }

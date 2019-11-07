@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -22,13 +21,13 @@ import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.adapters.TopListTypeAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.makeCapital
 import com.mrntlu.myanimeinfo2.utils.printLog
-import com.mrntlu.myanimeinfo2.utils.setToolbarTitle
 import com.mrntlu.myanimeinfo2.utils.showToast
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
@@ -156,7 +155,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setMangaAdapter(): PreviewMangaListAdapter {
-        topMangaListAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object : BaseAdapter.Interaction<PreviewMangaResponse>{
+        topMangaListAdapter= PreviewMangaListAdapter(R.layout.cell_preview_large,object : Interaction<PreviewMangaResponse> {
             override fun onErrorRefreshPressed() {
                 topMangaListAdapter.submitLoading()
                 setMangaObserver()
@@ -171,7 +170,7 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setAnimeAdapter(): PreviewAnimeListAdapter {
-        topAnimeListAdapter=PreviewAnimeListAdapter(R.layout.cell_preview_large,object :BaseAdapter.Interaction<PreviewAnimeResponse>{
+        topAnimeListAdapter=PreviewAnimeListAdapter(R.layout.cell_preview_large,object : Interaction<PreviewAnimeResponse>{
             override fun onErrorRefreshPressed() {
                 topAnimeListAdapter.submitLoading()
                 setAnimeObserver()

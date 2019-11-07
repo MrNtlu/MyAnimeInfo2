@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.CharacterListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.CharacterBodyResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.*
@@ -73,7 +74,7 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
 
     private fun setupRecyclerView()= fragmentRV.apply {
         layoutManager=LinearLayoutManager(context)
-        characterListAdapter= CharacterListAdapter(object :CharacterListAdapter.Interaction{
+        characterListAdapter= CharacterListAdapter(object : Interaction<CharacterBodyResponse> {
             override fun onErrorRefreshPressed() {
                 characterListAdapter.submitLoading()
                 setupObservers()

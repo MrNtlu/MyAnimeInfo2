@@ -8,21 +8,12 @@ import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.ErrorItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.LoadingItemViewHolder
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.CharacterBodyResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import kotlinx.android.synthetic.main.cell_character.view.*
-import kotlinx.android.synthetic.main.cell_error.view.*
 
-class CharacterListAdapter (private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-
-    private var isAdapterSet:Boolean=false
-    private var isErrorOccured=false
-    private val LOADING_ITEM_HOLDER=0
-    private val CHARACTER_HOLDER=1
-    private val ERROR_HOLDER=2
-    private val NO_ITEM_HOLDER=3
-    private var errorMessage="Error!"
-    private var characterList:ArrayList<CharacterBodyResponse> = arrayListOf()
+class CharacterListAdapter (override val interaction: Interaction<CharacterBodyResponse>? = null) : BaseAdapter<CharacterBodyResponse>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -33,56 +24,8 @@ class CharacterListAdapter (private val interaction: Interaction? = null) : Recy
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is CharacterHolder -> {
-                holder.bind(characterList[position])
-            }
-            is ErrorItemViewHolder->{
-                holder.itemView.errorText.text=errorMessage
-
-                holder.itemView.errorRefreshButton.setOnClickListener {
-                    interaction?.onErrorRefreshPressed()
-                }
-            }
-        }
-    }
-
-    override fun getItemCount()=if (isAdapterSet && !isErrorOccured && characterList.size!=0) characterList.size else 1
-
-    override fun getItemViewType(position: Int)=if (isAdapterSet){
-        when{
-            isErrorOccured->ERROR_HOLDER
-            characterList.size==0->NO_ITEM_HOLDER
-            else->CHARACTER_HOLDER
-        }
-    }else LOADING_ITEM_HOLDER
-
-    fun submitList(list: List<CharacterBodyResponse>) {
-        characterList.apply {
-            this.clear()
-            this.addAll(list)
-        }
-        isAdapterSet=true
-        isErrorOccured=false
-        notifyDataSetChanged()
-    }
-
-    fun submitLoading(){
-        isAdapterSet=false
-        isErrorOccured=false
-        notifyDataSetChanged()
-    }
-
-    fun submitError(message:String){
-        isAdapterSet=true
-        isErrorOccured=true
-        errorMessage=message
-        notifyDataSetChanged()
-    }
-
-    class CharacterHolder constructor(itemView: View, private val interaction: Interaction?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: CharacterBodyResponse) = with(itemView) {
+    class CharacterHolder constructor(itemView: View, private val interaction: Interaction<CharacterBodyResponse>?) : ItemHolder<CharacterBodyResponse>(itemView) {
+        override fun bind(item: CharacterBodyResponse):Unit = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
@@ -91,11 +34,5 @@ class CharacterListAdapter (private val interaction: Interaction? = null) : Recy
             itemView.characterRoleText.text=item.role
             itemView.characterImage.loadWithGlide(item.image_url,itemView.characterProgressBar)
         }
-    }
-
-    interface Interaction {
-        fun onItemSelected(position: Int, item: CharacterBodyResponse)
-
-        fun onErrorRefreshPressed()
     }
 }

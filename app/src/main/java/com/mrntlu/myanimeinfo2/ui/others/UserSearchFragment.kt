@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.UserPastSearchListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.utils.hideKeyboard
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.utils.showToast
 import kotlinx.android.synthetic.main.fragment_search_user.*
 
-class UserSearchFragment : Fragment(), UserPastSearchListAdapter.Interaction {
+class UserSearchFragment : Fragment(), Interaction<String> {
 
     private lateinit var navController: NavController
     private lateinit var userPastListAdapter:UserPastSearchListAdapter
@@ -53,6 +54,7 @@ class UserSearchFragment : Fragment(), UserPastSearchListAdapter.Interaction {
     private fun setupRecyclerView()=pastSearchRV.apply {
         layoutManager= LinearLayoutManager(context)
         userPastListAdapter=UserPastSearchListAdapter(this@UserSearchFragment)
+        userPastListAdapter.submitList(listOf())
         adapter=userPastListAdapter
     }
 
@@ -77,6 +79,8 @@ class UserSearchFragment : Fragment(), UserPastSearchListAdapter.Interaction {
         val bundle = bundleOf("username" to username)
         navController.navigate(R.id.action_userSearch_to_userProfile,bundle)
     }
+
+    override fun onErrorRefreshPressed() {}
 
     override fun onItemSelected(position: Int, item: String) {
         navigateWithBundle(item)

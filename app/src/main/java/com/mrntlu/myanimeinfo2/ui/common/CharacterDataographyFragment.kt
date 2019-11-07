@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.CharacterListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.CharacterBodyResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.utils.printLog
@@ -35,7 +36,7 @@ class CharacterDataographyFragment(private val dataList:List<CharacterBodyRespon
 
     private fun setupRecyclerView()=fragmentRV.apply {
         layoutManager= LinearLayoutManager(context)
-        listAdapter= CharacterListAdapter(object :CharacterListAdapter.Interaction{
+        listAdapter= CharacterListAdapter(object : Interaction<CharacterBodyResponse> {
             override fun onErrorRefreshPressed() {}
 
             override fun onItemSelected(position: Int, item: CharacterBodyResponse) {

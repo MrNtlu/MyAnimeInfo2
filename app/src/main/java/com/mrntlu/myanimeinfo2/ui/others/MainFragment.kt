@@ -16,6 +16,7 @@ import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
@@ -137,7 +138,7 @@ class MainFragment : Fragment(){
     private fun setupRecyclerView() {
         topAiringRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            topAiringAdapter=PreviewAnimeListAdapter(interaction = object :BaseAdapter.Interaction<PreviewAnimeResponse> {
+            topAiringAdapter=PreviewAnimeListAdapter(interaction = object : Interaction<PreviewAnimeResponse> {
                 override fun onErrorRefreshPressed() {
                     topAiringAdapter.submitLoading()
                     setTopAiringAnimeObserver()
@@ -151,7 +152,7 @@ class MainFragment : Fragment(){
         }
         topMangaRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            topMangaAdapter= PreviewMangaListAdapter(interaction = object : BaseAdapter.Interaction<PreviewMangaResponse> {
+            topMangaAdapter= PreviewMangaListAdapter(interaction = object : Interaction<PreviewMangaResponse> {
                 override fun onErrorRefreshPressed() {
                     topMangaAdapter.submitLoading()
                     setTopMangaObserver()
@@ -165,7 +166,7 @@ class MainFragment : Fragment(){
         }
         airingTodayRV.apply {
             layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            todayAiringAdapter=PreviewAnimeListAdapter(interaction = object : BaseAdapter.Interaction<PreviewAnimeResponse> {
+            todayAiringAdapter=PreviewAnimeListAdapter(interaction = object : Interaction<PreviewAnimeResponse> {
                 override fun onErrorRefreshPressed() {
                     todayAiringAdapter.submitLoading()
                     setAiringTodayObserver()

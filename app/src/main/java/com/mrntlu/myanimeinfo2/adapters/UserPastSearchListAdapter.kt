@@ -6,14 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.viewholders.NoItemViewHolder
+import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import kotlinx.android.synthetic.main.cell_no_item.view.*
 
-class UserPastSearchListAdapter(private val interaction: Interaction? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserPastSearchListAdapter(override val interaction: Interaction<String>? = null) : BaseAdapter<String>() {
 
-    private var userPastSearchList:ArrayList<String> = arrayListOf()
-
-    private val NO_ITEM_HOLDER=0
-    private val ITEM_HOLDER=1
+    override var errorMessage="Nothing searched before :("
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -22,30 +20,11 @@ class UserPastSearchListAdapter(private val interaction: Interaction? = null) : 
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
-            is UserPastSearchViewHolder->{
-                holder.bind(userPastSearchList[position])
-            }
-            is NoItemViewHolder->{
-                holder.itemView.cellNoItem.text="Nothing searched before :("
-            }
-        }
-    }
-
-    override fun getItemViewType(position: Int)=if (userPastSearchList.size==0) NO_ITEM_HOLDER else ITEM_HOLDER
-
-    override fun getItemCount()=if (userPastSearchList.size==0) 1 else userPastSearchList.size
-
-    class UserPastSearchViewHolder constructor(itemView:View,private val interaction: Interaction?):RecyclerView.ViewHolder(itemView){
-        fun bind(item:String){
+    class UserPastSearchViewHolder constructor(itemView:View,private val interaction: Interaction<String>?):ItemHolder<String>(itemView){
+        override fun bind(item:String){
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition,item)
             }
         }
-    }
-
-    interface Interaction {
-        fun onItemSelected(position: Int, item: String)
     }
 }
