@@ -206,7 +206,6 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
 
     override fun onError(message: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            printLog(message = message)
             if (pageNum == 1){
                 if (dataType == ANIME) topAnimeListAdapter.submitError(message)
                 else topMangaListAdapter.submitError(message)

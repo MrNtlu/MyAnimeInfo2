@@ -108,6 +108,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:tabMinWidth="30dp"
+            android:maxWidth="50dp"
             app:tabGravity="center"
             app:tabMode="auto" />
 

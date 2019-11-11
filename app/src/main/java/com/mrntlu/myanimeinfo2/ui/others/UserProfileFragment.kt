@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -12,6 +13,7 @@ import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.UserProfilePagerAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
+import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.UserFavsResponse
 import com.mrntlu.myanimeinfo2.models.UserProfileResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
@@ -55,11 +57,13 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
 
     private fun setListeners() {
         userAnimeListButton.setOnClickListener {
-
+            val bundle= bundleOf("username" to userProfileResponse.username, "data_type" to DataType.ANIME.code)
+            navController.navigate(R.id.action_userProfile_to_userList,bundle)
         }
 
         userMangaListButton.setOnClickListener {
-
+            val bundle= bundleOf("username" to userProfileResponse.username, "data_type" to DataType.MANGA.code)
+            navController.navigate(R.id.action_userProfile_to_userList,bundle)
         }
 
         errorLayout.errorRefreshButton.setOnClickListener {
@@ -75,10 +79,10 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
         progressbarLayout.setGone()
     }
 
-    private fun setViewPager(userFavsResponse: UserFavsResponse) {
+    private fun setViewPager(userProfileResponse: UserProfileResponse) {
         val pagerAdapter=UserProfilePagerAdapter(
             childFragmentManager,
-            userFavsResponse
+            userProfileResponse
         )
         profileViewPager.adapter=pagerAdapter
         profileTablayout.setupWithViewPager(profileViewPager)
@@ -89,7 +93,7 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
         commonViewModel.getUserProfile(username,this).observe(viewLifecycleOwner, Observer {
             userProfileResponse=it
             setUI()
-            setViewPager(it.favorites)
+            setViewPager(it)
         })
     }
 

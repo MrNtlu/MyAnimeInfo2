@@ -132,6 +132,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         setSupportActionBar(null)
+        adView.adListener=null
         super.onDestroy()
     }
 }
