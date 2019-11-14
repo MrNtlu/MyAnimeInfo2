@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
+
+    <ProgressBar
+        android:id="@+id/imageProgress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/userListImage"
+        app:layout_constraintEnd_toEndOf="@+id/userListImage"
+        app:layout_constraintStart_toStartOf="@+id/userListImage"
+        app:layout_constraintTop_toTopOf="@+id/userListImage" />
+
+    <ImageView
+        android:id="@+id/userListImage"
+        android:layout_width="140dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:scaleType="fitXY"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/userListView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="175dp"
+        app:layout_constraintWidth_min="150dp" />
+
+    <View
+        android:id="@+id/userListView"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:background="@color/green500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userListTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Shinchou Yuusha: Kono Yuusha ga Ore Tueee Kuse ni Shinchou Sugiru"
+        android:textAlignment="center"
+        android:textColor="@color/materialBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/userListImage"
+        app:layout_constraintTop_toTopOf="@+id/userListImage" />
+
+    <TextView
+        android:id="@+id/userListType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Plan to Watch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userListTitle" />
+
+    <TextView
+        android:id="@+id/userListVolumesText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Volumes:"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/userListChaptersText"
+        app:layout_constraintEnd_toStartOf="@+id/userListEpisodes"
+        app:layout_constraintStart_toEndOf="@+id/userListImage"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/userListEpisodes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="120/300"
+        android:textAlignment="viewStart"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/userListVolumesText"
+        app:layout_constraintEnd_toEndOf="@+id/userListTitle"
+        app:layout_constraintStart_toEndOf="@+id/userListVolumesText"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Score:"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/userListVolumesText"
+        app:layout_constraintEnd_toStartOf="@+id/userListScore"
+        app:layout_constraintStart_toEndOf="@+id/userListImage" />
+
+    <TextView
+        android:id="@+id/userListScore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="9"
+        android:textAlignment="viewStart"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView27"
+        app:layout_constraintEnd_toEndOf="@+id/userListEpisodes"
+        app:layout_constraintStart_toEndOf="@+id/textView27" />
+
+    <TextView
+        android:id="@+id/userListChaptersText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Chapters:"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/userListImage"
+        app:layout_constraintEnd_toStartOf="@+id/userListChapters"
+        app:layout_constraintStart_toEndOf="@+id/userListImage"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/userListChapters"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="300/300"
+        android:textAlignment="viewStart"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/userListChaptersText"
+        app:layout_constraintEnd_toEndOf="@+id/userListEpisodes"
+        app:layout_constraintStart_toEndOf="@+id/userListChaptersText"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

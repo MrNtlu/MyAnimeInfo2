@@ -29,6 +29,24 @@
         <item>bypopularity</item>
         <item>favorite</item>
     </string-array>
+    
+    <string-array name="animeListFilter">
+        <item>all</item>
+        <item>watching</item>
+        <item>completed</item>
+        <item>onhold</item>
+        <item>dropped</item>
+        <item>plan to watch</item>
+    </string-array>
+
+    <string-array name="mangaListFilter">
+        <item>all</item>
+        <item>reading</item>
+        <item>completed</item>
+        <item>onhold</item>
+        <item>dropped</item>
+        <item>plan to read</item>
+    </string-array>
 
     <string-array name="seasonNames">
         <item>winter</item>
