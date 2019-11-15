@@ -35,9 +35,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:src="@drawable/ic_arrow_up_24dp"
+        android:visibility="gone"
         app:backgroundTint="@color/materialBlack"
         app:fabSize="normal"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />

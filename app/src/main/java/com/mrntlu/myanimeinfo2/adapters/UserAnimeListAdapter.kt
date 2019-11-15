@@ -58,12 +58,11 @@ class UserAnimeListAdapter(override val interaction: Interaction<UserAnimeListBo
 
             itemView.userListScore.text=item.score.toInt().toString()
 
-            itemView.userListVolumesText.text="Episodes:"
+            itemView.userListChaptersText.text="Episodes:"
             val volumeText="${item.watched_episodes}/${item.total_episodes}"
-            itemView.userListEpisodes.text=volumeText
+            itemView.userListChapters.text=volumeText
 
-            itemView.userListChaptersText.setGone()
-            itemView.userListChapters.setGone()
+            itemView.userVolumesCardView.setGone()
 
             itemView.imageProgress.setVisible()
             itemView.userListImage.loadWithGlide(item.image_url,itemView.imageProgress)

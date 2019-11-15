@@ -8,23 +8,31 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.UserPastSearchListAdapter
+import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
+import com.mrntlu.myanimeinfo2.models.UserSearch
 import com.mrntlu.myanimeinfo2.utils.hideKeyboard
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.utils.showToast
+import com.mrntlu.myanimeinfo2.viewmodels.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search_user.*
 
-class UserSearchFragment : Fragment(), Interaction<String> {
+class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorHandler {
 
     private lateinit var navController: NavController
     private lateinit var userPastListAdapter:UserPastSearchListAdapter
+    private lateinit var searchViewModel:SearchViewModel
+
+    private lateinit var userSearchList:List<UserSearch>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search_user, container, false)
@@ -33,10 +41,25 @@ class UserSearchFragment : Fragment(), Interaction<String> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-
+        searchViewModel= ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        
         setSearchView()
         setupRecyclerView()
         setListeners()
+        setupObserver()
+    }
+
+    private fun setupObserver() {
+        searchViewModel.getSearches().observe(viewLifecycleOwner, Observer {
+            userSearchList=it
+            userPastListAdapter.submitList(it)
+        })
+    }
+    
+    private fun addOrUpdateSearch(search:UserSearch,isInserting:Boolean){
+        searchViewModel.insertOrUpdateSearch(search,isInserting,this).observe(viewLifecycleOwner, Observer {
+            navigateWithBundle(it.search)
+        })
     }
 
     private fun setListeners() {
@@ -54,7 +77,6 @@ class UserSearchFragment : Fragment(), Interaction<String> {
     private fun setupRecyclerView()=pastSearchRV.apply {
         layoutManager= LinearLayoutManager(context)
         userPastListAdapter=UserPastSearchListAdapter(this@UserSearchFragment)
-        userPastListAdapter.submitList(listOf())
         adapter=userPastListAdapter
     }
 
@@ -67,7 +89,7 @@ class UserSearchFragment : Fragment(), Interaction<String> {
             override fun onQueryTextSubmit(query: String?):Boolean{
                 if (query!=null && !query.isBlank()) {
                     this@apply.clearFocus()
-                    navigateWithBundle(query)
+                    addOrUpdateSearch(UserSearch(userSearchList.size,query),true)
                 }else showToast(this@apply.context,"Please type something.")
                 return false
             }
@@ -82,8 +104,12 @@ class UserSearchFragment : Fragment(), Interaction<String> {
 
     override fun onErrorRefreshPressed() {}
 
-    override fun onItemSelected(position: Int, item: String) {
-        navigateWithBundle(item)
+    override fun onItemSelected(position: Int, item: UserSearch) {
+        navigateWithBundle(item.search)
+    }
+
+    override fun onError(message: String) {
+
     }
 
     override fun onResume() {

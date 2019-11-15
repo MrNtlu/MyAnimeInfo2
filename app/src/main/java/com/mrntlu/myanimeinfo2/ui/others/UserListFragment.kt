@@ -5,12 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
@@ -66,8 +69,16 @@ class UserListFragment : Fragment(), CoroutinesErrorHandler{
         yearSpinner.isEnabled=false
 
         setRecyclerView()
+        setListeners()
         setSpinner()
         setupObservers()
+    }
+
+    private fun setListeners() {
+        goUpFAB.setOnClickListener {
+            goUpFAB.hide()
+            animeSeasonRV.scrollToPosition(0)
+        }
     }
 
     private fun setupObservers() {
@@ -98,11 +109,13 @@ class UserListFragment : Fragment(), CoroutinesErrorHandler{
     }
 
     private fun setRecyclerView()=animeSeasonRV.apply {
-        layoutManager= LinearLayoutManager(context)
+        val linearLayoutManager=LinearLayoutManager(context)
+        layoutManager=linearLayoutManager
         if (dataType==ANIME){
             animeAdapter= UserAnimeListAdapter(object :Interaction<UserAnimeListBody>{
                 override fun onItemSelected(position: Int, item: UserAnimeListBody) {
-
+                    val bundle= bundleOf("mal_id" to item.mal_id)
+                    navController.navigate(R.id.action_userList_to_animeInfo,bundle)
                 }
 
                 override fun onErrorRefreshPressed() {
@@ -115,7 +128,8 @@ class UserListFragment : Fragment(), CoroutinesErrorHandler{
         }else{
             mangaAdapter= UserMangaListAdapter(object :Interaction<UserMangaListBody>{
                 override fun onItemSelected(position: Int, item: UserMangaListBody) {
-
+                    val bundle= bundleOf("mal_id" to item.mal_id)
+                    navController.navigate(R.id.action_userList_to_mangaInfo,bundle)
                 }
 
                 override fun onErrorRefreshPressed() {
@@ -126,6 +140,15 @@ class UserListFragment : Fragment(), CoroutinesErrorHandler{
             })
             adapter=mangaAdapter
         }
+
+        this.addOnScrollListener(object:RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy<=-8 && linearLayoutManager.findLastVisibleItemPosition()>15) goUpFAB.show()
+                else if (linearLayoutManager.findLastVisibleItemPosition()>15 && dy in -7..7) if (goUpFAB.isVisible) goUpFAB.show() else goUpFAB.hide()
+                else goUpFAB.hide()
+            }
+        })
     }
 
     private fun filterData(position:Int){

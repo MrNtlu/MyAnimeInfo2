@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -46,6 +48,14 @@ class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<Prev
         setupRecyclerView()
         setupObserver(mYear,"")
         setSpinners()
+        setListeners()
+    }
+
+    private fun setListeners() {
+        goUpFAB.setOnClickListener {
+            goUpFAB.hide()
+            animeSeasonRV.scrollToPosition(0)
+        }
     }
 
     private fun setSpinners() {
@@ -98,6 +108,15 @@ class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<Prev
         layoutManager=gridLayoutManager
         seasonAnimeAdapter= PreviewAnimeListAdapter(R.layout.cell_preview_large,this@AnimeSeasonFragment)
         adapter=seasonAnimeAdapter
+
+        this.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy<=-8 && gridLayoutManager.findLastVisibleItemPosition()>15) goUpFAB.show()
+                else if (gridLayoutManager.findLastVisibleItemPosition()>15 && dy in -7..7) if (goUpFAB.isVisible) goUpFAB.show() else goUpFAB.hide()
+                else goUpFAB.hide()
+            }
+        })
     }
 
     override fun onItemSelected(position: Int, item: PreviewAnimeResponse) {
