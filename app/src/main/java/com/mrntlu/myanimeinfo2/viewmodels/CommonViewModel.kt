@@ -114,7 +114,10 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
         val liveData=MutableLiveData<UserProfileResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
-            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
+            printLog(message = "${throwable.message}")
+            if (throwable.message!=null && throwable.message!!.contains("HTTP 404")) errorHandler.onError(throwable.message!!)
+            else errorHandler.onError("Error! User not found or connection error.")
+            throwable.printStackTrace()
         }){
             var response:UserProfileResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){

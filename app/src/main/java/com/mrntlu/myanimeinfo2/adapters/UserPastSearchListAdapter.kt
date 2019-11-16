@@ -10,24 +10,35 @@ import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.UserSearch
 import kotlinx.android.synthetic.main.cell_no_item.view.*
 import kotlinx.android.synthetic.main.cell_related.view.*
+import kotlinx.android.synthetic.main.cell_user_search.view.*
 
-class UserPastSearchListAdapter(override val interaction: Interaction<UserSearch>? = null) : BaseAdapter<UserSearch>() {
+class UserPastSearchListAdapter constructor(override val interaction: Interaction<UserSearch>? = null, private val onDelete: (userSearch: UserSearch) -> Unit) : BaseAdapter<UserSearch>() {
 
     override var errorMessage="Nothing searched before :("
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             NO_ITEM_HOLDER-> NoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_no_item,parent,false))
-            else-> UserPastSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_related, parent, false), interaction)
+            else-> UserPastSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cell_user_search, parent, false), interaction,onDelete)
         }
     }
 
-    class UserPastSearchViewHolder constructor(itemView:View,private val interaction: Interaction<UserSearch>?):ItemHolder<UserSearch>(itemView){
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        if (getItemViewType(position)==NO_ITEM_HOLDER){
+            holder.itemView.cellNoItem.text="No past search found!"
+        }
+    }
+
+    class UserPastSearchViewHolder constructor(itemView:View,private val interaction: Interaction<UserSearch>?,val onDelete:(userSearch:UserSearch)->Unit):ItemHolder<UserSearch>(itemView){
         override fun bind(item:UserSearch){
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition,item)
             }
-            itemView.relatedDataText.text=item.search
+            itemView.userSearchDeleteButton.setOnClickListener {
+                onDelete(item)
+            }
+            itemView.userSearchText.text=item.search
         }
     }
 }

@@ -64,7 +64,7 @@ data class AnimeGenreSeasonResponse(val mal_url:GeneralShortResponse,val anime:L
 data class MangaGenreSeasonResponse(val mal_url:GeneralShortResponse,val manga:List<PreviewMangaResponse>)
 
 //User
-data class UserProfileResponse(val username: String, val image_url: String, val anime_stats:UserAnimeStats, val manga_stats:UserMangaStats,val favorites:UserFavsResponse)
+data class UserProfileResponse(val username: String, val image_url: String?, val anime_stats:UserAnimeStats, val manga_stats:UserMangaStats,val favorites:UserFavsResponse)
 
 data class UserFavsResponse(val anime:List<UserShortResponse>, val manga:List<UserShortResponse>, val characters:List<UserShortResponse>, val people:List<UserShortResponse>)
 

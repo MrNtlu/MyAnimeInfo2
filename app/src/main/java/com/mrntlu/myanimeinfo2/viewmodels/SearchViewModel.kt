@@ -20,15 +20,14 @@ class SearchViewModel(application: Application): AndroidViewModel(application) {
 
     fun getSearches()=searchRepository.getSearches()
 
-    fun insertOrUpdateSearch(search:UserSearch,isInserting:Boolean,errorHandler: CoroutinesErrorHandler): LiveData<UserSearch> {
+    fun insertSearch(search:UserSearch, errorHandler: CoroutinesErrorHandler): LiveData<UserSearch> {
         val liveData= MutableLiveData<UserSearch>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             val job=withTimeoutOrNull(TIME_OUT) {
-                if (isInserting) searchRepository.insertNewSearch(search)
-                else searchRepository.updateSearch(search)
+                searchRepository.insertNewSearch(search)
             }
             withContext(Dispatchers.Main){
                 if (job == null) {
@@ -39,6 +38,21 @@ class SearchViewModel(application: Application): AndroidViewModel(application) {
             }
         }
         return liveData
+    }
+
+    fun deleteSearch(search:UserSearch,errorHandler: CoroutinesErrorHandler){
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+            errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
+        }){
+            val job=withTimeoutOrNull(TIME_OUT) {
+                searchRepository.deleteSearch(search)
+            }
+            withContext(Dispatchers.Main){
+                if (job == null) {
+                    errorHandler.onError("Timed out!")
+                }
+            }
+        }
     }
 
     override fun onCleared() {

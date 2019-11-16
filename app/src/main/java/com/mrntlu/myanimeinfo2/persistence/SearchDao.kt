@@ -13,6 +13,6 @@ interface SearchDao {
     @Insert
     suspend fun insertNewSearch(search:UserSearch)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateSearch(search:UserSearch)
+    @Delete
+    suspend fun deleteSearch(search:UserSearch)//Transaction
 }

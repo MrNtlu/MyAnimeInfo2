@@ -6,4 +6,4 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "searches"
 )
-data class UserSearch(@PrimaryKey(autoGenerate = false)val id:Int, val search:String)
+data class UserSearch(@PrimaryKey(autoGenerate = true)val id:Int?=null, val search:String)

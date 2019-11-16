@@ -19,10 +19,7 @@ import com.mrntlu.myanimeinfo2.adapters.UserPastSearchListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.UserSearch
-import com.mrntlu.myanimeinfo2.utils.hideKeyboard
-import com.mrntlu.myanimeinfo2.utils.setGone
-import com.mrntlu.myanimeinfo2.utils.setVisible
-import com.mrntlu.myanimeinfo2.utils.showToast
+import com.mrntlu.myanimeinfo2.utils.*
 import com.mrntlu.myanimeinfo2.viewmodels.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search_user.*
 
@@ -56,10 +53,18 @@ class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorH
         })
     }
     
-    private fun addOrUpdateSearch(search:UserSearch,isInserting:Boolean){
-        searchViewModel.insertOrUpdateSearch(search,isInserting,this).observe(viewLifecycleOwner, Observer {
-            navigateWithBundle(it.search)
-        })
+    private fun insertSearch(search:UserSearch){
+        if (userSearchList.size==10){
+            deleteSearch(userSearchList[9])
+            val tempList= ArrayList(userSearchList).also { it.removeAt(9) }
+            userSearchList= tempList
+            insertSearch(search)
+        }else {
+            searchViewModel.insertSearch(search, this)
+                .observe(viewLifecycleOwner, Observer {
+                    navigateWithBundle(it.search)
+                })
+        }
     }
 
     private fun setListeners() {
@@ -76,8 +81,12 @@ class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorH
 
     private fun setupRecyclerView()=pastSearchRV.apply {
         layoutManager= LinearLayoutManager(context)
-        userPastListAdapter=UserPastSearchListAdapter(this@UserSearchFragment)
+        userPastListAdapter=UserPastSearchListAdapter(this@UserSearchFragment,::deleteSearch)
         adapter=userPastListAdapter
+    }
+
+    private fun deleteSearch(userSearch: UserSearch){
+        searchViewModel.deleteSearch(userSearch,this)
     }
 
     private fun setSearchView()=userSearchView.apply {
@@ -89,7 +98,7 @@ class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorH
             override fun onQueryTextSubmit(query: String?):Boolean{
                 if (query!=null && !query.isBlank()) {
                     this@apply.clearFocus()
-                    addOrUpdateSearch(UserSearch(userSearchList.size,query),true)
+                    insertSearch(UserSearch(search= query))
                 }else showToast(this@apply.context,"Please type something.")
                 return false
             }
@@ -109,7 +118,7 @@ class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorH
     }
 
     override fun onError(message: String) {
-
+        userPastListAdapter.submitError(message)
     }
 
     override fun onResume() {

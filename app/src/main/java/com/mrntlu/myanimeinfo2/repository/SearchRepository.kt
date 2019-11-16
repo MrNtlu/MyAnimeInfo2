@@ -12,5 +12,5 @@ class SearchRepository(application: Application) {
 
     suspend fun insertNewSearch(search:UserSearch)=searchDao.insertNewSearch(search)
 
-    suspend fun updateSearch(search: UserSearch)=searchDao.updateSearch(search)
+    suspend fun deleteSearch(search: UserSearch)=searchDao.deleteSearch(search)
 }

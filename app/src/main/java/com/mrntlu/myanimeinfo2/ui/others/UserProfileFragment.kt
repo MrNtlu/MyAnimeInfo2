@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.bumptech.glide.Glide
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.UserProfilePagerAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 
 class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
 
@@ -74,7 +76,11 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setUI(){
-        userProfileImage.loadWithGlide(userProfileResponse.image_url,userProfileProgress)
+        if (userProfileResponse.image_url!=null) userProfileImage.loadWithGlide(userProfileResponse.image_url!!,userProfileProgress)
+        else{
+            Glide.with(this).load(R.drawable.ic_person_black_24dp).into(userProfileImage)
+            userProfileProgress.setGone()
+        }
         userProfileName.text=userProfileResponse.username
         progressbarLayout.setGone()
     }
