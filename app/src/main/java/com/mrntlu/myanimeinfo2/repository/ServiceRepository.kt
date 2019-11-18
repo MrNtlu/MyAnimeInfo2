@@ -21,7 +21,8 @@ class ServiceRepository(application: Application) {
 
     suspend fun getAnimeBySeason(year:String,season:String)=apiClient.getAnimeBySeason(year,season)
 
-    suspend fun getAnimeBySearch(q:String,page:Int)=apiClient.getAnimeBySearch(q,page)
+    suspend fun getAnimeBySearch(q:String,type:String, status:String, rated:String, score:String,page:Int)
+            =apiClient.getAnimeBySearch(q,type,status,rated,score,page)
 
     //Manga
     suspend fun getMangaByID(mal_id:Int)=apiClient.getMangaByID(mal_id)
@@ -32,7 +33,8 @@ class ServiceRepository(application: Application) {
 
     suspend fun getMangaByGenre(genreID:Int,page:Int)=apiClient.getMangaByGenre(genreID,page)
 
-    suspend fun getMangaBySearch(q:String, page:Int)=apiClient.getMangaBySearch(q,page)
+    suspend fun getMangaBySearch(q:String,type:String, status:String, rated:String, score:String,page:Int)
+            =apiClient.getMangaBySearch(q,type,status,rated,score,page)
 
     //Common
     suspend fun getProducerInfoByID(mal_id: Int)=apiClient.getProducerInfoByID(mal_id)

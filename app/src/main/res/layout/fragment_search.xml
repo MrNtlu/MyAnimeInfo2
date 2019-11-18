@@ -9,19 +9,18 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".ui.common.SearchFragment">
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
         android:background="@color/white"
         android:elevation="2dp"
         android:iconifiedByDefault="false"
-        app:layout_constraintBottom_toTopOf="@id/searchRV"
-        app:layout_constraintEnd_toStartOf="@+id/searchAnim"
+        app:layout_constraintEnd_toStartOf="@+id/searchFilterButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,28 +30,14 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:visibility="visible"
-        android:scrollbars="vertical"
         android:scrollbarSize="3dp"
         android:scrollbarThumbVertical="@color/materialBlack"
+        android:scrollbars="vertical"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/searchAnim"
-        android:layout_width="48dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:scaleType="fitCenter"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/searchView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/searchView"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/search_loop"/>
+        app:layout_constraintTop_toBottomOf="@+id/userFilterView" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/goUpFAB"
@@ -67,4 +52,184 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/searchFilterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/searchView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/userFilterView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:visibility="gone"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/searchFilterButton"
+        app:layout_constraintStart_toStartOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/searchView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+                android:id="@+id/ratedToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="4dp"
+                android:entries="@array/ratedFilter"
+                android:textSize="12sp"
+                app:checkedBackgroundColor="@color/blue"
+                app:checkedTextColor="@color/materialBlack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView19"
+                app:layout_constraintTop_toTopOf="parent"
+                app:toggleHeight="30dp"
+                app:toggleMargin="4dp"
+                app:uncheckedBackgroundColor="@color/materialBlack"
+                app:uncheckedTextColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Rated"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/materialBlack"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/ratedToggle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ratedToggle" />
+
+            <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+                android:id="@+id/typeToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="4dp"
+                android:entries="@array/animeTypeFilter"
+                android:textSize="12sp"
+                app:checkedBackgroundColor="@color/blue"
+                app:checkedTextColor="@color/materialBlack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView22"
+                app:layout_constraintTop_toBottomOf="@+id/ratedToggle"
+                app:toggleHeight="30dp"
+                app:toggleMargin="4dp"
+                app:uncheckedBackgroundColor="@color/materialBlack"
+                app:uncheckedTextColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Type"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/materialBlack"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/typeToggle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/typeToggle" />
+
+            <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+                android:id="@+id/statusToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="4dp"
+                android:entries="@array/animeStatusFilter"
+                android:textSize="12sp"
+                app:checkedBackgroundColor="@color/blue"
+                app:checkedTextColor="@color/materialBlack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView21"
+                app:layout_constraintTop_toBottomOf="@+id/typeToggle"
+                app:toggleHeight="30dp"
+                app:toggleMargin="4dp"
+                app:uncheckedBackgroundColor="@color/materialBlack"
+                app:uncheckedTextColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Status"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/materialBlack"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/statusToggle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/statusToggle" />
+
+            <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+                android:id="@+id/scoreToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="4dp"
+                android:entries="@array/scoreFilter"
+                android:textSize="12sp"
+                app:checkedBackgroundColor="@color/blue"
+                app:checkedTextColor="@color/materialBlack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView25"
+                app:layout_constraintTop_toBottomOf="@+id/statusToggle"
+                app:toggleHeight="30dp"
+                app:toggleMargin="4dp"
+                app:uncheckedBackgroundColor="@color/materialBlack"
+                app:uncheckedTextColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Score"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/materialBlack"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/scoreToggle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/scoreToggle" />
+
+            <Button
+                android:id="@+id/clearAllButton"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/transparent"
+                android:text="Clear All"
+                android:textAllCaps="false"
+                android:textColor="@color/darkBlue"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scoreToggle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

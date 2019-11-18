@@ -59,7 +59,6 @@ class SearchViewModel(application: Application): AndroidViewModel(application) {
         super.onCleared()
         mJob?.let {
             if (it.isActive){
-                printLog(message = "Canceled Search")
                 it.cancel()
             }
         }

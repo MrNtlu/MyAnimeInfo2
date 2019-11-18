@@ -58,6 +58,46 @@
     <string name="internet_error">Error! Please check your internet connection and refresh.</string>
     <string name="timeout_try_again">Error, timeout! Please try again.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="ratedFilter">
+        <item>G</item>
+        <item>PG</item>
+        <item>PG-13</item>
+        <item>R-17</item>
+        <item>R</item>
+    </string-array>
+
+    <string-array name="animeStatusFilter">
+        <item>Airing</item>
+        <item>Completed</item>
+        <item>TBA</item>
+    </string-array>
+
+    <string-array name="mangaStatusFilter">
+        <item>Publishing</item>
+        <item>Completed</item>
+        <item>TBP</item>
+    </string-array>
+
+    <string-array name="animeTypeFilter">
+        <item>TV</item>
+        <item>OVA</item>
+        <item>Movie</item>
+        <item>Special</item>
+        <item>ONA</item>
+    </string-array>
+
+    <string-array name="mangaTypeFilter">
+        <item>Manga</item>
+        <item>Novel</item>
+        <item>Oneshot</item>
+        <item>Manhua</item>
+        <item>Manhwa</item>
+    </string-array>
+
+    <string-array name="scoreFilter">
+        <item>5></item>
+        <item>6></item>
+        <item>7></item>
+        <item>8></item>
+    </string-array>
 </resources>

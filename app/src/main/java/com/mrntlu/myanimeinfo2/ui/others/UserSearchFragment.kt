@@ -60,10 +60,9 @@ class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorH
             userSearchList= tempList
             insertSearch(search)
         }else {
-            searchViewModel.insertSearch(search, this)
-                .observe(viewLifecycleOwner, Observer {
-                    navigateWithBundle(it.search)
-                })
+            searchViewModel.insertSearch(search, this).observe(viewLifecycleOwner, Observer {
+                navigateWithBundle(it.search)
+            })
         }
     }
 

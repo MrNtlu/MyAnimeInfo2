@@ -14,5 +14,5 @@ interface SearchDao {
     suspend fun insertNewSearch(search:UserSearch)
 
     @Delete
-    suspend fun deleteSearch(search:UserSearch)//Transaction
+    suspend fun deleteSearch(search:UserSearch)
 }

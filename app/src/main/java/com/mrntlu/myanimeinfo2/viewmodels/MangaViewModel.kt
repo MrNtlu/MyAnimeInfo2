@@ -111,7 +111,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getMangaBySearch(q:String, page:Int,errorHandler: CoroutinesErrorHandler): LiveData<MangaSearchResponse> {
+    fun getMangaBySearch(q:String,type:String, status:String, rated:String, score:String,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<MangaSearchResponse> {
         val liveData= MutableLiveData<MangaSearchResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
@@ -119,7 +119,7 @@ class MangaViewModel(application: Application): AndroidViewModel(application) {
         }){
             var response: MangaSearchResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
-                response=serviceRepository.getMangaBySearch(q,page)
+                response=serviceRepository.getMangaBySearch(q,type,status,rated,score,page)
             }
             withContext(Dispatchers.Main){
                 if (job==null){

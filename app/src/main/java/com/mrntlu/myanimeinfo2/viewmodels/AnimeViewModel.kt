@@ -180,7 +180,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         return liveData
     }
 
-    fun getAnimeBySearch(q:String,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeSearchResponse> {
+    fun getAnimeBySearch(q:String,type:String, status:String, rated:String, score:String,page:Int,errorHandler: CoroutinesErrorHandler): LiveData<AnimeSearchResponse> {
         val liveData= MutableLiveData<AnimeSearchResponse>()
 
         mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
@@ -188,7 +188,7 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
         }){
             var response: AnimeSearchResponse?=null
             val job= withTimeoutOrNull(TIME_OUT){
-                response=serviceRepository.getAnimeBySearch(q,page)
+                response=serviceRepository.getAnimeBySearch(q,type,status,rated,score,page)
             }
             withContext(Dispatchers.Main){
                 if (job==null){

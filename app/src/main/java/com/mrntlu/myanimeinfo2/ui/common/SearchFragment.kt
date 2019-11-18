@@ -16,7 +16,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.adapters.BaseAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewAnimeListAdapter
 import com.mrntlu.myanimeinfo2.adapters.PreviewMangaListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -34,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class SearchFragment : Fragment(), CoroutinesErrorHandler {
 
@@ -43,6 +43,10 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var searchAnimeAdapter: PreviewAnimeListAdapter
     private lateinit var navController: NavController
     private lateinit var dataType:DataType
+    private lateinit var statusList: List<String>
+    private lateinit var typeList: List<String>
+    private val ratedList= listOf("g","pg","pg13","r17","r")
+    private val scoreList= listOf("5","6","7","8")
 
     private var isPaginating=false
     private var isSearching=false
@@ -68,12 +72,51 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
 
         setSearchView()
         setListeners()
+        setFilters()
+    }
+
+    private fun setFilters() {
+        if (dataType==ANIME){
+            statusList=resources.getStringArray(R.array.animeStatusFilter).toList()
+            typeList=resources.getStringArray(R.array.animeTypeFilter).toList()
+            typeToggle.setEntries(typeList)
+            statusToggle.setEntries(statusList)
+        }else{
+            statusList=resources.getStringArray(R.array.mangaStatusFilter).toList()
+            typeList=resources.getStringArray(R.array.mangaTypeFilter).toList()
+            typeToggle.setEntries(typeList)
+            statusToggle.setEntries(statusList)
+        }
     }
 
     private fun setListeners() {
         goUpFAB.setOnClickListener {
             goUpFAB.hide()
             searchRV.scrollToPosition(0)
+        }
+
+        clearAllButton.setOnClickListener {
+            ratedToggle.checkedPosition?.let {
+                ratedToggle.checkedPosition=null
+                ratedToggle.buttons[it].uncheck()
+            }
+            typeToggle.checkedPosition?.let {
+                typeToggle.checkedPosition=null
+                typeToggle.buttons[it].uncheck()
+            }
+            statusToggle.checkedPosition?.let {
+                statusToggle.checkedPosition=null
+                statusToggle.buttons[it].uncheck()
+            }
+            scoreToggle.checkedPosition?.let {
+                scoreToggle.checkedPosition=null
+                scoreToggle.buttons[it].uncheck()
+            }
+        }
+
+        searchFilterButton.setOnClickListener {
+            if (userFilterView.isVisible) userFilterView.setGone()
+            else userFilterView.setVisible()
         }
     }
 
@@ -87,12 +130,15 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
             override fun onQueryTextChange(newText: String?)=true
 
             override fun onQueryTextSubmit(query: String?): Boolean {
+                if (userFilterView.isVisible) userFilterView.setGone()
+
                 query?.let {
                     if (isSearching) showToast(searchView.context,"Searching...")
                     else if (!isSearching && it.length>2 && it.isNotEmpty() && it.isNotBlank()){
                         mQuery=it
                         isSearching=true
-                        searchAnim.setVisible()
+                        isPaginating=false
+                        pageNum=1
                         setupRecyclerView()
 
                         setupObservers()
@@ -106,23 +152,26 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     private fun setupObservers(){
+        val type=if (typeToggle.getCheckedPosition()!=-1) typeList[typeToggle.getCheckedPosition()].toLowerCase(Locale.getDefault()) else ""
+        val status=if (statusToggle.getCheckedPosition()!=-1) statusList[statusToggle.getCheckedPosition()].toLowerCase(Locale.getDefault()) else ""
+        val rated=if (ratedToggle.getCheckedPosition()!=-1) ratedList[ratedToggle.getCheckedPosition()] else ""
+        val score=if (scoreToggle.getCheckedPosition()!=-1) scoreList[scoreToggle.getCheckedPosition()] else ""
+
         if (dataType==MANGA){
-            mangaViewModel.getMangaBySearch(mQuery,pageNum,this).observe(viewLifecycleOwner, Observer {
+            mangaViewModel.getMangaBySearch(mQuery, type, status, rated, score, pageNum,this).observe(viewLifecycleOwner, Observer {
                 if (pageNum==1) {
                     isSearching=false
                     searchMangaAdapter.submitList(it.results)
-                    searchAnim.setGone()
                 }else{
                     isPaginating=false
                     searchMangaAdapter.submitPaginationList(it.results)
                 }
             })
         }else{
-            animeViewModel.getAnimeBySearch(mQuery,pageNum,this).observe(viewLifecycleOwner, Observer {
+            animeViewModel.getAnimeBySearch(mQuery,type, status, rated, score, pageNum,this).observe(viewLifecycleOwner, Observer {
                 if (pageNum==1) {
                     isSearching=false
                     searchAnimeAdapter.submitList(it.results)
-                    searchAnim.setGone()
                 }else{
                     isPaginating=false
                     searchAnimeAdapter.submitPaginationList(it.results)
@@ -207,7 +256,6 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
 
     override fun onError(message: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            searchAnim.setGone()
             if (pageNum==1){
                 isSearching=false
                 if (dataType==MANGA) searchMangaAdapter.submitError(message)

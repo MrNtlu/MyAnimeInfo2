@@ -27,7 +27,9 @@ interface AnimeService {
     suspend fun getAnimeBySeason(@Path("year") year:String,@Path("season")season:String):AnimeGenreSeasonResponse
 
     @GET("search/anime")
-    suspend fun getAnimeBySearch(@Query("q") q:String, @Query("page") page:Int):AnimeSearchResponse
+    suspend fun getAnimeBySearch(@Query("q") q:String, @Query("type") type:String,
+                                 @Query("status") status:String, @Query("rated") rated:String,
+                                 @Query("score") score:String, @Query("page") page:Int):AnimeSearchResponse
 
     //Manga
     @GET("manga/{mal_id}")
@@ -43,7 +45,9 @@ interface AnimeService {
     suspend fun getMangaByGenre(@Path("genreID") genreID:Int,@Path("page") page:Int):MangaGenreSeasonResponse
 
     @GET("search/manga")
-    suspend fun getMangaBySearch(@Query("q") q:String, @Query("page") page:Int):MangaSearchResponse
+    suspend fun getMangaBySearch(@Query("q") q:String,@Query("type") type:String,
+                                 @Query("status") status:String, @Query("rated") rated:String,
+                                 @Query("score") score:String,@Query("page") page:Int):MangaSearchResponse
 
     //Common
     @GET("producer/{mal_id}")
