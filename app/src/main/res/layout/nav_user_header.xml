@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/malUserImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/malUserText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Username"
+        android:textAlignment="viewStart"
+        android:textColor="@color/materialBlack"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/malUserImage"
+        app:layout_constraintTop_toTopOf="@+id/malUserImage" />
+
+    <ProgressBar
+        android:id="@+id/malUserProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/malUserImage"
+        app:layout_constraintEnd_toEndOf="@+id/malUserImage"
+        app:layout_constraintStart_toStartOf="@+id/malUserImage"
+        app:layout_constraintTop_toTopOf="@+id/malUserImage" />
+
+    <Button
+        android:id="@+id/malUserProfileButton"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="1dp"
+        android:backgroundTint="@color/materialBlack"
+        android:text="Profile"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/malUserAnimeButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/malUserImage" />
+
+    <Button
+        android:id="@+id/malUserAnimeButton"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:backgroundTint="@color/materialBlack"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Anime List"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/malUserProfileButton"
+        app:layout_constraintEnd_toStartOf="@+id/malUserMangaButton"
+        app:layout_constraintStart_toEndOf="@+id/malUserProfileButton" />
+
+    <Button
+        android:id="@+id/malUserMangaButton"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="@color/materialBlack"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Manga List"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/malUserProfileButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/malUserAnimeButton" />
+
+    <Button
+        android:id="@+id/malUserRemoveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginEnd="4dp"
+        android:background="@android:color/transparent"
+        android:text="Remove User"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/view5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/malUserMangaButton" />
+
+    <Button
+        android:id="@+id/malUserChangeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:background="@android:color/transparent"
+        android:text="Change User"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/malUserMangaButton" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/gray_very_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
