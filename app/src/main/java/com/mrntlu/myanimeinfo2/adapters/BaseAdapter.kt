@@ -9,7 +9,7 @@ abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):Recy
 
     //Conditions
     private var isAdapterSet=false
-    private var isErrorOccured=false
+    private var isErrorOccurred=false
     private var isPaginationLoading=false
     //Holders
     protected val LOADING_ITEM_HOLDER=0
@@ -38,15 +38,15 @@ abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):Recy
 
     override fun getItemViewType(position: Int)=if (isAdapterSet){
         when{
-            isErrorOccured->ERROR_HOLDER
+            isErrorOccurred->ERROR_HOLDER
             arrayList.size==0->NO_ITEM_HOLDER
             isPaginationLoading && position==arrayList.size->PAGINATION_LOADING_HOLDER
             else->ITEM_HOLDER
         }
     }else LOADING_ITEM_HOLDER
 
-    override fun getItemCount()=if (isAdapterSet && !isErrorOccured && arrayList.size!=0 && !isPaginationLoading) arrayList.size
-    else if (isAdapterSet && !isErrorOccured && isPaginationLoading) arrayList.size+1
+    override fun getItemCount()=if (isAdapterSet && !isErrorOccurred && arrayList.size!=0 && !isPaginationLoading) arrayList.size
+    else if (isAdapterSet && !isErrorOccurred && isPaginationLoading) arrayList.size+1
     else 1
 
     fun submitList(list: List<T>) {
@@ -55,19 +55,19 @@ abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):Recy
             this.addAll(list)
         }
         isAdapterSet=true
-        isErrorOccured=false
+        isErrorOccurred=false
         notifyDataSetChanged()
     }
 
     fun submitLoading(){
         isAdapterSet=false
-        isErrorOccured=false
+        isErrorOccurred=false
         notifyDataSetChanged()
     }
 
     fun submitError(message:String){
         isAdapterSet=true
-        isErrorOccured=true
+        isErrorOccurred=true
         errorMessage=message
         notifyDataSetChanged()
     }

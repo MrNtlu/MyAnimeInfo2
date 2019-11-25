@@ -36,11 +36,6 @@ fun View.setVisible(){
 
 fun String.makeCapital()=substring(0,1).toUpperCase(Locale.ENGLISH)+substring(1)
 
-fun View.setToolbarTitle(title:String){
-    val activity: MainActivity?=(context as MainActivity)
-    if (activity!=null) activity.toolbar.title = title
-}
-
 fun showToast(context: Context?, message: String) = Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
 
 fun printLog(tag: String = "Test",message:String)= Log.d(tag,message)
@@ -76,7 +71,20 @@ fun ImageView.loadWithGlide(imageUrl:String,progressBar: ProgressBar)= Glide.wit
 
 }).into(this)
 
-fun SearchView.getStringQuery()=this.query.toString()
+fun Activity.writeToPref(username:String){
+    val sharedPref=getPreferences(Context.MODE_PRIVATE).edit()
+    sharedPref.putString("username",username)
+    sharedPref.apply()
+}
+
+fun Activity.readFromPref(): String? {
+    val sharedPref=getPreferences(Context.MODE_PRIVATE)
+    return sharedPref.getString("username",null)
+}
+
+fun Activity.deletePref(){
+    getPreferences(Context.MODE_PRIVATE).edit().remove("username").apply()
+}
 
 fun View.hideKeyboard() {
     val inputMethodManager =

@@ -6,13 +6,14 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.os.bundleOf
-import androidx.core.view.GravityCompat
 import androidx.core.view.GravityCompat.*
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -26,8 +27,8 @@ import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_no_user_header.view.*
 import kotlinx.android.synthetic.main.nav_no_user_header.view.malUserText
+import kotlinx.android.synthetic.main.nav_user_header.*
 import kotlinx.android.synthetic.main.nav_user_header.view.*
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -38,7 +39,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var navHeader:View
     private lateinit var commonViewModel: CommonViewModel
+    private var username:String?=null
     private var malUser:UserProfileResponse?=null
+
+    private var isErrorOccurred=false
+    private var errorMessage="Error Occurred!"
+
+    override fun onBackPressed() {
+        if (::navController.isInitialized && navController.currentDestination?.id==R.id.mainFragment){
+            MaterialDialog(this).show {
+                message(text = "Do you want to EXIT?")
+                positiveButton(text = "Yes"){
+                    finish()
+                }
+                negativeButton(text = "Stay"){dialog ->
+                    dialog.dismiss()
+                }
+                cornerRadius(6f)
+            }
+        }else super.onBackPressed()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +66,18 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment=nav_host_fragment as NavHostFragment
         navController=navHostFragment.navController
         commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        username=readFromPref()
 
+        setListeners()
+        setAds()
+
+        setSupportActionBar(toolbar)
+        setDrawer()
+        setStatusBarColor(R.color.white,true)
+        setNavBarColor(R.color.black)
+    }
+
+    private fun setListeners() {
         navController.addOnDestinationChangedListener { _, destination, arguments ->
             toolbar.title=when(destination.id){
                 R.id.userSearchFragment->"Search User"
@@ -75,17 +106,16 @@ class MainActivity : AppCompatActivity() {
                     } else "Search"
                 }
                 R.id.picturesFragment->"Pictures"
+                R.id.userListFragment->{
+                    if (arguments!=null) {
+                        val dataType = DataType.getByCode(arguments.getInt("data_type"))
+                        "${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()} List"
+                    }else "User List"
+                }
                 else->""
             }
             if (!adView.isVisible && isInternetAvailable(this)) setAds()
         }
-        setAds()
-
-        setSupportActionBar(toolbar)
-        setDrawer()
-        setStatusBarColor(R.color.white,true)
-        setNavBarColor(R.color.black)
-
     }
 
     private fun setAds(){
@@ -149,31 +179,77 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
+    private fun setNavHeader(layout:Int){
+        if(::navHeader.isInitialized) navigationView.removeHeaderView(navHeader)
+        navHeader=navigationView.inflateHeaderView(layout)
+    }
+
     private fun setHeader() {
-        if (malUser!=null){
-            if(::navHeader.isInitialized) navigationView.removeHeaderView(navHeader)
-            navHeader=navigationView.inflateHeaderView(R.layout.nav_user_header)
+        if (malUser!=null && username!=null){
+            setNavHeader(R.layout.nav_user_header)
             navHeader.malUserText.text=malUser!!.username
+            printLog(message = malUser!!.toString())
             if(malUser!!.image_url != null) navHeader.malUserImage.loadWithGlide(malUser!!.image_url!!,navHeader.malUserProgress)
-            else navHeader.malUserImage.setImageDrawable(resources.getDrawable(R.drawable.ic_person_black_24dp,theme))
+            else{
+                malUserProgress.setGone()
+                navHeader.malUserImage.setImageDrawable(resources.getDrawable(R.drawable.ic_person_black_24dp,theme))
+            }
 
             setHeaderListeners(navHeader)
+        }else if (malUser==null && username!=null){
+            setMALUserData()
         }else{
-            navHeader=navigationView.inflateHeaderView(R.layout.nav_no_user_header)
+            setNavHeader(R.layout.nav_no_user_header)
             navHeader.malUserAddButton.setOnClickListener {
-                commonViewModel.getUserProfile("mrntlu",object:CoroutinesErrorHandler{
-                    override fun onError(message: String) {
-                        GlobalScope.launch(Dispatchers.Main){
+                setUsernameInputDialog("Set MAL Username")
+            }
 
-                        }
-                    }
-                }).observe(this, Observer {
-                    malUser=it
-                    setHeader()
-                })
+            if (isErrorOccurred){
+                navHeader.malUserText.text=errorMessage
+                navHeader.malUserText.setTextColor(resources.getColor(R.color.red800,theme))
+                navHeader.malUserInfoText.text="Please retry again."
+                isErrorOccurred=false
             }
         }
 
+    }
+
+    private fun setUsernameInputDialog(title:String){
+        drawerLayout.closeDrawer(START)
+
+        MaterialDialog(this).show {
+            input { _, text ->
+                username=text.toString()
+                setMALUserData()
+            }
+            title(text = title)
+            positiveButton(text = "Set")
+            negativeButton(text = "Cancel")
+            cornerRadius(6f)
+        }
+    }
+
+    private fun setMALUserData(){
+        setNavHeader(R.layout.nav_loading_user)
+
+        commonViewModel.getUserProfile(username!!,object:CoroutinesErrorHandler{
+            override fun onError(message: String) {
+                GlobalScope.launch(Dispatchers.Main){
+                    navHeaderErrorHandler(message)
+                }
+            }
+        }).observe(this, Observer {
+            malUser=it
+            writeToPref(username!!)
+            setHeader()
+        })
+    }
+
+    private fun navHeaderErrorHandler(message:String) {
+        username=null
+        isErrorOccurred=true
+        errorMessage=message
+        setHeader()
     }
 
     private fun setHeaderListeners(navHeader: View) {
@@ -193,6 +269,17 @@ class MainActivity : AppCompatActivity() {
             val bundle= bundleOf("username" to malUser!!.username, "data_type" to MANGA.code)
             navController.navigate(R.id.action_global_userList,bundle)
             drawerLayout.closeDrawer(START)
+        }
+
+        navHeader.malUserChangeButton.setOnClickListener {
+            setUsernameInputDialog("Change MAL Username")
+        }
+
+        navHeader.malUserRemoveButton.setOnClickListener {
+            username=null
+            malUser=null
+            deletePref()
+            setHeader()
         }
     }
 

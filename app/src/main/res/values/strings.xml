@@ -57,6 +57,39 @@
 
     <string name="internet_error">Error! Please check your internet connection and refresh.</string>
     <string name="timeout_try_again">Error, timeout! Please try again.</string>
+    <string name="error_occured">Error Occurred!</string>
+    <string name="refresh">Refresh</string>
+    <string name="character_image">Character Image</string>
+    <string name="loading_">Loading…</string>
+    <string name="nothing_found">Nothing Found!</string>
+    <string name="loading_more_">Loading More…</string>
+    <string name="preview_image">Preview Image</string>
+    <string name="user_image">User Image</string>
+    <string name="overall">Overall</string>
+    <string name="story">Story</string>
+    <string name="sound">Sound</string>
+    <string name="enjoyment">Enjoyment</string>
+    <string name="character">Character</string>
+    <string name="animation">Animation</string>
+    <string name="plan_to_watch">Plan to Watch</string>
+    <string name="score_">Score:</string>
+    <string name="volumes_">Volumes:</string>
+    <string name="chapters_">Chapters:</string>
+    <string name="score">Score</string>
+    <string name="ranked">Ranked</string>
+    <string name="popularity">Popularity</string>
+    <string name="members">Members</string>
+    <string name="info">Info</string>
+    <string name="premiered">Premiered</string>
+    <string name="broadcast">Broadcast</string>
+    <string name="status">Status</string>
+    <string name="episodes">Episodes</string>
+    <string name="duration">Duration</string>
+    <string name="synopsis">Synopsis</string>
+    <string name="background">Background</string>
+    <string name="close_button">Close Button</string>
+    <string name="poster_image">Poster Image</string>
+    <string name="click_for_more">Click for more…</string>
 
     <string-array name="ratedFilter">
         <item>G</item>
