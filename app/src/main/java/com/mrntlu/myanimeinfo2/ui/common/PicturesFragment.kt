@@ -82,11 +82,12 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
         }
     }
 
-    private fun downloadImage(view:View,drawable: Drawable) {
+    @Suppress("DEPRECATION")
+    private fun downloadImage(view:View, drawable: Drawable) {
         val bitmap = (drawable as BitmapDrawable).bitmap
         var fout: FileOutputStream? =null
         var imageMainDirectory:File?=null
-        var root:File?=null
+        val root:File?
 
         try {
             root=File(view.context.getExternalFilesDir(null)!!.absolutePath)
@@ -105,7 +106,7 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
                 it.close()
             }
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q ){
-                MediaScannerConnection.scanFile(context, arrayOf(imageMainDirectory!!.path), arrayOf("image/jpeg","image/png")) { path, uri->
+                MediaScannerConnection.scanFile(context, arrayOf(imageMainDirectory!!.path), arrayOf("image/jpeg","image/png")) { _, uri->
                     MediaStore.setIncludePending(uri)
                 }
             }else{

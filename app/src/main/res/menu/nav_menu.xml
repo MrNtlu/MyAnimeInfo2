@@ -5,78 +5,63 @@
 
     <group>
         <item
-            android:title="Main Page"
+            android:title="@string/main_page"
             app:showAsAction="ifRoom"
             android:icon="@drawable/ic_home_black_24dp"
             android:id="@+id/main_page_menu"/>
     </group>
 
-    <item android:title="Anime">
+    <item android:title="@string/anime_capital">
         <menu>
             <item
-                android:title="Top Lists"
+                android:title="@string/top_lists"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_oscar"
                 android:id="@+id/top_anime_list"/>
 
             <item
-                android:title="Schedule"
+                android:title="@string/schedule"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_calendar_small"
                 android:id="@+id/anime_schedule"/>
 
             <item
-                android:title="Search Anime"
+                android:title="@string/search_anime"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_search"
                 android:id="@+id/anime_search"/>
 
             <item
-                android:title="Anime by Season"
+                android:title="@string/anime_by_season"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_search"
                 android:id="@+id/anime_by_season"/>
-
-            <item
-                android:title="Coming Soon..."
-                app:showAsAction="ifRoom"
-                android:id="@+id/soon"/>
         </menu>
     </item>
 
-    <item android:title="Manga">
+    <item android:title="@string/manga_capital">
         <menu>
             <item
-                android:title="Top Lists"
+                android:title="@string/top_lists"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_oscar"
                 android:id="@+id/top_manga_list"/>
 
             <item
-                android:title="Search Manga"
+                android:title="@string/search_manga"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_comic_book"
                 android:id="@+id/manga_search"/>
-
-            <item
-                android:title="Coming Soon..."
-                app:showAsAction="ifRoom"
-                android:id="@+id/soon2"/>
         </menu>
     </item>
 
-    <item android:title="Others">
+    <item android:title="@string/others">
         <menu>
             <item
-                android:title="Search User"
+                android:title="@string/search_user"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_anime_boy_with_tie"
                 android:id="@+id/search_user"/>
-
-            <item
-                android:title="Coming Soon..."
-                app:showAsAction="always"
-                android:id="@+id/about_me"/>
         </menu>
     </item>
 </menu>

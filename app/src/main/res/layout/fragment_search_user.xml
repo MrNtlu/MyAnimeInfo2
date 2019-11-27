@@ -65,7 +65,8 @@
                 android:src="@drawable/ic_arrow_down_24dp"
                 app:layout_constraintBottom_toTopOf="@+id/userSearchCautionText"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/userSearchCautionText"
@@ -75,7 +76,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="6dp"
                 android:fontFamily="serif-monospace"
-                android:text="MAL username should be precise. If you don't know your username just sign-in to MAL and go to your profile. Example: myanimelist.net/profile/YOUR_USERNAME"
+                android:text="@string/search_caution_text"
                 android:textAlignment="viewStart"
                 android:textColor="@color/materialBlack"
                 android:textSize="14sp"
@@ -93,7 +94,7 @@
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
                 android:fontFamily="serif-monospace"
-                android:text="Caution!"
+                android:text="@string/caution_"
                 android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:textStyle="bold"
