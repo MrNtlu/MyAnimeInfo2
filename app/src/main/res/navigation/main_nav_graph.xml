@@ -342,4 +342,9 @@
     </fragment>
     <action android:id="@+id/action_global_userProfile" app:destination="@id/userProfileFragment" />
     <action android:id="@+id/action_global_userList" app:destination="@id/userListFragment" />
+    <fragment
+        android:id="@+id/aboutMeFragment"
+        android:name="com.mrntlu.myanimeinfo2.ui.others.AboutMeFragment"
+        android:label="AboutMeFragment" />
+    <action android:id="@+id/action_global_aboutMe" app:destination="@id/aboutMeFragment" />
 </navigation>

@@ -21,6 +21,7 @@ abstract class BaseAdapter<T>(open val interaction: Interaction<T>? = null):Recy
     protected open var errorMessage="Error!"
     private var arrayList:ArrayList<T> = arrayListOf()
 
+    @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ITEM_HOLDER -> {

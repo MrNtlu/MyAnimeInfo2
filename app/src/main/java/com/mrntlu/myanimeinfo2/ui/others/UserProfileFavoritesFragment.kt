@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.UserFavoritesListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
-import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.UserShortResponse
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 

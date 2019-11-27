@@ -15,7 +15,6 @@ import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.pageradapters.UserProfilePagerAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.DataType
-import com.mrntlu.myanimeinfo2.models.UserFavsResponse
 import com.mrntlu.myanimeinfo2.models.UserProfileResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setGone
@@ -26,7 +25,6 @@ import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 
 class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
 

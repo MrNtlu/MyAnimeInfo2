@@ -34,7 +34,7 @@
             <item
                 android:title="@string/anime_by_season"
                 app:showAsAction="ifRoom"
-                android:icon="@drawable/ic_search"
+                android:icon="@drawable/ic_winter_season"
                 android:id="@+id/anime_by_season"/>
         </menu>
     </item>
@@ -62,6 +62,11 @@
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_anime_boy_with_tie"
                 android:id="@+id/search_user"/>
+            <item
+                android:id="@+id/about_me"
+                app:showAsAction="ifRoom"
+                android:title="@string/about_me"
+                android:icon="@drawable/ic_ninja"/>
         </menu>
     </item>
 </menu>

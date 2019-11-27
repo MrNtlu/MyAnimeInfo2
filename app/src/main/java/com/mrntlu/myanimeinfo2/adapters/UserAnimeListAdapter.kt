@@ -58,7 +58,7 @@ class UserAnimeListAdapter(override val interaction: Interaction<UserAnimeListBo
 
             itemView.userListScore.text=item.score.toInt().toString()
 
-            itemView.userListChaptersText.text="Episodes:"
+            itemView.userListChaptersText.text=resources.getString(R.string.episodes_)
             val volumeText="${item.watched_episodes}/${item.total_episodes}"
             itemView.userListChapters.text=volumeText
 

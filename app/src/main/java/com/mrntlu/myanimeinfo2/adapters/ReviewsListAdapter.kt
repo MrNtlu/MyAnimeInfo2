@@ -14,7 +14,6 @@ import com.mrntlu.myanimeinfo2.models.ReviewsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
-import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_reviews.view.*
 
 class ReviewsListAdapter(override val interaction: Interaction<ReviewsBodyResponse>? = null) : BaseAdapter<ReviewsBodyResponse>() {

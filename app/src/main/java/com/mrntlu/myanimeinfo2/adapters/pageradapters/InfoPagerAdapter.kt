@@ -3,16 +3,13 @@ package com.mrntlu.myanimeinfo2.adapters.pageradapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentStatePagerAdapter
 import com.mrntlu.myanimeinfo2.models.AnimeResponse
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.DataType.ANIME
 import com.mrntlu.myanimeinfo2.models.DataType.MANGA
-import com.mrntlu.myanimeinfo2.models.GeneralShortResponse
 import com.mrntlu.myanimeinfo2.models.MangaResponse
 import com.mrntlu.myanimeinfo2.ui.anime.AnimeProducersFragment
 import com.mrntlu.myanimeinfo2.ui.common.*
-import com.mrntlu.myanimeinfo2.utils.printLog
 
 class InfoPagerAdapter(fm: FragmentManager, private val dataType: DataType, animeResponse: AnimeResponse?=null, mangaResponse: MangaResponse?=null): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT){
 

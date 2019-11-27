@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -15,7 +14,6 @@ import com.mrntlu.myanimeinfo2.adapters.CharacterListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.CharacterBodyResponse
 import com.mrntlu.myanimeinfo2.models.DataType
-import com.mrntlu.myanimeinfo2.utils.printLog
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 
 class CharacterDataographyFragment(private val dataList:List<CharacterBodyResponse>,private val dataType: DataType) : Fragment() {

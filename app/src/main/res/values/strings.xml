@@ -29,7 +29,7 @@
         <item>bypopularity</item>
         <item>favorite</item>
     </string-array>
-    
+
     <string-array name="animeListFilter">
         <item>all</item>
         <item>watching</item>
@@ -84,6 +84,7 @@
     <string name="broadcast">Broadcast</string>
     <string name="status">Status</string>
     <string name="episodes">Episodes</string>
+    <string name="episodes_">Episodes:</string>
     <string name="duration">Duration</string>
     <string name="synopsis">Synopsis</string>
     <string name="background">Background</string>
@@ -131,6 +132,8 @@
     <string name="search_manga">Search Manga</string>
     <string name="others">Others</string>
     <string name="search_user">Search User</string>
+    <string name="no_past_search_found_">No past search found!</string>
+    <string name="please_retry_again">Please retry again.</string>
 
     <string-array name="ratedFilter">
         <item>G</item>
@@ -174,4 +177,8 @@
         <item>7></item>
         <item>8></item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_me">About Me</string>
 </resources>

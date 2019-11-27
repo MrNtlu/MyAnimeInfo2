@@ -10,7 +10,7 @@ import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.models.UserProfileResponse
 import kotlinx.android.synthetic.main.fragment_user_profile_stats.*
 
-class UserProfileStatsFragment(val userProfileResponse: UserProfileResponse) : Fragment() {
+class UserProfileStatsFragment(private val userProfileResponse: UserProfileResponse) : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_user_profile_stats, container, false)

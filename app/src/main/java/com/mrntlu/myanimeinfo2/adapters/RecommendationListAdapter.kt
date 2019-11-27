@@ -12,7 +12,6 @@ import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
 import kotlinx.android.synthetic.main.cell_character.view.*
-import kotlinx.android.synthetic.main.cell_error.view.*
 
 class RecommendationListAdapter(override val interaction: Interaction<RecommendationsBodyResponse>? = null):BaseAdapter<RecommendationsBodyResponse>(){
 

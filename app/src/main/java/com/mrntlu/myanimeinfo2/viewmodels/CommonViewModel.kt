@@ -15,7 +15,7 @@ import kotlinx.coroutines.*
 
 class CommonViewModel(application: Application): AndroidViewModel(application) {
 
-    private val serviceRepository= ServiceRepository(application)
+    private val serviceRepository= ServiceRepository()
     private var mJob: Job?=null
 
     fun getRecommendationsByID(type:String,mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<RecommendationsResponse> {
@@ -90,7 +90,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
     fun getPicturesByID(type:String,mal_id:Int,errorHandler: CoroutinesErrorHandler): LiveData<PicturesResponse> {
         val liveData= MutableLiveData<PicturesResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, e ->
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: PicturesResponse?=null
@@ -138,7 +138,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
     fun getUserAnimeList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserAnimeListResponse> {
         val liveData=MutableLiveData<UserAnimeListResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response:UserAnimeListResponse?=null
@@ -161,7 +161,7 @@ class CommonViewModel(application: Application): AndroidViewModel(application) {
     fun getUserMangaList(username:String,errorHandler: CoroutinesErrorHandler): LiveData<UserMangaListResponse> {
         val liveData=MutableLiveData<UserMangaListResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response:UserMangaListResponse?=null

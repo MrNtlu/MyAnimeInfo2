@@ -1,10 +1,9 @@
 package com.mrntlu.myanimeinfo2.repository
 
-import android.app.Application
 import com.mrntlu.myanimeinfo2.service.AnimeService
 import com.mrntlu.myanimeinfo2.service.RetrofitClient
 
-class ServiceRepository(application: Application) {
+class ServiceRepository {
 
     private val apiClient=RetrofitClient.getClient().create(AnimeService::class.java)
 

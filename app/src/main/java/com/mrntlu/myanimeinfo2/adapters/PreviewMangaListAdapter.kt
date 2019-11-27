@@ -12,9 +12,7 @@ import com.mrntlu.myanimeinfo2.adapters.viewholders.PaginationLoadingViewHolder
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.utils.loadWithGlide
-import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.utils.setVisible
-import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.cell_preview.view.*
 
 class PreviewMangaListAdapter(private val layout:Int=R.layout.cell_preview, override val interaction: Interaction<PreviewMangaResponse>? = null) : BaseAdapter<PreviewMangaResponse>(interaction) {

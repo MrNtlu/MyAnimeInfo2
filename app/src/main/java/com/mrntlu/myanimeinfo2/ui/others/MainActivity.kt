@@ -2,6 +2,7 @@ package com.mrntlu.myanimeinfo2.ui.others
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -73,8 +74,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         setDrawer()
-        setStatusBarColor(R.color.white,true)
-        setNavBarColor(R.color.black)
+        setStatusBarColor()
+        setNavBarColor()
     }
 
     private fun setListeners() {
@@ -112,6 +113,7 @@ class MainActivity : AppCompatActivity() {
                         "${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()} List"
                     }else "User List"
                 }
+                R.id.aboutMeFragment->"About Me"
                 else->""
             }
             if (!adView.isVisible && isInternetAvailable(this)) setAds()
@@ -139,14 +141,14 @@ class MainActivity : AppCompatActivity() {
         adView.loadAd(adRequest)
     }
 
-    private fun setNavBarColor(color:Int){
-        window.navigationBarColor=resources.getColor(color,theme)
+    private fun setNavBarColor(){
+        window.navigationBarColor=resources.getColor(R.color.black,theme)
     }
 
-    fun setStatusBarColor(color:Int,isLight:Boolean){
-        if (isLight) window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    private fun setStatusBarColor(){
+        window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor=resources.getColor(color,theme)
+        window.statusBarColor=resources.getColor(R.color.white,theme)
     }
 
     private fun setDrawer(){
@@ -160,6 +162,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.anime_search->navController.navigate(R.id.action_global_search, bundleOf("data_type" to ANIME.code))
                 R.id.manga_search->navController.navigate(R.id.action_global_search, bundleOf("data_type" to MANGA.code))
                 R.id.search_user->navController.navigate(R.id.action_global_userSearch)
+                R.id.about_me->navController.navigate(R.id.action_global_aboutMe)
             }
 
             drawerLayout.closeDrawer(START)
@@ -207,7 +210,7 @@ class MainActivity : AppCompatActivity() {
             if (isErrorOccurred){
                 navHeader.malUserText.text=errorMessage
                 navHeader.malUserText.setTextColor(resources.getColor(R.color.red800,theme))
-                navHeader.malUserInfoText.text="Please retry again."
+                navHeader.malUserInfoText.text=resources.getString(R.string.please_retry_again)
                 isErrorOccurred=false
             }
         }

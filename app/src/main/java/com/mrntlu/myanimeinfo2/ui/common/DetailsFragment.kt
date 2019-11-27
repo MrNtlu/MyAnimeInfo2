@@ -9,15 +9,12 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.GenreTagListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.*
 import com.mrntlu.myanimeinfo2.utils.setGone
 import kotlinx.android.synthetic.main.fragment_details.*
-import javax.xml.parsers.FactoryConfigurationError
 
 class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val mangaResponse: MangaResponse?=null,private val dataType: DataType) : Fragment() {
 
@@ -43,8 +40,8 @@ class DetailsFragment(private val animeResponse: AnimeResponse?=null,private val
             setData(it.score,it.scored_by,rank,popularity,members,it.premiered,it.duration,it.episodes,it.status,it.synopsis,it.background,it.broadcast,it.genres)
         }
         mangaResponse?.let {
-            durationTextview.text="Volumes"
-            episodesTextview.text="Chapters"
+            durationTextview.text=resources.getString(R.string.volumes)
+            episodesTextview.text=resources.getString(R.string.chapters)
             val rank="#${it.rank}"
             val popularity="#${it.popularity}"
             val members="#${it.members}"

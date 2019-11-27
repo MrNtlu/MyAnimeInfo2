@@ -11,15 +11,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mrntlu.myanimeinfo2.R
-import com.mrntlu.myanimeinfo2.ui.others.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 object Constants{

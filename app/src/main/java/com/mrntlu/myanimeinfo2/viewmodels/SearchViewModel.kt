@@ -10,7 +10,6 @@ import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.UserSearch
 import com.mrntlu.myanimeinfo2.repository.SearchRepository
 import com.mrntlu.myanimeinfo2.utils.Constants.TIME_OUT
-import com.mrntlu.myanimeinfo2.utils.printLog
 import kotlinx.coroutines.*
 
 class SearchViewModel(application: Application): AndroidViewModel(application) {

@@ -15,7 +15,7 @@ import kotlinx.coroutines.*
 
 class AnimeViewModel(application: Application): AndroidViewModel(application) {
 
-    private val serviceRepository=ServiceRepository(application)
+    private val serviceRepository=ServiceRepository()
     private var mJob:Job?=null
 
     //Anime
