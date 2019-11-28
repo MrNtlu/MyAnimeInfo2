@@ -134,6 +134,7 @@
     <string name="search_user">Search User</string>
     <string name="no_past_search_found_">No past search found!</string>
     <string name="please_retry_again">Please retry again.</string>
+    <string name="about_me">About Me</string>
 
     <string-array name="ratedFilter">
         <item>G</item>
@@ -177,8 +178,4 @@
         <item>7></item>
         <item>8></item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="about_me">About Me</string>
 </resources>

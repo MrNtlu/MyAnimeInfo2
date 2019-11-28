@@ -2,7 +2,6 @@ package com.mrntlu.myanimeinfo2.ui.others
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -135,7 +134,9 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
         val adRequest=AdRequest.Builder()
+                //TODO remove
             .addTestDevice("AD4218F6AC5DB23A77A519172E0D2A6D")
+            .addTestDevice("C15BA4A4DC246726736F6CAC69AAAE7E")
             .addTestDevice("544C0113FE3A3977A8B86DCBE3B024C0")
             .build()
         adView.loadAd(adRequest)
@@ -191,7 +192,6 @@ class MainActivity : AppCompatActivity() {
         if (malUser!=null && username!=null){
             setNavHeader(R.layout.nav_user_header)
             navHeader.malUserText.text=malUser!!.username
-            printLog(message = malUser!!.toString())
             if(malUser!!.image_url != null) navHeader.malUserImage.loadWithGlide(malUser!!.image_url!!,navHeader.malUserProgress)
             else{
                 malUserProgress.setGone()

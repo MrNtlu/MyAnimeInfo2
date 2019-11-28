@@ -1,5 +1,7 @@
 package com.mrntlu.myanimeinfo2.ui.common
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +16,6 @@ import com.mrntlu.myanimeinfo2.adapters.pageradapters.PicturesPagerAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.PictureBodyResponse
-import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.utils.setGone
 import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
@@ -36,6 +37,8 @@ import java.io.FileOutputStream
 import java.lang.Exception
 import android.os.Build
 import android.provider.MediaStore
+import androidx.core.content.ContextCompat
+import com.mrntlu.myanimeinfo2.utils.showToast
 
 class PicturesFragment : Fragment(), CoroutinesErrorHandler {
 
@@ -45,6 +48,7 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
     private lateinit var dataType: DataType
     private lateinit var pictures:List<PictureBodyResponse>
     private lateinit var fragments: ArrayList<PictureItemFragment>
+    private var PERMISSION_REQUEST_WRITE_STORAGE=1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,24 +67,31 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
         navController= Navigation.findNavController(view)
         commonViewModel= ViewModelProviders.of(this).get(CommonViewModel::class.java)
 
+        if (isPermissionsNeeded(view)) requestPermission()
         setupObservers()
         setListeners()
     }
 
+    private fun isPermissionsNeeded(view:View)=ContextCompat.checkSelfPermission(view.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+
     private fun setListeners(){
         errorLayout.errorRefreshButton.setOnClickListener {
             downloadFab.setVisible()
+            loadingLayout.setVisible()
             errorLayout.setGone()
             setupObservers()
         }
 
         downloadFab.setOnClickListener {
             if (::fragments.isInitialized){
-                //TODO ask for permission
-                downloadImage(it,fragments[pictureViewpager.currentItem].pictureImage.drawable)
+                if (isPermissionsNeeded(it)) requestPermission()
+                else downloadImage(it,fragments[pictureViewpager.currentItem].pictureImage.drawable)
             }
         }
     }
+
+    private fun requestPermission()=requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),PERMISSION_REQUEST_WRITE_STORAGE)
+
 
     @Suppress("DEPRECATION")
     private fun downloadImage(view:View, drawable: Drawable) {
@@ -92,10 +103,8 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
         try {
             root=File(view.context.getExternalFilesDir(null)!!.absolutePath)
             root.mkdirs()
-            imageMainDirectory=File(root,"mPic.jpg")
+            imageMainDirectory=File(root,"$malID${pictureViewpager.currentItem}.jpg")
             fout=FileOutputStream(imageMainDirectory)
-
-            printLog(message = "Paths $root $imageMainDirectory ${view.context.externalMediaDirs} ${view.context.getExternalFilesDir(null)!!.absolutePath}")
         }catch (e:Exception){
             e.printStackTrace()
         }
@@ -110,8 +119,9 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
                     MediaStore.setIncludePending(uri)
                 }
             }else{
-                MediaStore.Images.Media.insertImage(view.context.contentResolver, bitmap, "Test", "Desc")
+                MediaStore.Images.Media.insertImage(view.context.contentResolver, bitmap, "$malID's ${pictureViewpager.currentItem}th Image", "Desc")
             }
+            showToast(view.context,"Image saved to gallery. It might take a while to be shown.")
         }catch (e:Exception){
             e.printStackTrace()
         }
@@ -119,6 +129,7 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
 
     private fun setupObservers() {
         commonViewModel.getPicturesByID(dataType.toString().toLowerCase(Locale.ENGLISH),malID,this).observe(viewLifecycleOwner, Observer {
+            loadingLayout.setGone()
             pictures=it.pictures
             setupViewPagers(it.pictures)
         })
@@ -134,8 +145,21 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
         pictureTabLayout.setupWithViewPager(pictureViewpager,true)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode){
+            PERMISSION_REQUEST_WRITE_STORAGE->{
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    showToast(context,"Permission granted. Now you can save images.")
+                }else{
+                    showToast(context,"Permission denied. You can't save images.")
+                }
+            }
+        }
+    }
+
     override fun onError(message: String) {
         GlobalScope.launch(Dispatchers.Main) {
+            loadingLayout.setGone()
             downloadFab.setGone()
             errorLayout.setVisible()
             errorLayout.errorText.text=message

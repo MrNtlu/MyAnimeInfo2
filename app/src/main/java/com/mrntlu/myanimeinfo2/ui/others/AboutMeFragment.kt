@@ -27,7 +27,7 @@ class AboutMeFragment : Fragment() {
             .addLinkedInLink("burak-fidan")
             .setAppIcon(R.mipmap.ic_launcher)
             .setAppName(R.string.app_name)
-            .addGooglePlayStoreLink("") //TODO Change
+            .addGooglePlayStoreLink("8269784969410642250")
             .addGitHubLink("MrNtlu")
             .addEmailLink("mrntlu@gmail.com")
             .addWebsiteLink("https://burakfidan.net/")

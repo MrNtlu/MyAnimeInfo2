@@ -46,6 +46,13 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/loadingLayout"
+        android:visibility="visible"
+        layout="@layout/loading_layout"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/errorLayout"
         android:visibility="gone"
         layout="@layout/cell_error"/>
