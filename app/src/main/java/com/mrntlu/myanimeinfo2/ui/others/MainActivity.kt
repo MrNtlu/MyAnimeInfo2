@@ -134,10 +134,6 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
         val adRequest=AdRequest.Builder()
-                //TODO remove
-            .addTestDevice("AD4218F6AC5DB23A77A519172E0D2A6D")
-            .addTestDevice("C15BA4A4DC246726736F6CAC69AAAE7E")
-            .addTestDevice("544C0113FE3A3977A8B86DCBE3B024C0")
             .build()
         adView.loadAd(adRequest)
     }
@@ -234,7 +230,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setMALUserData(){
         setNavHeader(R.layout.nav_loading_user)
-
         commonViewModel.getUserProfile(username!!,object:CoroutinesErrorHandler{
             override fun onError(message: String) {
                 GlobalScope.launch(Dispatchers.Main){

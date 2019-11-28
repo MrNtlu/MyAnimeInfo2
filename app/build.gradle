@@ -80,6 +80,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
     implementation 'com.afollestad.material-dialogs:input:3.1.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
+    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 

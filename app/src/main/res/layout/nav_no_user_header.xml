@@ -4,8 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="120dp">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_header_background"
+        android:scaleType="centerCrop"
+        android:alpha="0.4"
+        android:id="@+id/noBlurImage"
+        tools:ignore="ContentDescription" />
     <View
         android:id="@+id/view6"
         android:layout_width="0dp"
@@ -61,6 +69,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/malUserText"
         app:layout_constraintTop_toBottomOf="@+id/malUserText" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

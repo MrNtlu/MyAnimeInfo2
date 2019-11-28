@@ -53,7 +53,7 @@
         android:layout_marginEnd="4dp"
         android:textAlignment="center"
         android:textColor="@color/materialBlack"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userListView"
@@ -168,7 +168,7 @@
 
             <TextView
                 android:id="@+id/userListEpisodes"
-                android:layout_width="117dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
