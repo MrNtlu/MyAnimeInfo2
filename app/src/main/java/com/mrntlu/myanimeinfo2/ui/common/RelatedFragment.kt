@@ -66,7 +66,6 @@ class RelatedFragment(private val relatedResponse: RelatedResponse,private val d
                 override fun onErrorRefreshPressed() {}
 
                 override fun onItemSelected(position: Int, item: GeneralShortResponse) {
-                    printLog(message = "Item ${item.mal_id} ${item.name}")
                     if (dataType==DataType.MANGA) navigateWithBundle(item.mal_id,R.id.action_mangaInfo_to_animeInfo)
                     else navigateWithBundle(item.mal_id,R.id.action_animeInfo_to_mangaInfo)
                 }

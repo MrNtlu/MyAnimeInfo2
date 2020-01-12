@@ -24,6 +24,7 @@ import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -86,9 +87,13 @@ class MainFragment : Fragment(){
     }
 
     private fun setupObservers() {
-        setTopAiringAnimeObserver()
-        setTopMangaObserver()
-        setAiringTodayObserver()
+        GlobalScope.launch(Dispatchers.Main){
+            setTopAiringAnimeObserver()
+            delay(600)
+            setTopMangaObserver()
+            delay(600)
+            setAiringTodayObserver()
+        }
     }
 
     private fun setTopAiringAnimeObserver()= animeViewModel.getTopAnimes(1,resources.getStringArray(R.array.topAnimeSubtypes)[1].toLowerCase(Locale.ENGLISH),

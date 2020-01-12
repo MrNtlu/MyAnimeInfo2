@@ -19,6 +19,7 @@ import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.utils.makeCapital
+import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import kotlinx.android.synthetic.main.fragment_anime_season.*
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +47,8 @@ class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<Prev
         animeViewModel=ViewModelProviders.of(this).get(AnimeViewModel::class.java)
 
         setupRecyclerView()
-        setupObserver(mYear,"")
+        if (mYear == "later")setupObserver(mYear,"")
+        else setupObserver(mYear,mSeason)
         setSpinners()
         setListeners()
     }
@@ -71,6 +73,7 @@ class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<Prev
                 isLoading=true
                 mSeason=item.toString().toLowerCase(Locale.ENGLISH)
                 setupObserver(mYear,mSeason)
+                printLog(message = "$mYear $mSeason")
             }
         }
 

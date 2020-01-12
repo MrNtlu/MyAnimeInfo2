@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -39,11 +40,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var navHeader:View
     private lateinit var commonViewModel: CommonViewModel
+    private lateinit var mInterstitialAd: InterstitialAd
+
     private var username:String?=null
     private var malUser:UserProfileResponse?=null
 
     private var isErrorOccurred=false
     private var errorMessage="Error Occurred!"
+
+    private var interstitialCount=0
 
     override fun onBackPressed() {
         if (::navController.isInitialized && navController.currentDestination?.id==R.id.mainFragment){
@@ -88,25 +93,42 @@ class MainActivity : AppCompatActivity() {
                     }else "User's Profile"
                 }
                 R.id.animeSeasonFragment->"Anime by Season"
-                R.id.mangaInfoFragment->"Manga Info"
-                R.id.animeInfoFragment->"Anime Info"
+                R.id.mangaInfoFragment->{
+                    showInterstitialAd()
+                    "Manga Info"
+                }
+                R.id.animeInfoFragment->{
+                    showInterstitialAd()
+                    "Anime Info"
+                }
                 R.id.topListFragment->{
+                    showInterstitialAd()
                     if (arguments!=null){
                         val dataType=DataType.getByCode(arguments.getInt("data_type"))
                         "Top ${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()} List"
                     } else "Top List"
                 }
-                R.id.scheduleAnimeFragment->"Schedule"
+                R.id.scheduleAnimeFragment->{
+                    showInterstitialAd()
+                    "Schedule"
+                }
                 R.id.genreDialogFragment->toolbar.title
-                R.id.characterInfoFragment-> "Character Info"
+                R.id.characterInfoFragment->{
+                    showInterstitialAd()
+                    "Character Info"
+                }
                 R.id.searchFragment->{
                     if (arguments!=null){
                         val dataType=DataType.getByCode(arguments.getInt("data_type"))
                         "Search ${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()}"
                     } else "Search"
                 }
-                R.id.picturesFragment->"Pictures"
+                R.id.picturesFragment->{
+                    showInterstitialAd()
+                    "Pictures"
+                }
                 R.id.userListFragment->{
+                    showInterstitialAd()
                     if (arguments!=null) {
                         val dataType = DataType.getByCode(arguments.getInt("data_type"))
                         "${dataType.name.toLowerCase(Locale.ENGLISH).makeCapital()} List"
@@ -134,8 +156,37 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
         val adRequest=AdRequest.Builder()
+            //.addTestDevice(getString(R.string.motorolaDeviceID))
             .build()
         adView.loadAd(adRequest)
+
+        mInterstitialAd= InterstitialAd(this)
+        mInterstitialAd.adUnitId =getString(R.string.interstitialID)
+        //banner ca-app-pub-3940256099942544/1033173712
+        //video ca-app-pub-3940256099942544/8691691433
+        val interstitialRequest=AdRequest.Builder()
+            //.addTestDevice(getString(R.string.motorolaDeviceID))
+            .build()
+        mInterstitialAd.loadAd(interstitialRequest)
+
+        mInterstitialAd.adListener=object: AdListener(){
+            override fun onAdFailedToLoad(p0: Int) {
+                super.onAdFailedToLoad(p0)
+                interstitialCount--
+            }
+            override fun onAdClosed() {
+                super.onAdClosed()
+                if (!mInterstitialAd.isLoaded)
+                    mInterstitialAd.loadAd(interstitialRequest)
+            }
+        }
+    }
+
+    private fun showInterstitialAd(){
+        if (isInternetAvailable(this) && ::mInterstitialAd.isInitialized) {
+            if (mInterstitialAd.isLoaded && interstitialCount % 8 == 2) mInterstitialAd.show()
+            interstitialCount++
+        }
     }
 
     private fun setNavBarColor(){
@@ -188,7 +239,9 @@ class MainActivity : AppCompatActivity() {
         if (malUser!=null && username!=null){
             setNavHeader(R.layout.nav_user_header)
             navHeader.malUserText.text=malUser!!.username
-            if(malUser!!.image_url != null) navHeader.malUserImage.loadWithGlide(malUser!!.image_url!!,navHeader.malUserProgress)
+
+            if(malUser!!.image_url != null)
+                navHeader.malUserImage.loadWithGlide(malUser!!.image_url!!,navHeader.malUserProgress)
             else{
                 malUserProgress.setGone()
                 navHeader.malUserImage.setImageDrawable(resources.getDrawable(R.drawable.ic_person_black_24dp,theme))
@@ -207,8 +260,15 @@ class MainActivity : AppCompatActivity() {
                 navHeader.malUserText.text=errorMessage
                 navHeader.malUserText.setTextColor(resources.getColor(R.color.red800,theme))
                 navHeader.malUserInfoText.text=resources.getString(R.string.please_retry_again)
+                if (username!=null) {
+                    navHeader.malUserRefreshButton.setVisible()
+                    navHeader.malUserRefreshButton.setOnClickListener {
+                        setMALUserData()
+                    }
+                }
                 isErrorOccurred=false
-            }
+            }else
+                navHeader.malUserRefreshButton.visibility=View.INVISIBLE
         }
 
     }

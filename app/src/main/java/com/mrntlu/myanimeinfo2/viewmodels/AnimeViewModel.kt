@@ -160,7 +160,10 @@ class AnimeViewModel(application: Application): AndroidViewModel(application) {
     fun getAnimeBySeason(year:String,season:String,errorHandler: CoroutinesErrorHandler): LiveData<AnimeGenreSeasonResponse> {
         val liveData= MutableLiveData<AnimeGenreSeasonResponse>()
 
-        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+        printLog(message = "Year $year season $season")
+
+        mJob=viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, a ->
+            printLog(message = "${a.message}")
             errorHandler.onError(getApplication<Application>().getString(R.string.internet_error))
         }){
             var response: AnimeGenreSeasonResponse?=null

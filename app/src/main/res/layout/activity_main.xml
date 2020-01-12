@@ -40,7 +40,7 @@
             android:layout_centerHorizontal="true"
             app:adSize="SMART_BANNER"
             android:visibility="gone"
-            app:adUnitId="ca-app-pub-7421130457283934/4527678427"
+            app:adUnitId="@string/bannerID"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

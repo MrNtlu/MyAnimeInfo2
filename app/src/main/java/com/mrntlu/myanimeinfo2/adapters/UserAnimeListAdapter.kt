@@ -35,7 +35,6 @@ class UserAnimeListAdapter(override val interaction: Interaction<UserAnimeListBo
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
-            printLog(message = item.watching_status.toString())
 
             itemView.userListView.setBackgroundColor(resources.getColor(
                 when(item.watching_status){
