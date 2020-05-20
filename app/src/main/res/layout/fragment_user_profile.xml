@@ -12,7 +12,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FAFAFA"
+            android:background="?attr/layoutBackgroundColor"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -74,9 +74,10 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:textAlignment="center"
-                    android:textColor="@color/materialBlack"
+                    android:textColor="?attr/contentTextColor"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    tools:text="Test Profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/userProfileImage"
                     app:layout_constraintTop_toTopOf="@+id/userProfileImage" />
@@ -105,6 +106,10 @@
             app:tabTextAppearance="@style/TabLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="?attr/layoutBackgroundColor"
+            app:tabTextColor="@color/grey500"
+            app:tabSelectedTextColor="?attr/contentTextColor"
+            app:tabIconTint="?attr/contentTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -118,6 +123,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="?attr/layoutBackgroundColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

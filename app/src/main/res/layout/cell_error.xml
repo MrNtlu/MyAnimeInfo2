@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE">
+    android:background="?attr/layoutBackgroundColor">
 
     <ImageButton
         android:id="@+id/errorRefreshButton"
@@ -13,6 +14,7 @@
         android:layout_marginEnd="8dp"
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
+        android:tint="?attr/contentTextColor"
         android:src="@drawable/ic_refresh_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,7 +31,7 @@
         android:fontFamily="serif-monospace"
         android:text="@string/error_occured"
         android:textAlignment="center"
-        android:textColor="@color/materialBlack"
+        android:textColor="?attr/contentTextColor"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/imageView"

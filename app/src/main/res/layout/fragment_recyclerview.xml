@@ -2,12 +2,13 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/layoutBackgroundColor">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragmentRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:scrollbarSize="3dp"
-        android:scrollbarThumbVertical="@color/materialBlack"/>
+        android:scrollbarThumbVertical="?attr/contentTextColor"/>
 </FrameLayout>

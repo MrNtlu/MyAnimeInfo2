@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.ReviewsListAdapter
@@ -13,11 +15,8 @@ import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
 import com.mrntlu.myanimeinfo2.interfaces.Interaction
 import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.ReviewsBodyResponse
-import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -33,7 +32,7 @@ class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        commonViewModel=ViewModelProvider(this).get(CommonViewModel::class.java)
 
         setupRecyclerView()
         setupObservers()
@@ -59,9 +58,10 @@ class ReviewsFragment(private val malID:Int,private val dataType:DataType) : Fra
     }
 
     override fun onError(message: String) {
-        printLog(message = message)
-        GlobalScope.launch(Dispatchers.Main) {
-            reviewsListAdapter.submitError(message)
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenResumed {
+                reviewsListAdapter.submitError(message)
+            }
         }
     }
 

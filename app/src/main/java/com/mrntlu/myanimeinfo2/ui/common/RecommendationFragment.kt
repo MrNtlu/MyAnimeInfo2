@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,8 +20,6 @@ import com.mrntlu.myanimeinfo2.models.DataType
 import com.mrntlu.myanimeinfo2.models.RecommendationsBodyResponse
 import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -35,7 +35,7 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        commonViewModel = ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        commonViewModel = ViewModelProvider(this).get(CommonViewModel::class.java)
 
         setupRecyclerView()
         setupObservers()
@@ -64,8 +64,10 @@ class RecommendationFragment(private val dataType: DataType,private val malID:In
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            recommendationListAdapter.submitError(message)
+        viewLifecycleOwner.lifecycleScope.launch{
+            whenResumed {
+                recommendationListAdapter.submitError(message)
+            }
         }
     }
 

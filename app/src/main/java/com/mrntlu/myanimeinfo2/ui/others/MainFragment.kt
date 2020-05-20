@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,8 +24,6 @@ import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -44,8 +44,8 @@ class MainFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
-        mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+        animeViewModel = ViewModelProvider(this).get(AnimeViewModel::class.java)
+        mangaViewModel = ViewModelProvider(this).get(MangaViewModel::class.java)
 
         setToggle()
         setListeners()
@@ -87,20 +87,24 @@ class MainFragment : Fragment(){
     }
 
     private fun setupObservers() {
-        GlobalScope.launch(Dispatchers.Main){
-            setTopAiringAnimeObserver()
-            delay(600)
-            setTopMangaObserver()
-            delay(600)
-            setAiringTodayObserver()
+        viewLifecycleOwner.lifecycleScope.launch{
+            whenResumed {
+                setTopAiringAnimeObserver()
+                delay(600)
+                setTopMangaObserver()
+                delay(600)
+                setAiringTodayObserver()
+            }
         }
     }
 
-    private fun setTopAiringAnimeObserver()= animeViewModel.getTopAnimes(1,resources.getStringArray(R.array.topAnimeSubtypes)[1].toLowerCase(Locale.ENGLISH),
+    private fun setTopAiringAnimeObserver()=animeViewModel.getTopAnimes(1,resources.getStringArray(R.array.topAnimeSubtypes)[1].toLowerCase(Locale.ENGLISH),
         object :CoroutinesErrorHandler{
             override fun onError(message: String) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    topAiringAdapter.submitError(message)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    whenResumed {
+                        topAiringAdapter.submitError(message)
+                    }
                 }
             }
         }).observe(viewLifecycleOwner,Observer{
@@ -110,8 +114,10 @@ class MainFragment : Fragment(){
     private fun setTopMangaObserver()=mangaViewModel.getTopMangas(1,"",
         object :CoroutinesErrorHandler{
             override fun onError(message: String) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    topMangaAdapter.submitError(message)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    whenResumed {
+                        topMangaAdapter.submitError(message)
+                    }
                 }
             }
         }).observe(viewLifecycleOwner, Observer {
@@ -120,8 +126,10 @@ class MainFragment : Fragment(){
 
     private fun setAiringTodayObserver()=animeViewModel.getAnimeSchedule(object :CoroutinesErrorHandler{
         override fun onError(message: String) {
-            GlobalScope.launch(Dispatchers.Main) {
-                todayAiringAdapter.submitError(message)
+            viewLifecycleOwner.lifecycleScope.launch {
+                whenResumed {
+                    todayAiringAdapter.submitError(message)
+                }
             }
         }
     }).observe(viewLifecycleOwner, Observer {

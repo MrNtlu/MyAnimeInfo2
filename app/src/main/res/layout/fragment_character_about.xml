@@ -12,12 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        app:cardCornerRadius="6dp">
+        app:cardCornerRadius="6dp"
+        app:cardBackgroundColor="?attr/cardContentBackgroundColor">
 
         <TextView
             android:id="@+id/characterAboutText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp" />
+            android:layout_margin="8dp"
+            android:textColor="?attr/contentTextColor"
+            tools:text="This is text character info."/>
     </androidx.cardview.widget.CardView>
 </androidx.core.widget.NestedScrollView>

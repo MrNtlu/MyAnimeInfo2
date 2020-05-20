@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +23,6 @@ import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class CharactersFragment(private val malID:Int,private val dataType:DataType): Fragment() {
@@ -39,8 +39,8 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        if (dataType==MANGA) mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
-        else animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        if (dataType==MANGA) mangaViewModel = ViewModelProvider(this).get(MangaViewModel::class.java)
+        else animeViewModel = ViewModelProvider(this).get(AnimeViewModel::class.java)
 
         setupRecyclerView()
         setupObservers()
@@ -50,8 +50,10 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
         if (dataType==MANGA){
             mangaViewModel.getMangaCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        characterListAdapter.submitError(message)
+                    viewLifecycleOwner.lifecycleScope.launch{
+                        whenResumed {
+                            characterListAdapter.submitError(message)
+                        }
                     }
                 }
 
@@ -61,8 +63,10 @@ class CharactersFragment(private val malID:Int,private val dataType:DataType): F
         }else{
             animeViewModel.getAnimeCharactersByID(malID,object :CoroutinesErrorHandler{
                 override fun onError(message: String) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        characterListAdapter.submitError(message)
+                    viewLifecycleOwner.lifecycleScope.launch{
+                        whenResumed {
+                            characterListAdapter.submitError(message)
+                        }
                     }
                 }
             }).observe(viewLifecycleOwner, Observer {

@@ -2,6 +2,7 @@ package com.mrntlu.myanimeinfo2.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -21,6 +22,9 @@ import java.util.*
 
 object Constants{
     const val TIME_OUT=5000L
+    const val THEME_PREF_NAME="appTheme"
+    const val DARK_THEME=0
+    const val LIGHT_THEME=1
 }
 
 fun View.setGone(){

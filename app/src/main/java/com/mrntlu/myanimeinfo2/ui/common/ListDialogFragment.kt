@@ -9,7 +9,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,13 +26,13 @@ import com.mrntlu.myanimeinfo2.models.DataType.*
 import com.mrntlu.myanimeinfo2.models.DialogType
 import com.mrntlu.myanimeinfo2.models.PreviewAnimeResponse
 import com.mrntlu.myanimeinfo2.models.PreviewMangaResponse
+import com.mrntlu.myanimeinfo2.ui.others.MainActivity
+import com.mrntlu.myanimeinfo2.utils.Constants
 import com.mrntlu.myanimeinfo2.utils.showToast
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_genre_dialog.*
 import kotlinx.android.synthetic.main.fragment_genre_dialog.goUpFAB
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
@@ -62,7 +64,10 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
             dialogType=DialogType.getByCode(it.getInt("dialog_type"))
             malID=it.getInt("mal_id")
         }
-        setStyle(STYLE_NORMAL,R.style.FullScreenLightDialog)
+        if((activity as MainActivity).themeCode==Constants.LIGHT_THEME)
+            setStyle(STYLE_NORMAL,R.style.FullScreenLightDialog)
+        else
+            setStyle(STYLE_NORMAL,R.style.FullScreenDarkDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,16 +86,17 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         parentFragment?.let {
-            if (it.view!=null) navController=Navigation.findNavController(it.view!!)
+            if (it.view!=null)
+                navController=Navigation.findNavController(it.requireView())
         }
 
         setupUI()
         setupRecyclerView()
         if (dataType== MANGA){
-            mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+            mangaViewModel = ViewModelProvider(this).get(MangaViewModel::class.java)
             setGenreMangaObserver()
         } else{
-            animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+            animeViewModel = ViewModelProvider(this).get(AnimeViewModel::class.java)
             if (dialogType==DialogType.GENRE) setGenreAnimeObserver()
             else setProducerAnimeObserver()
         }
@@ -220,17 +226,19 @@ class ListDialogFragment: DialogFragment(),CoroutinesErrorHandler {
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main){
-            if (pageNum==1) {
-                if (dataType == MANGA) mangaGenreAdapter.submitError(message)
-                else animeGenreAdapter.submitError(message)
-            }else{
-                isLoading=false
-                pageNum--
-                if (dataType==MANGA) mangaGenreAdapter.submitPaginationError()
-                else animeGenreAdapter.submitPaginationError()
+        viewLifecycleOwner.lifecycleScope.launch{
+            whenResumed {
+                if (pageNum == 1) {
+                    if (dataType == MANGA) mangaGenreAdapter.submitError(message)
+                    else animeGenreAdapter.submitError(message)
+                } else {
+                    isLoading = false
+                    pageNum--
+                    if (dataType == MANGA) mangaGenreAdapter.submitPaginationError()
+                    else animeGenreAdapter.submitPaginationError()
 
-                showToast(context,"Failed to load more. $message")
+                    showToast(context, "Failed to load more. $message")
+                }
             }
         }
     }

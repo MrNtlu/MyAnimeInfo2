@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
@@ -48,7 +50,7 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        commonViewModel=ViewModelProvider(this).get(CommonViewModel::class.java)
         progressbarLayout.setVisible()
 
         setListeners()
@@ -102,10 +104,12 @@ class UserProfileFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main){
-            progressbarLayout.setGone()
-            errorLayout.setVisible()
-            errorLayout.errorText.text=message
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenResumed {
+                progressbarLayout.setGone()
+                errorLayout.setVisible()
+                errorLayout.errorText.text = message
+            }
         }
     }
 

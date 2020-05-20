@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/layoutBackgroundColor"
     tools:context=".ui.anime.ScheduleAnimeFragment">
 
     <com.google.android.material.tabs.TabLayout
@@ -15,6 +16,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:background="?attr/contentBackground"
+        app:tabTextColor="@color/grey500"
+        app:tabSelectedTextColor="?attr/contentTextColor"
         app:tabGravity="center"
         app:tabMode="scrollable" />
 

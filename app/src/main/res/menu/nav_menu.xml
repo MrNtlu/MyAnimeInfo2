@@ -58,6 +58,11 @@
     <item android:title="@string/others">
         <menu>
             <item
+                android:title="Change Theme"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/ic_theme_black_24dp"
+                android:id="@+id/change_theme"/>
+            <item
                 android:title="@string/search_user"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/ic_anime_boy_with_tie"

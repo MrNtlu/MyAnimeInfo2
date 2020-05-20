@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="6dp"
-    android:layout_marginBottom="4dp">
-
+    android:layout_marginBottom="4dp"
+    app:cardBackgroundColor="?attr/cardContentBackgroundColor">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -43,6 +44,8 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:textSize="16sp"
+            tools:text="Test Character"
+            android:textColor="?attr/contentTextColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/characterImage"
@@ -56,6 +59,8 @@
             android:layout_marginEnd="8dp"
             android:textSize="16sp"
             android:textStyle="bold"
+            tools:text="Main"
+            android:textColor="?attr/titleTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

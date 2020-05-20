@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#EEEEEE"
+    android:background="?attr/layoutBackgroundColor"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".ui.others.UserSearchFragment">
@@ -18,8 +18,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/white"
-        android:elevation="2dp"
+        style="@style/SearchViewStyle"
         android:iconifiedByDefault="false"
         app:layout_constraintBottom_toTopOf="@+id/pastSearchRV"
         app:layout_constraintEnd_toEndOf="parent"

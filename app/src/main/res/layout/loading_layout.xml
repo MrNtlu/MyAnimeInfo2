@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="7dp"
-    android:background="#EEEEEE">
+    android:background="?attr/contentBackground">
 
     <ProgressBar
         android:id="@+id/progressBar2"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/materialBlack"
-        android:progressTint="@color/materialBlack"
+        android:indeterminateTint="?attr/contentTextColor"
+        android:progressTint="?attr/contentTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/loading_"
-        android:textColor="@color/materialBlack"
+        android:textColor="?attr/contentTextColor"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

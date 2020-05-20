@@ -9,11 +9,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.mrntlu.myanimeinfo2.R
 import com.mrntlu.myanimeinfo2.adapters.UserPastSearchListAdapter
 import com.mrntlu.myanimeinfo2.interfaces.CoroutinesErrorHandler
@@ -38,8 +37,11 @@ class UserSearchFragment : Fragment(), Interaction<UserSearch>, CoroutinesErrorH
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        searchViewModel= ViewModelProviders.of(this).get(SearchViewModel::class.java)
-        
+        searchViewModel= ViewModelProvider(this).get(SearchViewModel::class.java)
+
+        val textArea=userSearchView.findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
+        textArea.setTextColor(resources.getColor(R.color.materialBlack,view.context.theme))
+
         setSearchView()
         setupRecyclerView()
         setListeners()

@@ -5,13 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.common.ListDialogFragment">
+    tools:context=".ui.common.ListDialogFragment"
+    android:background="?attr/layoutBackgroundColor">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:elevation="2dp"
+        android:background="?attr/toolbarBackgroundColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,19 +25,22 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/close_button"
             android:src="@drawable/ic_close_black_24dp"
-            android:tint="@color/materialBlack"
+            android:tint="?attr/titleTextColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/dialogGenreNameText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:textColor="@color/materialBlack"
+            android:layout_marginEnd="32dp"
+            android:textColor="?attr/contentTextColor"
             android:textSize="18sp"
+            tools:text="Historical"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dialogCloseButton"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

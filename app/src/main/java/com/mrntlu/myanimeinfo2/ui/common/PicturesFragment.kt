@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
@@ -22,8 +22,6 @@ import com.mrntlu.myanimeinfo2.viewmodels.CommonViewModel
 import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.fragment_pictures.*
 import kotlinx.android.synthetic.main.fragment_pictures.errorLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.properties.Delegates
@@ -38,6 +36,8 @@ import java.lang.Exception
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import com.mrntlu.myanimeinfo2.utils.showToast
 
 class PicturesFragment : Fragment(), CoroutinesErrorHandler {
@@ -65,7 +65,7 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        commonViewModel= ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        commonViewModel= ViewModelProvider(this).get(CommonViewModel::class.java)
 
         if (isPermissionsNeeded(view)) requestPermission()
         setupObservers()
@@ -84,8 +84,12 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
 
         downloadFab.setOnClickListener {
             if (::fragments.isInitialized){
-                if (isPermissionsNeeded(it)) requestPermission()
-                else downloadImage(it,fragments[pictureViewpager.currentItem].pictureImage.drawable)
+                if (isPermissionsNeeded(it))
+                    requestPermission()
+                else {
+                    if (fragments[pictureViewpager.currentItem].pictureImage!=null && fragments[pictureViewpager.currentItem].pictureImage.drawable!=null)
+                        downloadImage(it, fragments[pictureViewpager.currentItem].pictureImage.drawable)
+                }
             }
         }
     }
@@ -158,11 +162,13 @@ class PicturesFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            loadingLayout.setGone()
-            downloadFab.setGone()
-            errorLayout.setVisible()
-            errorLayout.errorText.text=message
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenResumed {
+                loadingLayout.setGone()
+                downloadFab.setGone()
+                errorLayout.setVisible()
+                errorLayout.errorText.text = message
+            }
         }
     }
 

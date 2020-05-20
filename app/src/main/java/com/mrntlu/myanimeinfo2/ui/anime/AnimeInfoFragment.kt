@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.mrntlu.myanimeinfo2.R
@@ -21,8 +23,6 @@ import com.mrntlu.myanimeinfo2.utils.setVisible
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import kotlinx.android.synthetic.main.cell_error.view.*
 import kotlinx.android.synthetic.main.fragment_info.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
@@ -48,7 +48,7 @@ class AnimeInfoFragment : Fragment(), CoroutinesErrorHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        animeViewModel = ViewModelProvider(this).get(AnimeViewModel::class.java)
         progressbarLayout.setVisible()
 
         setListeners()
@@ -94,10 +94,12 @@ class AnimeInfoFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            progressbarLayout.setGone()
-            errorLayout.setVisible()
-            errorLayout.errorText.text=message
+        viewLifecycleOwner.lifecycleScope.launch{
+            whenResumed {
+                progressbarLayout.setGone()
+                errorLayout.setVisible()
+                errorLayout.errorText.text=message
+            }
         }
     }
 

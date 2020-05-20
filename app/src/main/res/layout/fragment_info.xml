@@ -16,7 +16,8 @@
             android:background="#FAFAFA">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="?attr/layoutBackgroundColor">
                 <ImageView
                     android:id="@+id/posterImage"
                     android:layout_width="105dp"
@@ -35,9 +36,10 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:textAlignment="center"
-                    android:textColor="@color/materialBlack"
+                    android:textColor="?attr/contentTextColor"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    tools:text="Title Text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/posterImage"
                     app:layout_constraintTop_toTopOf="@+id/posterImage" />
@@ -62,8 +64,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:textAlignment="textEnd"
-                    android:textColor="@android:color/black"
+                    android:textColor="?attr/titleTextColor"
                     android:textSize="18sp"
+                    tools:text="TV"
                     app:layout_constraintBottom_toBottomOf="@+id/posterImage"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -103,12 +106,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:background="?attr/layoutBackgroundColor"
+            app:tabTextColor="@color/grey500"
+            app:tabSelectedTextColor="?attr/contentTextColor"
             app:tabGravity="center"
             app:tabMode="scrollable" />
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/infoViewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="?attr/layoutBackgroundColor"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

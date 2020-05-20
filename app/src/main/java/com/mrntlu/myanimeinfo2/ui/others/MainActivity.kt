@@ -1,7 +1,11 @@
 package com.mrntlu.myanimeinfo2.ui.others
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -9,7 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat.*
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.afollestad.materialdialogs.MaterialDialog
@@ -42,6 +46,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var commonViewModel: CommonViewModel
     private lateinit var mInterstitialAd: InterstitialAd
 
+    private lateinit var prefs: SharedPreferences
+    var themeCode=Constants.LIGHT_THEME
+
     private var username:String?=null
     private var malUser:UserProfileResponse?=null
 
@@ -65,12 +72,26 @@ class MainActivity : AppCompatActivity() {
         }else super.onBackPressed()
     }
 
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        prefs=getSharedPreferences(Constants.THEME_PREF_NAME,0)
+        themeCode=prefs.getInt(Constants.THEME_PREF_NAME,Constants.LIGHT_THEME)
+
+        if (themeCode==Constants.DARK_THEME)
+            setTheme(R.style.DarkTheme)
+        else
+            setTheme(R.style.AppTheme)
+
+        setNavBarColor()
+        setStatusBarColor(themeCode)
+        return super.onCreateView(name, context, attrs)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navHostFragment=nav_host_fragment as NavHostFragment
         navController=navHostFragment.navController
-        commonViewModel=ViewModelProviders.of(this).get(CommonViewModel::class.java)
+        commonViewModel=ViewModelProvider(this).get(CommonViewModel::class.java)
         username=readFromPref()
 
         setListeners()
@@ -78,8 +99,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         setDrawer()
-        setStatusBarColor()
-        setNavBarColor()
     }
 
     private fun setListeners() {
@@ -156,16 +175,12 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
         val adRequest=AdRequest.Builder()
-            //.addTestDevice(getString(R.string.motorolaDeviceID))
             .build()
         adView.loadAd(adRequest)
 
         mInterstitialAd= InterstitialAd(this)
         mInterstitialAd.adUnitId =getString(R.string.interstitialID)
-        //banner ca-app-pub-3940256099942544/1033173712
-        //video ca-app-pub-3940256099942544/8691691433
         val interstitialRequest=AdRequest.Builder()
-            //.addTestDevice(getString(R.string.motorolaDeviceID))
             .build()
         mInterstitialAd.loadAd(interstitialRequest)
 
@@ -184,7 +199,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showInterstitialAd(){
         if (isInternetAvailable(this) && ::mInterstitialAd.isInitialized) {
-            if (mInterstitialAd.isLoaded && interstitialCount % 8 == 2) mInterstitialAd.show()
+            if (mInterstitialAd.isLoaded && interstitialCount % 6 == 2)
+                mInterstitialAd.show()
             interstitialCount++
         }
     }
@@ -193,10 +209,12 @@ class MainActivity : AppCompatActivity() {
         window.navigationBarColor=resources.getColor(R.color.black,theme)
     }
 
-    private fun setStatusBarColor(){
-        window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    private fun setStatusBarColor(themeCode: Int){
+        val isLightTheme=themeCode==Constants.LIGHT_THEME
+        if (isLightTheme)
+            window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor=resources.getColor(R.color.white,theme)
+        window.statusBarColor=resources.getColor(if (isLightTheme) R.color.white else R.color.materialBlack,theme)
     }
 
     private fun setDrawer(){
@@ -209,6 +227,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.top_manga_list->navController.navigate(R.id.action_global_topList, bundleOf("data_type" to MANGA.code))
                 R.id.anime_search->navController.navigate(R.id.action_global_search, bundleOf("data_type" to ANIME.code))
                 R.id.manga_search->navController.navigate(R.id.action_global_search, bundleOf("data_type" to MANGA.code))
+                R.id.change_theme->{
+                    if (themeCode==Constants.LIGHT_THEME)
+                        setThemePref(Constants.DARK_THEME)
+                    else
+                        setThemePref(Constants.LIGHT_THEME)
+                    val intent= Intent(this,MainActivity::class.java)
+                    startActivity(intent)
+                    this.finish()
+                }
                 R.id.search_user->navController.navigate(R.id.action_global_userSearch)
                 R.id.about_me->navController.navigate(R.id.action_global_aboutMe)
             }
@@ -230,8 +257,15 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
+    private fun setThemePref(value: Int){
+        val editor=prefs.edit()
+        editor.putInt(Constants.THEME_PREF_NAME,value)
+        editor.apply()
+    }
+
     private fun setNavHeader(layout:Int){
-        if(::navHeader.isInitialized) navigationView.removeHeaderView(navHeader)
+        if(::navHeader.isInitialized)
+            navigationView.removeHeaderView(navHeader)
         navHeader=navigationView.inflateHeaderView(layout)
     }
 

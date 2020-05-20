@@ -9,7 +9,9 @@ import android.widget.AbsListView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,8 +32,6 @@ import com.mrntlu.myanimeinfo2.utils.showToast
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_top_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
@@ -68,10 +68,10 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
         setListeners()
 
         if (dataType==ANIME){
-            animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+            animeViewModel = ViewModelProvider(this).get(AnimeViewModel::class.java)
             setAnimeObserver()
         }else{
-            mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
+            mangaViewModel = ViewModelProvider(this).get(MangaViewModel::class.java)
             setMangaObserver()
         }
     }
@@ -203,17 +203,18 @@ class TopListFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            if (pageNum == 1){
-                if (dataType == ANIME) topAnimeListAdapter.submitError(message)
-                else topMangaListAdapter.submitError(message)
-            }
-            else {
-                isLoading = false
-                pageNum--
-                if (dataType==ANIME) topAnimeListAdapter.submitPaginationError()
-                else topMangaListAdapter.submitPaginationError()
-                showToast(context,"Failed to load more. $message")
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenResumed {
+                if (pageNum == 1) {
+                    if (dataType == ANIME) topAnimeListAdapter.submitError(message)
+                    else topMangaListAdapter.submitError(message)
+                } else {
+                    isLoading = false
+                    pageNum--
+                    if (dataType == ANIME) topAnimeListAdapter.submitPaginationError()
+                    else topMangaListAdapter.submitPaginationError()
+                    showToast(context, "Failed to load more. $message")
+                }
             }
         }
     }

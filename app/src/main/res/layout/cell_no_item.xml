@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/layoutBackgroundColor">
 
     <TextView
         android:id="@+id/cellNoItem"
@@ -13,10 +14,10 @@
         android:drawableStart="@drawable/ic_error_outline_black_24dp"
         android:drawablePadding="4dp"
         android:drawableTint="@android:color/darker_gray"
+        android:textColor="@android:color/darker_gray"
         android:ellipsize="end"
         android:gravity="center"
         android:text="@string/nothing_found"
-        android:textColor="@android:color/darker_gray"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?attr/contentBackground">
 
     <ProgressBar
         android:id="@+id/searchProgressBar"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/loading_"
-        android:textColor="@color/materialBlack"
+        android:textColor="?attr/contentTextColor"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/searchProgressBar"
         app:layout_constraintStart_toStartOf="@+id/searchProgressBar"

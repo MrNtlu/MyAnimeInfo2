@@ -5,6 +5,41 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="layoutBackgroundColor">@color/androidWhite</item>
+        <item name="toolbarBackgroundColor">@color/white</item>
+        <item name="contentBackground">@color/white</item>
+        <item name="cardContentBackgroundColor">@color/white</item>
+
+        <item name="navIconTint">@color/colorPrimary</item>
+
+        <item name="contentTextColor">@color/materialBlack</item>
+        <item name="toolbarTintColor">@color/materialBlack</item>
+        <item name="titleTextColor">@color/black</item>
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="layoutBackgroundColor">@color/gray</item>
+        <item name="toolbarBackgroundColor">@color/materialBlack</item>
+        <item name="contentBackground">@color/materialBlack</item>
+        <item name="cardContentBackgroundColor">@color/materialBlack</item>
+
+        <item name="navIconTint">@color/androidWhite</item>
+
+        <item name="contentTextColor">@color/white</item>
+        <item name="toolbarTintColor">@color/white</item>
+        <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_search_black_24dp</item>
+        <item name="searchHintIcon">@drawable/ic_search_black_24dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="elevation">2dp</item>
     </style>
 
     <style name="FullScreenLightDialog" parent="Theme.MaterialComponents.Light.Dialog" >

@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,8 +24,6 @@ import com.mrntlu.myanimeinfo2.utils.makeCapital
 import com.mrntlu.myanimeinfo2.utils.printLog
 import com.mrntlu.myanimeinfo2.viewmodels.AnimeViewModel
 import kotlinx.android.synthetic.main.fragment_anime_season.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -44,7 +44,7 @@ class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<Prev
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        animeViewModel=ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        animeViewModel=ViewModelProvider(this).get(AnimeViewModel::class.java)
 
         setupRecyclerView()
         if (mYear == "later")setupObserver(mYear,"")
@@ -134,9 +134,11 @@ class AnimeSeasonFragment : Fragment(), CoroutinesErrorHandler, Interaction<Prev
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            seasonAnimeAdapter.submitError(message)
-            isLoading = false
+        viewLifecycleOwner.lifecycleScope.launch{
+            whenResumed {
+                seasonAnimeAdapter.submitError(message)
+                isLoading = false
+            }
         }
     }
 

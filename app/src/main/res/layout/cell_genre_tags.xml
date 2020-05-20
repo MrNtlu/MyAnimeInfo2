@@ -4,13 +4,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="12dp"
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="?attr/cardContentBackgroundColor">
     <TextView
         android:id="@+id/genreTagText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="8dp"
-        android:textColor="@color/materialBlack"/>
+        tools:text="Test Tag"
+        android:textColor="?attr/contentTextColor"/>
 </androidx.cardview.widget.CardView>

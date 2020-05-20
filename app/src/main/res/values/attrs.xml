@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ds">
-        <attr name="backgroundcolor" format="color"/>
-        <attr name="toolbarbackgroundcolor" format="color"/>
-        <attr name="toolbariconcolor" format="color"/>
-        <attr name="toolbartintcolor" format="color"/>
-        <attr name="textcolor" format="color"/>
-        <attr name="cardbackgroundcolor" format="color"/>
+        <attr name="layoutBackgroundColor" format="color"/>
+        <attr name="toolbarBackgroundColor" format="color"/>
+        <attr name="toolbarTintColor" format="color"/>
+        <attr name="contentTextColor" format="color"/>
+        <attr name="cardContentBackgroundColor" format="color"/>
+        <attr name="titleTextColor" format="color"/>
+        <attr name="navIconTint" format="color"/>
+        <attr name="contentBackground" format="color"/>
     </declare-styleable>
 </resources>

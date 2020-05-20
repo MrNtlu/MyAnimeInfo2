@@ -15,6 +15,9 @@
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="?actionBarSize"
+            android:background="?attr/toolbarBackgroundColor"
+            app:titleTextColor="?attr/toolbarTintColor"
+            tools:title="Test"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +53,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="?attr/layoutBackgroundColor"
         android:fitsSystemWindows="true"
+        app:itemTextColor="?attr/contentTextColor"
         app:menu="@menu/nav_menu"
-        app:itemIconTint="@color/colorPrimary"/>
+        app:itemIconTint="?attr/navIconTint"/>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#EEEEEE"
+    android:background="?attr/layoutBackgroundColor"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".ui.common.SearchFragment">
@@ -16,9 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="4dp"
-        android:background="@color/white"
-        android:elevation="2dp"
+        android:layout_marginEnd="2dp"
+        style="@style/SearchViewStyle"
         android:iconifiedByDefault="false"
         app:layout_constraintEnd_toStartOf="@+id/searchFilterButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +74,7 @@
         android:layout_marginTop="2dp"
         android:visibility="gone"
         app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/searchFilterButton"
         app:layout_constraintStart_toStartOf="@+id/searchView"
         app:layout_constraintTop_toBottomOf="@+id/searchView">

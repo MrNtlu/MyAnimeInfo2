@@ -10,7 +10,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,8 +32,6 @@ import com.mrntlu.myanimeinfo2.viewmodels.MangaViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.goUpFAB
 import kotlinx.android.synthetic.main.fragment_search.searchView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -67,8 +67,13 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController= Navigation.findNavController(view)
-        if (dataType== MANGA) mangaViewModel = ViewModelProviders.of(this).get(MangaViewModel::class.java)
-        else animeViewModel = ViewModelProviders.of(this).get(AnimeViewModel::class.java)
+        if (dataType== MANGA)
+            mangaViewModel = ViewModelProvider(this).get(MangaViewModel::class.java)
+        else
+            animeViewModel = ViewModelProvider(this).get(AnimeViewModel::class.java)
+
+        val textArea=searchView.findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
+        textArea.setTextColor(resources.getColor(R.color.materialBlack,view.context.theme))
 
         setSearchView()
         setListeners()
@@ -255,19 +260,20 @@ class SearchFragment : Fragment(), CoroutinesErrorHandler {
     }
 
     override fun onError(message: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            if (pageNum==1){
-                isSearching=false
-                if (dataType==MANGA) searchMangaAdapter.submitError(message)
-                else searchAnimeAdapter.submitError(message)
-            }
-            else{
-                isPaginating=false
-                pageNum--
-                if (dataType==MANGA) searchMangaAdapter.submitPaginationError()
-                else searchAnimeAdapter.submitPaginationError()
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenResumed {
+                if (pageNum == 1) {
+                    isSearching = false
+                    if (dataType == MANGA) searchMangaAdapter.submitError(message)
+                    else searchAnimeAdapter.submitError(message)
+                } else {
+                    isPaginating = false
+                    pageNum--
+                    if (dataType == MANGA) searchMangaAdapter.submitPaginationError()
+                    else searchAnimeAdapter.submitPaginationError()
 
-                showToast(context,"Failed to load more. $message")
+                    showToast(context, "Failed to load more. $message")
+                }
             }
         }
     }
